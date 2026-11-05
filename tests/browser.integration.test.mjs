@@ -30,6 +30,13 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     assert.match(await page.locator('.resource-dock > strong').innerText(), /600 mi/);
     await page.goto(`${fixture.origin}/historia`);
     await page.locator('.story-save').waitFor();
+    assert.equal(await page.locator('.journey-picker').count(), 1);
+    assert.equal(await page.locator('.journey-choice').count(), 17);
+    assert.equal(await page.locator('.journey-choice img').count(), 17);
+    assert.equal(await page.locator('.journey-symbol, .landmark-trails, .landmark-picker').count(), 0);
+    for (const card of await page.locator('.journey-choice').all()) {
+      assert.equal(await card.isVisible(), true);
+    }
     assert.equal((await page.locator('.story-save').innerText()).trim(), '🌸 600 mi');
     assert.equal(await page.locator('.story-save').getAttribute('aria-label'), '600.000.000 pétalas disponíveis');
     for (const width of [320, 375, 1280]) {
@@ -58,7 +65,7 @@ test('browser trails, managers, max buying, museum profile and share export', { 
       await page.locator('.chapter-nav-item').first().waitFor();
       assert.equal(await page.locator('.chapter-nav-item').count(), 3);
       assert.equal(await page.locator('.chapter-nav-item:disabled').count(), 2);
-      assert.equal(await page.locator('#trilhas-dos-lugares').getAttribute('open'), '');
+      assert.equal(await page.locator('#trilhas-dos-lugares').isVisible(), true);
       const chapters = CITY_CHAPTERS.filter((item) => item.journey === journey.id);
       assert.equal(await page.locator('.chapter-art').getAttribute('src'), chapters[0].art);
       for (const [index, chapter] of chapters.entries()) {
@@ -67,7 +74,7 @@ test('browser trails, managers, max buying, museum profile and share export', { 
         assert.equal(await page.locator('.chapter-heading h2').innerText(), chapter.title);
         if (index < chapters.length - 1) await page.getByRole('button', { name: 'Próximo capítulo →', exact: true }).click();
       }
-      assert.ok((await page.locator('.landmark-picker .journey-choice.active').innerText()).includes('Trilha completa'));
+      assert.ok((await page.locator('.journey-picker .journey-choice.active').innerText()).includes('Trilha completa'));
       assert.equal(await page.locator('.trail-complete').count(), 1);
       assert.equal(await page.getByRole('link', { name: 'Escolher outra trilha →', exact: true }).getAttribute('href'), '#trilhas-dos-lugares');
     }

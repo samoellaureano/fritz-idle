@@ -16,7 +16,7 @@ function JourneyChoice({ journey, chapters, selected, onChoose }) {
   return (
     <button className={`journey-choice ${selected ? 'active' : ''}`} onClick={() => onChoose(journey.id)} aria-pressed={selected}>
       {journey.art && <img className="journey-thumbnail" src={journey.art} alt="" loading="lazy" />}
-      <span className="journey-symbol" aria-hidden="true">{journey.icon}</span><strong>{journey.name}</strong><small>{journey.description}</small>
+      <strong>{journey.name}</strong><small>{journey.description}</small>
       <span>{completed}/{chapters.length} lembranças{completed === chapters.length ? ' · Trilha completa ✓' : ''}</span>
     </button>
   );
@@ -152,23 +152,13 @@ export default function StoryPage() {
         <span className="story-eyebrow"><span className="story-eyebrow-dot" /> UM DIÁRIO DE JOINVILLE</span>
         <h1>Há coisas que a cidade <span>não esquece.</span></h1>
         <p>{gameState.profile.nickname}, este diário também é seu. Uma aventura para ler sem pressa — entre um punhado de pétalas e o próximo lugar onde Fritz vai precisar de você.</p>
-        <nav className="journey-catalog" aria-label="Trilhas do diário">
+        <nav className="journey-catalog" id="trilhas-dos-lugares" aria-label="Trilhas do diário">
           <div className="journey-picker">
-            {JOURNEYS.filter((journey) => journey.category !== 'lugares').map((journey) => (
+            {JOURNEYS.map((journey) => (
               <JourneyChoice key={journey.id} journey={journey} selected={journeyId === journey.id} onChoose={chooseJourney}
                 chapters={gameState.storyChapters.filter((item) => item.journey === journey.id)} />
             ))}
           </div>
-          <details className="landmark-trails" id="trilhas-dos-lugares" open={JOURNEYS.find((journey) => journey.id === journeyId)?.category === 'lugares' || undefined}>
-            <summary><strong>🗺️ Trilhas pelos lugares de Joinville</strong><span>14 jornadas · 42 novas lembranças · escolha seu caminho</span></summary>
-            <p>Cada lugar guarda uma história em três passos. Recupere pétalas e guarde cada lembrança para abrir a próxima. Siga uma trilha por vez, no seu ritmo.</p>
-            <div className="journey-picker landmark-picker">
-              {JOURNEYS.filter((journey) => journey.category === 'lugares').map((journey) => (
-                <JourneyChoice key={journey.id} journey={journey} selected={journeyId === journey.id} onChoose={chooseJourney}
-                  chapters={gameState.storyChapters.filter((item) => item.journey === journey.id)} />
-              ))}
-            </div>
-          </details>
         </nav>
         <div className="story-progress-summary">
           <span>📖 {completedCount} de {chapters.length} lembranças nesta trilha · nível {gameState.rebirth.level}</span>
