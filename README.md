@@ -4,7 +4,27 @@ Jogo idle com oito capítulos ilustrados, personagens e pontos de Joinville, pé
 
 O **Caderno da Cidade**, no mesmo diário, complementa a aventura com a **Cidade das Bicicletas**, o Memorial da Bicicleta e a memória industrial de **Döhler (1881), Wetzel (1932), Tupy (1938), Consul (1950) e Ciser (1959)**. As cenas de Fritz são ficção original; fatos e datas têm links para a Prefeitura e as histórias institucionais das empresas. As menções são históricas, sem patrocínio ou endosso declarado, e não indicam visitação pública às fábricas.
 
-Essas páginas podem ser lidas desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. São complementos de leitura, não novos capítulos com recompensa: preservam os oito capítulos, saves, produção e critérios do ranking.
+Essas páginas podem ser lidas desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. São complementos de leitura, não novos capítulos com recompensa. Bicicletas e as cinco memórias industriais também inspiram seis novos geradores de pétalas, sem alterar IDs, custos e produção dos sete geradores originais.
+
+### Museu e novas eras
+
+Na aba **Museu e eras**, seis miniaturas fictícias originais podem ser adquiridas uma única vez com sementes: bicicleta (2), tear (4), engrenagem (6), caderno do aprendiz (8), geladeira (10) e parafuso (12). Cada peça converte o bônus das sementes gastas (+25% por semente) em produção permanente equivalente e melhora os toques. O museu tem fontes históricas; não representa acervos reais, produtos oficiais ou patrocínios.
+
+O prestígio comum continua exigindo 250.000 pétalas e dá `floor(saldo / 250000)` sementes. A **Redefinição da Cidade** é uma segunda camada, liberada após **50 sementes conquistadas no ciclo**, incluindo as gastas no museu. A recompensa é a **Roda da Memória**, uma medalha imaginária inspirada na Cidade das Bicicletas. Cada Roda soma +10% de produção permanente; o total acumulado é o primeiro critério do ranking e acompanha o avatar no jogo, diário, perfil, ranking e mensagens.
+
+O reset exige confirmação digitada e mostra a prévia/perdas. Zera apenas saldo de pétalas, sementes, geradores, melhorias e contadores do ciclo. **Preserva** pétalas históricas, personagens, capítulos e seus bônus, museu, Rodas, cliques históricos, identidade e mensagens. O intervalo diário não reinicia. Há uma celebração do Fritz que respeita a preferência por movimento reduzido.
+
+Recompensa calculada exclusivamente no servidor, arredondada para baixo:
+
+```
+40 * sqrt(sementesDoCiclo / 50)
++ 25 * log2(1 + petalasDoCiclo / 12500000)
++ 15 * capitulosGuardados / 8
++ 10 * log2(1 + geradoresCompradosNoCiclo / 50)
++ 10 * pecasDoMuseu / 6
+```
+
+São pesos-base, não percentuais fixos; as contribuições de sementes, pétalas e ativações têm retornos decrescentes. Compras e sementes do ciclo sobrevivem ao prestígio comum, mas não à redefinição avançada. Capítulos/peças preservados entram em cada avaliação, sem novas recompensas de leitura. Saves antigos são migrados no primeiro acesso: sementes atuais, pétalas históricas e geradores ativos servem como ponto de partida dos contadores, pois compras antigas não eram registradas. Mutações usam CAS; o número esperado do ciclo impede repetir uma redefinição entre abas/dispositivos.
 
 Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)**. Cada conta tem sua própria jornada, compartilhada entre aparelhos. O servidor calcula todas as recompensas: o navegador não pode gravar um saldo arbitrário.
 
@@ -50,9 +70,11 @@ O fluxo usa PKCE e cookies de sessão. O retorno do Supabase vai para `/auth/cal
 
 Execute também [002_community.sql](supabase/migrations/002_community.sql) no SQL Editor **antes de publicar esta versão**. Ela adiciona perfis, mensagens e a visão de ranking sem alterar os saves existentes. Não execute novamente uma migração já aplicada.
 
+Depois, aplique [003_memory_wheels.sql](supabase/migrations/003_memory_wheels.sql) **antes de publicar museu e eras**. Ela amplia a visão de ranking com Rodas/redefinições, mantém o acesso exclusivo do servidor e não redefine nenhum save.
+
 No primeiro acesso sem perfil (inclusive para contas antigas), `/perfil` solicita um apelido único de 3 a 24 letras/números, hífen ou sublinhado, e um avatar. Maiúsculas/minúsculas não distinguem apelidos; acentos distinguem. Os retratos são releituras lúdicas originais de Dona Francisca, Fritz Alt, Juarez Machado e Schwanke, além do Fritz fictício. O perfil pode ser editado posteriormente sem reiniciar a partida.
 
-Ao salvar o perfil, a participação no `/mural` é automática e informada na tela. Apenas jogadores autenticados podem ver apelidos, avatares e progresso; nomes Google, e-mails e IDs de autenticação não são publicados. O ranking exibe as primeiras 50 jornadas, ordenadas por **sementes → histórias concluídas → pétalas históricas**, com desempate por antiguidade do perfil e ID público. A posição do próprio jogador também aparece fora do top 50. O progresso é o último salvo pelo servidor, não uma estimativa offline dos demais jogadores.
+Ao salvar o perfil, a participação no `/mural` é automática e informada na tela. Apenas jogadores autenticados podem ver apelidos, avatares e progresso; nomes Google, e-mails e IDs de autenticação não são publicados. O ranking exibe as primeiras 50 jornadas, ordenadas por **Rodas da Memória → sementes disponíveis → histórias concluídas → pétalas históricas**, com desempate por antiguidade do perfil e ID público. A posição do próprio jogador também aparece fora do top 50. O progresso é o último salvo pelo servidor, não uma estimativa offline dos demais jogadores.
 
 O feed mostra as 50 mensagens mais recentes, com incentivos prontos ou texto personalizado de até 160 caracteres. O intervalo de 60 segundos é transacional no Postgres (também entre abas/aparelhos); excluir uma mensagem não elimina o intervalo. Só o autor pode excluir suas mensagens. Mensagens são texto simples, não HTML. Não publique dados pessoais. Esta versão não oferece moderação automática: revise a necessidade de denúncia/moderação antes de abrir o jogo a um público amplo.
 
@@ -77,7 +99,7 @@ npm start -- --port 3001
 
 Os testes locais verificam economia, progresso offline, prestígio, capítulos, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
 
-Os testes de integração da comunidade também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as duas migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
+Os testes de integração da comunidade e progressão também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as três migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
 
 ```powershell
 npm run build

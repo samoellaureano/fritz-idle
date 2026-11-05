@@ -16,6 +16,51 @@
 
 * { box-sizing: border-box; }
 
+.memory-wheel-art { width: 48px; height: 48px; flex: 0 0 auto; vertical-align: middle; }
+.memory-wheel-badge { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; flex: 0 0 auto; max-width: 100%; padding: 3px 6px; border: 1px solid #f3cb7850; border-radius: 12px; color: var(--gold); background: #463c252e; font-size: 11px; }
+.memory-wheel-badge .memory-wheel-art { width: 22px; height: 22px; }
+.memory-wheel-badge small { color: var(--green); font-size: 10px; }
+.museum-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.museum-item { display: flex; flex-direction: column; min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: #10211d80; }
+.museum-owned { border-color: #b7d88566; }
+.museum-art { width: 100%; height: auto; }
+.museum-item h3 { margin: 14px 0 0; font-size: 17px; }
+.museum-item p, .rebirth-card p { color: var(--muted); font-size: 14px; line-height: 1.8; }
+.museum-item .museum-bonus { color: var(--gold); font-size: 12px; }
+.museum-item a { color: var(--green); font-size: 12px; margin-bottom: 16px; }
+.museum-item button { margin-top: auto; width: 100%; white-space: normal; font-size: 12px; }
+.museum-section > .community-note { margin-bottom: 22px; }
+.rebirth-card { margin-top: 28px; padding: clamp(18px, 3vw, 30px); border: 1px solid #f3cb7850; border-radius: 16px; background: radial-gradient(ellipse at top, #79612a30, #10211d80); overflow-wrap: anywhere; }
+.rebirth-card > .memory-wheel-art { display: block; width: 80px; height: 80px; margin: 0 auto 20px; }
+.rebirth-card h2 { font-size: 26px; }
+.rebirth-card progress { width: 100%; height: 16px; accent-color: var(--gold); }
+.rebirth-breakdown { padding: 0; list-style: none; }
+.rebirth-breakdown li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.6; }
+.rebirth-breakdown small { color: var(--muted); }
+.rebirth-card .museum-formula { font-size: 12px; }
+.memory-dialog { width: min(540px, calc(100% - 24px)); max-height: 90dvh; padding: clamp(20px, 4vw, 32px); overflow-y: auto; border: 1px solid var(--gold); border-radius: 18px; color: var(--ink); background: var(--background); box-shadow: 0 20px 90px #0008; }
+.memory-dialog::backdrop { background: #06120edb; }
+.memory-dialog h2 { font-size: 24px; line-height: 1.3; }
+.memory-dialog p { font-size: 14px; line-height: 1.8; color: #d2d5c7; }
+.memory-dialog label { display: block; margin: 18px 0 10px; font-size: 14px; }
+.memory-dialog input { width: 100%; padding: 12px; border: 1px solid var(--green); border-radius: 8px; background: #1d3129; color: var(--ink); font-size: 16px; }
+.memory-dialog-actions { display: grid; gap: 12px; margin-top: 22px; }
+.memory-dialog .story-button { white-space: normal; text-align: center; }
+.memory-celebration { text-align: center; }
+.fritz-new-era { display: flex; align-items: center; justify-content: center; gap: 14px; height: 120px; }
+.fritz-rider { font-size: 56px; animation: fritz-pedals 1s ease-in-out 4; }
+.fritz-new-era > .memory-wheel-art { width: 64px; height: 64px; animation: memory-turns 3s ease-in-out; }
+@keyframes fritz-pedals { 50% { transform: translateY(-12px) rotate(-8deg); } }
+@keyframes memory-turns { from { transform: rotate(-360deg) scale(.5); } to { transform: rotate(0) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .fritz-rider, .fritz-new-era > .memory-wheel-art { animation: none; } }
+@media (max-width: 600px) {
+  .museum-grid { grid-template-columns: minmax(0, 1fr); }
+  .ranking-entry, .message-author, .profile-name-row { flex-wrap: wrap; }
+  .ranking-copy { flex-basis: 100%; }
+  .player-identity { flex-wrap: wrap; }
+  .community-profile-link { flex-wrap: wrap; }
+}
+
 .player-avatar { display: block; width: 48px; height: 48px; flex: 0 0 auto; }
 .player-identity { display: inline-flex; align-items: center; gap: 8px; min-width: 0; color: var(--green); text-decoration: none; overflow-wrap: anywhere; }
 .player-identity .player-avatar { width: 34px; height: 34px; }

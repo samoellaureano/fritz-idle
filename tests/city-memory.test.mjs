@@ -29,7 +29,7 @@ test('city notebook covers bicycles and dated industrial memories with official 
   }
 });
 
-test('notebook does not add rewarded chapters, reset saved memories or change generator economy', () => {
+test('notebook keeps eight rewarded chapters and the original Station economy with expanded generators', () => {
   const now = 1800000000000;
   const player = newPlayer(now);
   player.lifetime = 2000000;
@@ -42,7 +42,7 @@ test('notebook does not add rewarded chapters, reset saved memories or change ge
   for (const chapterId of [BICYCLE_MEMORY.id, 'memoria-industrial', ...INDUSTRIAL_MEMORIES.map((company) => company.id)]) {
     assert.match(runGameAction(player, 'story', { chapterId }, now).error, /inválido/);
   }
-  assert.equal(GENERATORS.length, 7);
+  assert.equal(GENERATORS.length, 13);
   const station = GENERATORS.find((generator) => generator.id === 'fritz-lab');
   assert.deepEqual([station.baseCost, station.cps], [12000, 47]);
   assert.match(station.place, /Memorial da Bicicleta/);

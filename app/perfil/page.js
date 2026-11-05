@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { AVATARS, avatarFor } from '@/lib/community';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
+import MemoryWheel from '@/app/components/MemoryWheel';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
+  const [progress, setProgress] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [nickname, setNickname] = useState('');
   const [avatarId, setAvatarId] = useState('fritz');
@@ -14,8 +16,9 @@ export default function ProfilePage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    request('/api/profile').then(({ profile: saved }) => {
+    request('/api/profile').then(({ profile: saved, progress: savedProgress }) => {
       setProfile(saved);
+      setProgress(savedProgress);
       if (saved) {
         setNickname(saved.nickname);
         setAvatarId(saved.avatarId);
@@ -57,6 +60,7 @@ export default function ProfilePage() {
         <form className="community-card profile-form" onSubmit={save}>
           <div className="profile-name-row">
             <Avatar id={avatarId} />
+            {progress && <MemoryWheel points={Number(progress.wheels)} count={Number(progress.rebirths)} />}
             <div className="profile-name-input">
               <label htmlFor="nickname">Seu apelido em Joinville</label>
               <input id="nickname" name="nickname" value={nickname} onChange={(event) => setNickname(event.target.value)}

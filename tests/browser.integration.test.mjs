@@ -4,6 +4,8 @@ import { createRequire } from 'node:module';
 import { cloudEnabled, cloudFixture } from './helpers/cloud.mjs';
 import { ENCOURAGEMENTS } from '../lib/community.js';
 import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES } from '../lib/city-memory.js';
+import { MUSEUM_ITEMS } from '../lib/progression.js';
+import { STORY_CHAPTERS } from '../lib/story.js';
 
 const enabled = cloudEnabled && process.env.FRITZ_BROWSER_TESTS === '1';
 
@@ -122,6 +124,92 @@ test('browser onboarding, personalized game and diary, community messages and mo
       await page.screenshot({ path: process.env.FRITZ_BROWSER_FAILURE_SCREENSHOT, fullPage: true });
     }
     throw error;
+  } finally {
+    if (browser) await browser.close();
+    await fixture.cleanup();
+  }
+});
+
+test('browser museum spending, explicit reset confirmation, celebration, badges and preserved progress', { skip: !enabled }, async () => {
+  const fixture = await cloudFixture();
+  let browser;
+  try {
+    const { chromium } = createRequire(import.meta.url)(process.env.FRITZ_PLAYWRIGHT_MODULE);
+    browser = await chromium.launch({ channel: 'msedge', headless: true });
+    const actor = await fixture.user();
+    const nickname = `Memoria_${fixture.suffix}`;
+    await fixture.profile(actor, nickname);
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    await context.addCookies(actor.browserCookies);
+    const page = await context.newPage();
+    const pageErrors = [];
+    page.on('pageerror', (error) => pageErrors.push(error.message));
+    await page.goto(fixture.origin);
+    await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
+    assert.ok(await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).isDisabled());
+    await fixture.seed(actor, {
+      seeds: 50, cycle_seeds: 50, lifetime: 12500000, cycle_petals: 12500000,
+      cycle_purchases: 50, memories: STORY_CHAPTERS.map((item) => item.id),
+    });
+    await page.reload();
+    await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
+    assert.equal(await page.locator('.museum-item').count(), MUSEUM_ITEMS.length);
+    await page.getByRole('button', { name: 'Adquirir Bicicleta das flores · 2 sementes', exact: true }).click();
+    await page.getByRole('button', { name: 'Guardada no museu ✓', exact: true }).waitFor();
+    await page.setViewportSize({ width: 320, height: 740 });
+    await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).click();
+    const confirmation = page.getByRole('dialog', { name: 'Levar a memória, recomeçar a economia?' });
+    await confirmation.waitFor();
+    assert.ok(await confirmation.evaluate((node) => node.scrollWidth <= node.clientWidth), 'reset confirmation must fit mobile');
+    assert.ok(await confirmation.getByRole('button', { name: 'Confirmar redefinição' }).isDisabled());
+    await confirmation.getByRole('button', { name: 'Continuar esta jornada' }).click();
+    assert.equal((await fixture.api(actor, '/api/game')).data.rebirth.count, 0);
+    await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).click();
+    await confirmation.getByRole('textbox', { name: 'Digite REINICIAR para confirmar' }).fill('REINICIAR');
+    await confirmation.getByRole('button', { name: 'Confirmar redefinição' }).click();
+    const celebration = page.getByRole('dialog', { name: 'A gente leva o que ama.' });
+    await celebration.waitFor();
+    assert.ok(await celebration.evaluate((node) => node.scrollWidth <= node.clientWidth), 'celebration must fit mobile');
+    assert.ok((await celebration.innerText()).includes(nickname));
+    assert.equal(await celebration.locator('.fritz-rider').evaluate((node) => getComputedStyle(node).animationName), 'none');
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    assert.equal(await celebration.locator('.fritz-rider').evaluate((node) => getComputedStyle(node).animationName), 'fritz-pedals');
+    await celebration.getByRole('button', { name: 'Pedalar para a próxima aventura' }).click();
+    const restored = await fixture.api(actor, '/api/game');
+    assert.equal(restored.data.rebirth.count, 1);
+    assert.equal(restored.data.seeds, 0);
+    assert.ok(restored.data.museum[0].owned);
+    const expected = restored.data.rebirth.points;
+    await page.reload();
+    await page.locator('.account-bar .memory-wheel-badge').waitFor();
+    assert.ok((await page.locator('.account-bar .memory-wheel-badge').getAttribute('aria-label')).includes(`${expected} Rodas`));
+    await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
+    await page.getByRole('button', { name: 'Guardada no museu ✓', exact: true }).waitFor();
+    assert.ok(await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).isDisabled());
+    for (const width of [320, 375, 430, 768, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `museum overflow at ${width}`);
+    }
+    await fixture.api(actor, '/api/community/messages', 'POST', { text: 'Pedalando para uma nova era!' });
+    for (const route of ['/historia', '/perfil', '/mural']) {
+      await page.goto(`${fixture.origin}${route}`);
+      if (route === '/historia') {
+        await page.locator('.reader-dedication').waitFor();
+        assert.equal(await page.locator('.chapter-nav-item.finished').count(), 8);
+      } else if (route === '/perfil') {
+        await page.getByRole('button', { name: 'Salvar minha identidade' }).waitFor();
+      } else {
+        await page.getByRole('heading', { name: 'Correio das flores' }).waitFor();
+        await page.locator('.own-ranking .memory-wheel-badge').waitFor();
+        await page.locator('.message-card').filter({ hasText: 'Pedalando para uma nova era!' }).locator('.memory-wheel-badge').waitFor();
+      }
+      assert.ok(await page.locator('.memory-wheel-badge').count() > 0, `missing badge on ${route}`);
+      for (const width of [320, 375, 430, 768, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${route} rebirth overflow at ${width}`);
+      }
+    }
+    assert.deepEqual(pageErrors, []);
   } finally {
     if (browser) await browser.close();
     await fixture.cleanup();

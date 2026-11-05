@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ENCOURAGEMENTS, MESSAGE_COOLDOWN_SECONDS, MESSAGE_MAX_LENGTH } from '@/lib/community';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
+import MemoryWheel from '@/app/components/MemoryWheel';
 
 const number = (value) => Number(value).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 const time = (value) => new Date(value).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
@@ -13,6 +14,7 @@ function RankingEntry({ entry, own }) {
     <li className={`ranking-entry ${own ? 'own-ranking' : ''}`}>
       <span className="ranking-place">#{entry.rank}</span>
       <Avatar id={entry.avatar_id} decorative />
+      <MemoryWheel points={Number(entry.wheels)} count={Number(entry.rebirths)} />
       <div className="ranking-copy"><strong>{entry.nickname}{own && <small> você</small>}</strong>
         <div className="ranking-stats"><span>🌱 {number(entry.seeds)} sementes</span><span>📖 {number(entry.memories)} histórias</span><span>🌸 {number(entry.lifetime)} pétalas</span></div>
       </div>
@@ -104,7 +106,7 @@ export default function CommunityPage() {
         <span className="story-eyebrow">O JARDIM DAS JORNADAS</span>
         <h1>{board ? `${board.profile.nickname}, ninguém floresce sozinho.` : 'Ninguém floresce sozinho.'}</h1>
         <p>Cada semente conta uma volta por cima. Cada história, uma memória protegida. Deixe uma palavra boa para quem caminha com Fritz ao seu lado.</p>
-        {board && <a className="community-profile-link" href="/perfil"><Avatar id={board.profile.avatarId} decorative /><span>{board.profile.nickname} · editar apelido e avatar →</span></a>}
+        {board && <a className="community-profile-link" href="/perfil"><Avatar id={board.profile.avatarId} decorative /><MemoryWheel points={Number(board.me.wheels)} count={Number(board.me.rebirths)} /><span>{board.profile.nickname} · editar apelido e avatar →</span></a>}
       </section>
       {error && <div className="story-error" role="alert">{error} <button className="story-button secondary" disabled={busy} onClick={() => { setError(''); refresh().catch((cause) => setError(cause.message)); }}>Atualizar mural</button></div>}
       {notice && <p className="story-reward" role="status">{notice}</p>}
@@ -112,7 +114,7 @@ export default function CommunityPage() {
         <div className="community-layout">
           <section className="community-card ranking-card" aria-labelledby="ranking-title">
             <span className="story-eyebrow">RAÍZES QUE INSPIRAM</span><h2 id="ranking-title">Mural-ranking</h2>
-            <p>As 50 primeiras jornadas, por sementes, depois histórias concluídas e pétalas históricas. Em empate, o perfil mais antigo vem primeiro.</p>
+            <p>As 50 primeiras jornadas, por Rodas da Memória, depois sementes disponíveis, histórias concluídas e pétalas históricas. Em empate, o perfil mais antigo vem primeiro.</p>
             <p className="community-note">O progresso é atualizado quando cada jogador joga ou abre o mural. As pétalas continuam guardadas mesmo após o prestígio.</p>
             <ol className="ranking-list">{board.ranking.map((entry) => <RankingEntry key={entry.profile_id} entry={entry} own={entry.profile_id === board.profile.id} />)}</ol>
             {Number(board.me.rank) > 50 && <><h3>Sua posição na cidade</h3><ol className="ranking-list"><RankingEntry entry={board.me} own /></ol></>}
@@ -141,7 +143,7 @@ export default function CommunityPage() {
             {!board.messages.length && <p>O primeiro bilhete pode ser seu. Que tal plantar uma palavra boa?</p>}
             <ol className="message-list">{board.messages.map((message) => (
               <li className="message-card" key={message.id}>
-                <div className="message-author"><Avatar id={message.player_profiles.avatar_id} decorative /><div><strong>{message.player_profiles.nickname}</strong><time dateTime={message.created_at}>{time(message.created_at)}</time></div></div>
+                <div className="message-author"><Avatar id={message.player_profiles.avatar_id} decorative /><MemoryWheel points={Number(message.progress.wheels)} count={Number(message.progress.rebirths)} /><div><strong>{message.player_profiles.nickname}</strong><time dateTime={message.created_at}>{time(message.created_at)}</time></div></div>
                 <p>{message.text}</p>
                 {message.profile_id === board.profile.id && <button className="story-button secondary" disabled={busy} onClick={() => remove(message.id)}>Excluir minha mensagem</button>}
               </li>

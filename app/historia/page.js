@@ -5,6 +5,7 @@ import { STORY_CHAPTERS } from '@/lib/story';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
 import CityNotebook from '@/app/components/CityNotebook';
+import MemoryWheel from '@/app/components/MemoryWheel';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -112,7 +113,7 @@ export default function StoryPage() {
           <span>Fritz <span>em Joinville</span></span>
         </a>
         <div className="story-nav-actions">
-          <a className="player-identity" href="/perfil"><Avatar id={gameState.profile.avatarId} decorative /><span>{gameState.profile.nickname}</span></a>
+          <a className="player-identity" href="/perfil"><Avatar id={gameState.profile.avatarId} decorative /><MemoryWheel points={gameState.rebirth.points} count={gameState.rebirth.count} /><span>{gameState.profile.nickname}</span></a>
           <a className="back-to-game" href="/mural">Mural da cidade</a>
           <span className="story-save"><span aria-hidden="true">🌸</span> {format(gameState.coins)} pétalas</span>
           <a className="back-to-game" href="/"><span>↖</span> Voltar a jogar</a>

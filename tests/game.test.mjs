@@ -32,7 +32,7 @@ test('new accounts start independently and actions do not mutate their input', (
   assert.equal(result.state.coins, 1);
   assert.equal(result.state.totalClicks, 1);
   assert.equal(result.state.characters.filter((item) => item.unlocked).length, 1);
-  assert.equal(result.state.generators.length, 7);
+  assert.equal(result.state.generators.length, 13);
   assert.equal(result.state.upgrades.length, 4);
 });
 

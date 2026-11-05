@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
+import MemoryWheel from '@/app/components/MemoryWheel';
+import CityMuseum from '@/app/components/CityMuseum';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -63,7 +65,9 @@ export default function Home() {
     setBusy(true);
     setError(null);
     try {
-      applyState(await action());
+      const nextState = await action();
+      applyState(nextState);
+      return nextState;
     } catch (cause) {
       setError(cause.message);
     } finally {
@@ -121,19 +125,20 @@ export default function Home() {
             ['jornada', 'A jornada'],
             ['personagens', 'Personagens'],
             ['colecao', 'Coleção'],
+            ['museu', 'Museu e eras'],
           ].map(([id, label]) => (
-            <button key={id} className={`nav-link ${tab === id ? 'selected' : ''}`} onClick={() => setTab(id)}>
+            <button key={id} className={`nav-link ${tab === id ? 'selected' : ''}`} disabled={busy} onClick={() => setTab(id)}>
               {label}
             </button>
           ))}
         </nav>
-        <div className="seed-pill" title="Sementes permanentes: aumentam sua produção">
+        <div className="seed-pill" title="Sementes disponíveis: produção extra ou peças permanentes do museu">
           <span aria-hidden="true">🌱</span> {state.seeds} <span className="seed-word">sementes</span>
         </div>
       </header>
 
       <div className="account-bar">
-        <a className="player-identity" href="/perfil"><Avatar id={state.profile.avatarId} decorative /><span>{state.profile.nickname} · editar perfil</span></a>
+        <a className="player-identity" href="/perfil"><Avatar id={state.profile.avatarId} decorative /><MemoryWheel points={state.rebirth.points} count={state.rebirth.count} /><span>{state.profile.nickname} · editar perfil</span></a>
         <a className="community-profile-link" href="/mural">🌷 Mural-ranking e mensagens</a>
         <form action="/auth/logout" method="post"><button type="submit">Sair da conta</button></form>
       </div>
@@ -215,6 +220,7 @@ export default function Home() {
                   <div><span className="section-kicker">CADA CANTO CONTA</span><h2>Ative os lugares da cidade</h2></div>
                   <span className="section-aside">Pontos de Joinville que fazem história</span>
                 </div>
+                <p className="section-intro">Bicicletas e memórias das indústrias também fazem a cidade florescer. Geradores são fantasia, não produção real das empresas. <a href="/historia#memoria-industrial">Conheça as fontes no diário.</a></p>
                 <div className="places-list">
                   {state.generators.map((generator, index) => {
                     const affordable = display >= generator.cost;
@@ -287,6 +293,13 @@ export default function Home() {
               </div>
             </section>
           )}
+          {tab === 'museu' && <CityMuseum state={state} busy={busy} error={error}
+            onPurchase={(itemId) => perform(() => request('/api/museum', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ itemId }),
+            }))}
+            onRebirth={(expectedCycle) => perform(() => request('/api/rebirth', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ expectedCycle }),
+            }))} />}
         </section>
 
         <aside className="side-column">
@@ -299,9 +312,11 @@ export default function Home() {
 
           <section className="side-card roots-card">
             <div className="side-card-heading"><span className="side-icon">🌱</span><div><span className="section-kicker">NOVAS RAÍZES</span><h2>Sementes da Cidade</h2></div></div>
-            <p>Quando juntar {format(state.prestigeRequirement)} pétalas, comece outra jornada. Seus encontros ficam; cada semente aumenta em 25% a produção permanente.</p>
+            <p>Quando juntar {format(state.prestigeRequirement)} pétalas, comece outra jornada. Seus encontros ficam; cada semente disponível aumenta em 25% a produção. Invista no museu para tornar esse bônus permanente.</p>
             <button className="prestige-button" disabled={!state.prestigeReady || busy} onClick={handlePrestige}>{state.prestigeReady ? 'Plantar novas raízes' : `${format(state.prestigeRequirement - display)} pétalas para florescer`}</button>
-            <span className="roots-footnote">{state.seeds} {state.seeds === 1 ? 'semente plantada' : 'sementes plantadas'} · +{state.seeds * 25}% produção</span>
+            <span className="roots-footnote">{state.seeds} {state.seeds === 1 ? 'semente disponível' : 'sementes disponíveis'} · +{state.seeds * 25}% produção</span>
+            <button className="side-action" onClick={() => setTab('museu')}>Museu e Roda da Memória <span>→</span></button>
+            <p>{state.rebirth.earnedSeeds}/{state.rebirth.requiredSeeds} sementes neste ciclo · {state.rebirth.points} Rodas permanentes</p>
           </section>
 
           <section className="side-card return-card">
