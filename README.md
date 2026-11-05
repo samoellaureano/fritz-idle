@@ -2,6 +2,10 @@
 
 Jogo idle com oito capítulos ilustrados, personagens e pontos de Joinville, pétalas, progresso offline, melhorias, presente diário e prestígio. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
 
+O **Caderno da Cidade**, no mesmo diário, complementa a aventura com a **Cidade das Bicicletas**, o Memorial da Bicicleta e a memória industrial de **Döhler (1881), Wetzel (1932), Tupy (1938), Consul (1950) e Ciser (1959)**. As cenas de Fritz são ficção original; fatos e datas têm links para a Prefeitura e as histórias institucionais das empresas. As menções são históricas, sem patrocínio ou endosso declarado, e não indicam visitação pública às fábricas.
+
+Essas páginas podem ser lidas desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. São complementos de leitura, não novos capítulos com recompensa: preservam os oito capítulos, saves, produção e critérios do ranking.
+
 Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)**. Cada conta tem sua própria jornada, compartilhada entre aparelhos. O servidor calcula todas as recompensas: o navegador não pode gravar um saldo arbitrário.
 
 **Jogar:** https://fritz-idle.onrender.com

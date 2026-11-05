@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { STORY_CHAPTERS } from '@/lib/story';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
+import CityNotebook from '@/app/components/CityNotebook';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -17,6 +18,7 @@ export default function StoryPage() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const versionRef = useRef(-1);
+  const hasGameState = gameState !== null;
 
   const applyState = useCallback((state) => {
     if (state.saveVersion < versionRef.current) return;
@@ -46,6 +48,13 @@ export default function StoryPage() {
     const intervalId = setInterval(refresh, 15000);
     return () => clearInterval(intervalId);
   }, [refresh]);
+
+  useEffect(() => {
+    if (!hasGameState || !window.location.hash) return;
+    // The notebook mounts after the authenticated save loads, after native anchor scrolling.
+    const target = document.getElementById(window.location.hash.slice(1));
+    if (target?.closest('.city-notebook')) target.scrollIntoView({ behavior: 'instant' });
+  }, [hasGameState]);
 
   const chapterProgress = useMemo(
     () => gameState?.storyChapters ?? [],
@@ -114,6 +123,10 @@ export default function StoryPage() {
         <span className="story-eyebrow"><span className="story-eyebrow-dot" /> UM DIÁRIO DE JOINVILLE</span>
         <h1>Há coisas que a cidade <span>não esquece.</span></h1>
         <p>{gameState.profile.nickname}, este diário também é seu. Uma aventura para ler sem pressa — entre um punhado de pétalas e o próximo lugar onde Fritz vai precisar de você.</p>
+        <nav className="city-notebook-nav" aria-label="Outras páginas do diário">
+          <a className="story-button secondary" href="#cidade-das-bicicletas">🚲 Joinville, Cidade das Bicicletas</a>
+          <a className="story-button secondary" href="#memoria-industrial">🏭 Tupy, Döhler e a memória industrial</a>
+        </nav>
         <div className="story-progress-summary">
           <span>📖 {completedCount} de {STORY_CHAPTERS.length} lembranças guardadas</span>
           <span className="story-progress-track"><span style={{ width: `${(completedCount / STORY_CHAPTERS.length) * 100}%` }} /></span>
@@ -200,6 +213,7 @@ export default function StoryPage() {
         </article>
       </div>
 
+      <CityNotebook nickname={gameState.profile.nickname} />
       <section className="story-truth-note"><span>💚</span><p><strong>Feito com carinho por Joinville.</strong> Esta é uma obra de ficção interativa. Retratos e cenas são ilustrações originais; encontros, falas e acontecimentos narrativos não são fatos biográficos.</p></section>
       <footer className="story-footer"><a href="/">← Fritz e a jornada das flores</a><span>Leia uma história. Guarde uma lembrança. Continue jogando.</span></footer>
     </main>

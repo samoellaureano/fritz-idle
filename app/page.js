@@ -309,7 +309,14 @@ export default function Home() {
             <p>Seus lugares continuam trazendo pétalas por até {state.multipliers.offlineHours} horas enquanto você descansa.</p>
           </section>
 
-          <div className="city-note"><span>🌷</span><p><strong>Joinville, Cidade das Flores.</strong><br />Uma jornada de carinho pela cidade e por quem a constrói.</p></div>
+          <section className="side-card city-notebook-preview">
+            <div className="side-card-heading"><span className="side-icon">🚲</span><div><span className="section-kicker">CADERNO DA CIDADE</span><h2>Flores, bicicletas e mãos que constroem</h2></div></div>
+            <p>{state.profile.nickname}, pedale pela memória de Joinville com Fritz. Conheça o Memorial da Bicicleta e histórias de Döhler, Wetzel, Tupy, Consul e Ciser.</p>
+            <a className="side-story-link" href="/historia#cidade-das-bicicletas">Cidade das Bicicletas <span aria-hidden="true">→</span></a>
+            <a className="side-story-link" href="/historia#memoria-industrial">Abrir memória industrial <span aria-hidden="true">→</span></a>
+          </section>
+
+          <div className="city-note"><span>🌷</span><p><strong>Joinville, Cidade das Flores e das Bicicletas.</strong><br />Uma jornada de carinho pela cidade e por quem a constrói.</p></div>
         </aside>
       </div>
 
