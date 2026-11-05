@@ -27,6 +27,10 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto(fixture.origin);
     await page.locator('.resource-dock').waitFor();
+    assert.equal(await page.locator('.brand-mark img').getAttribute('src'), '/icons/fritz.webp');
+    assert.equal(await page.locator('link[rel="icon"]').getAttribute('href'), '/fritz-icon.png');
+    assert.ok(await page.locator('.game-icon').count() > 0);
+    await page.locator('.game-icon').evaluateAll(images => Promise.all(images.map(image => image.decode())));
     assert.match(await page.locator('.resource-dock > strong').innerText(), /600 mi/);
     await page.goto(`${fixture.origin}/historia`);
     await page.locator('.story-save').waitFor();
@@ -37,7 +41,8 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     for (const card of await page.locator('.journey-choice').all()) {
       assert.equal(await card.isVisible(), true);
     }
-    assert.equal((await page.locator('.story-save').innerText()).trim(), '🌸 600 mi');
+    assert.equal((await page.locator('.story-save').innerText()).trim(), '600 mi');
+    assert.equal(await page.locator('.story-save .game-icon').getAttribute('src'), '/icons/petal.webp');
     assert.equal(await page.locator('.story-save').getAttribute('aria-label'), '600.000.000 pétalas disponíveis');
     for (const width of [320, 375, 1280]) {
       await page.setViewportSize({ width, height: 900 });
@@ -46,9 +51,9 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     }
     await page.goto(fixture.origin);
     await page.getByRole('button', { name: 'Personagens', exact: true }).click();
-    await page.getByRole('button', { name: 'Adquirir · 500 mi 🌸', exact: true }).click();
+    await page.getByRole('button', { name: 'Adquirir · 500 mi', exact: true }).click();
     await page.getByRole('button', { name: 'Viveiro ativo', exact: true }).waitFor();
-    await page.getByRole('button', { name: 'Contratar · 5 🌱', exact: true }).click();
+    await page.getByRole('button', { name: 'Contratar · 5', exact: true }).click();
     await page.getByRole('button', { name: 'Gestor ativo ✓', exact: true }).nth(1).waitFor();
     await page.getByRole('button', { name: 'A jornada', exact: true }).click();
     await page.getByRole('button', { name: 'Comprar o máximo de Rua das Palmeiras', exact: true }).click();
@@ -93,9 +98,18 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     }
     await page.goto(`${fixture.origin}/perfil`);
     await page.locator('.profile-collection .museum-badge').waitFor();
+    for (const avatar of await page.locator('.avatar-options .player-avatar').all()) {
+      assert.match(await avatar.getAttribute('src'), /^\/icons\/[\w-]+\.webp$/);
+      assert.equal(await avatar.evaluate(image => image.tagName), 'IMG');
+    }
     assert.ok(await page.locator('.profile-collection .achievement-unlocked').count() > 0);
     await page.goto(`${fixture.origin}/mural`);
     await page.locator('.progress-card-preview').waitFor();
+    await page.waitForFunction(() => [...document.querySelectorAll('button')]
+      .some(button => button.textContent === 'Baixar arte para as redes' && !button.disabled));
+    assert.equal(await page.locator('.progress-card-preview').evaluate(canvas => {
+      return canvas.width === 1080 && canvas.height === 1080 && canvas.toDataURL('image/png').startsWith('data:image/png;base64,');
+    }), true);
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.getByRole('button', { name: 'Baixar arte para as redes', exact: true }).click(),

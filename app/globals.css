@@ -19,6 +19,7 @@
 .game-tooltip { position: fixed; z-index: 10000; left: 8px; top: 8px; width: max-content; max-width: min(300px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); overflow: auto; padding: 10px 13px; border: 1px solid var(--green-deep); border-radius: 12px; background: var(--surface-raised); color: var(--ink); box-shadow: 0 8px 26px #0006; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
 [data-tooltip]:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
+.game-icon { display: inline-block; width: 1.5em; height: 1.5em; object-fit: contain; vertical-align: middle; flex-shrink: 0; border-radius: .25em; }
 .era-portal-art { width: 48px; height: 48px; flex: 0 0 auto; vertical-align: middle; }
 .era-portal-badge { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; flex: 0 0 auto; max-width: 100%; padding: 3px 6px; border: 1px solid #f3cb7850; border-radius: 12px; color: var(--gold); background: #463c252e; font-size: 11px; }
 .era-portal-badge .era-portal-art { width: 22px; height: 22px; }
@@ -26,7 +27,10 @@
 .museum-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .museum-item { display: flex; flex-direction: column; min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: #10211d80; }
 .museum-owned { border-color: #b7d88566; }
-.museum-art { width: 100%; height: auto; }
+.game-icon.museum-art { display: block; width: 100%; height: 150px; object-fit: contain; background: #18362b; border-radius: 16px; }
+.character-medallion .game-icon, .place-icon .game-icon, .upgrade-icon .game-icon, .achievement-icon .game-icon, .daily-illustration .game-icon { width: 100%; height: 100%; border-radius: inherit; }
+.museum-badge .game-icon { width: 24px; height: 24px; border-radius: 50%; }
+.chapter-preview .game-icon { width: 48px; height: 48px; border-radius: 50%; }
 .museum-item h3 { margin: 14px 0 0; font-size: 17px; }
 .museum-item p, .rebirth-card p { color: var(--muted); font-size: 14px; line-height: 1.8; }
 .museum-item .museum-bonus { color: var(--gold); font-size: 12px; }
@@ -65,7 +69,7 @@
   .community-profile-link { flex-wrap: wrap; }
 }
 
-.player-avatar { display: block; width: 48px; height: 48px; flex: 0 0 auto; }
+.player-avatar { display: block; width: 48px; height: 48px; flex: 0 0 auto; object-fit: cover; border-radius: 50%; border: 1px solid #e8c47b70; }
 .player-identity { display: inline-flex; align-items: center; gap: 8px; min-width: 0; color: var(--green); text-decoration: none; overflow-wrap: anywhere; }
 .player-identity .player-avatar { width: 34px; height: 34px; }
 .account-bar .community-profile-link { font-size: 12px; }

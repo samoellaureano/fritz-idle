@@ -1,3 +1,4 @@
+import GameIcon from '@/app/components/GameIcon';
 import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES, INDUSTRY_STORY } from '@/lib/city-memory';
 
 export default function CityNotebook({ nickname }) {
@@ -8,14 +9,14 @@ export default function CityNotebook({ nickname }) {
         <h2 id="city-notebook-title">Duas rodas, muitos fios e mãos que constroem.</h2>
         <p>{nickname}, Fritz reservou estas páginas para a Joinville das bicicletas e da memória industrial. Leia desde o início da jornada, sem gastar pétalas ou interromper sua partida.</p>
         <nav className="city-notebook-nav" aria-label="Memórias da cidade">
-          <a className="story-button secondary" href="#cidade-das-bicicletas">🚲 Cidade das Bicicletas</a>
-          <a className="story-button secondary" href="#memoria-industrial">🏭 Memória industrial</a>
+          <a className="story-button secondary" href="#cidade-das-bicicletas"><GameIcon symbol="🚲" /> Cidade das Bicicletas</a>
+          <a className="story-button secondary" href="#memoria-industrial"><GameIcon symbol="🏭" /> Memória industrial</a>
         </nav>
       </header>
 
       <article className="story-chapter city-memory-chapter" id={BICYCLE_MEMORY.id} aria-labelledby="bicycle-title">
         <div className="city-memory-banner bicycle-banner">
-          <span aria-hidden="true">🚲</span>
+          <span aria-hidden="true"><GameIcon symbol="🚲" /></span>
           <div><span className="chapter-overline">UMA CIDADE EM MOVIMENTO</span><h3 id="bicycle-title">{BICYCLE_MEMORY.title}</h3><p>{BICYCLE_MEMORY.place}</p></div>
         </div>
         <div className="chapter-reading">
@@ -32,7 +33,7 @@ export default function CityNotebook({ nickname }) {
 
       <article className="story-chapter city-memory-chapter" id="memoria-industrial" aria-labelledby="industry-title">
         <div className="city-memory-banner industry-banner">
-          <span aria-hidden="true">🧵 ⚙️</span>
+          <span aria-hidden="true"><GameIcon symbol="🧵" /> <GameIcon symbol="⚙️" /></span>
           <div><span className="chapter-overline">MEMÓRIA INDUSTRIAL DE JOINVILLE</span><h3 id="industry-title">A cidade também floresce pelas mãos de quem trabalha.</h3><p>Dos teares à fundição, das pequenas peças às casas</p></div>
         </div>
         <div className="chapter-reading">
@@ -43,7 +44,7 @@ export default function CityNotebook({ nickname }) {
           <ol className="city-industry-timeline">
             {INDUSTRIAL_MEMORIES.map((company) => (
               <li className="city-industry-card" key={company.id} id={`memoria-${company.id}`}>
-                <div className="city-industry-heading"><span className="city-industry-icon" aria-hidden="true">{company.icon}</span><div><span className="chapter-overline">{company.year} · {company.name}</span><h5>{company.title}</h5></div></div>
+                <div className="city-industry-heading"><span className="city-industry-icon" aria-hidden="true"><GameIcon symbol={company.icon} /></span><div><span className="chapter-overline">{company.year} · {company.name}</span><h5>{company.title}</h5></div></div>
                 <p>{company.fact}</p>
                 <blockquote>{company.keepsake}</blockquote>
                 <a className="city-memory-source" href={company.source.url} target="_blank" rel="noopener noreferrer">{company.source.label} ↗</a>

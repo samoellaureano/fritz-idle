@@ -1,5 +1,6 @@
 'use client';
 
+import GameIcon from '@/app/components/GameIcon';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { STORY_CHAPTERS } from '@/lib/story';
 import { CITY_CHAPTERS, JOURNEYS } from '@/lib/journeys';
@@ -8,6 +9,7 @@ import Avatar from '@/app/components/Avatar';
 import CityNotebook from '@/app/components/CityNotebook';
 import EraPortal from '@/app/components/EraPortal';
 import { formatCompactNumber as format } from '@/lib/format-number';
+import { JOURNEY_ICON_ART } from '@/lib/icon-art';
 
 const ALL_CHAPTERS = [...STORY_CHAPTERS.map((chapter) => ({ ...chapter, journey: 'flores' })), ...CITY_CHAPTERS];
 
@@ -135,7 +137,7 @@ export default function StoryPage() {
   if (!gameState) {
     return (
       <main className="story-page">
-        <div className="story-loading"><span>🐊</span><p>{error || 'Abrindo o diário de Fritz...'}</p>{error && <a className="story-button secondary" href="/">Voltar ao jogo</a>}</div>
+        <div className="story-loading"><span><GameIcon symbol="🐊" /></span><p>{error || 'Abrindo o diário de Fritz...'}</p>{error && <a className="story-button secondary" href="/">Voltar ao jogo</a>}</div>
       </main>
     );
   }
@@ -144,13 +146,13 @@ export default function StoryPage() {
     <main className="story-page">
       <header className="story-topbar">
         <a className="story-brand" href="/" aria-label="Voltar ao jogo Fritz em Joinville">
-          <span aria-hidden="true"><img src="/fritz-logo.svg" alt="" width="40" height="40" /></span>
+          <span aria-hidden="true"><img src="/icons/fritz.webp" alt="" width="40" height="40" /></span>
           <span>Fritz <span>em Joinville</span></span>
         </a>
         <div className="story-nav-actions">
           <a className="player-identity" href="/perfil"><Avatar id={gameState.profile.avatarId} decorative /><EraPortal points={gameState.rebirth.points} count={gameState.rebirth.count} /><span>{gameState.profile.nickname}</span></a>
           <a className="back-to-game" href="/mural">Mural da cidade</a>
-          <span className="story-save" tabIndex={0} aria-label={`${gameState.coins.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} pétalas disponíveis`} data-tooltip={`${gameState.coins.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} pétalas disponíveis`}><span aria-hidden="true">🌸</span> {format(gameState.coins)}</span>
+          <span className="story-save" tabIndex={0} aria-label={`${gameState.coins.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} pétalas disponíveis`} data-tooltip={`${gameState.coins.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} pétalas disponíveis`}><span aria-hidden="true"><GameIcon symbol="🌸" /></span> {format(gameState.coins)}</span>
           <a className="back-to-game" href="/"><span>↖</span> Voltar a jogar</a>
         </div>
       </header>
@@ -168,9 +170,9 @@ export default function StoryPage() {
           </div>
         </nav>
         <div className="story-progress-summary">
-          <span>📖 {completedCount} de {chapters.length} lembranças nesta trilha · nível {gameState.rebirth.level}</span>
+          <span><GameIcon symbol="📖" /> {completedCount} de {chapters.length} lembranças nesta trilha · nível {gameState.rebirth.level}</span>
           <span className="story-progress-track"><span style={{ width: `${(completedCount / chapters.length) * 100}%` }} /></span>
-          <span>🌱 +{Math.round(completedCount * 2)}% produção permanente</span>
+          <span><GameIcon symbol="🌱" /> +{Math.round(completedCount * 2)}% produção permanente</span>
         </div>
       </section>
 
@@ -191,26 +193,26 @@ export default function StoryPage() {
                 aria-current={index === selectedIndex ? 'step' : undefined}
                 data-tooltip={locked ? unlockHint : `Ler capítulo ${item.number}: ${item.title}`}
               >
-                <span className="chapter-number">{locked ? '🔒' : chapterState?.completed ? '✓' : String(item.number).padStart(2, '0')}</span>
+                <span className="chapter-number">{locked ? <GameIcon symbol="🔒" /> : chapterState?.completed ? '✓' : String(item.number).padStart(2, '0')}</span>
                 <span className="chapter-nav-copy"><strong>{item.title}</strong><small>{locked ? unlockHint : item.place}</small></span>
               </button>
             );
           })}
-          <div className="chapter-list-note"><span>✨</span><p>Cada história guardada aumenta em 2% a produção da sua cidade — e rende pétalas para a próxima aventura.</p></div>
+          <div className="chapter-list-note"><span><GameIcon symbol="✨" /></span><p>Cada história guardada aumenta em 2% a produção da sua cidade — e rende pétalas para a próxima aventura.</p></div>
         </nav>
 
         <article className="story-chapter" ref={chapterRef} aria-live="polite">
           <div className="chapter-art-wrap">
             <img className="chapter-art" src={chapter.art} alt={chapter.artAlt} />
             <div className="chapter-art-overlay" />
-            <div className="chapter-art-label"><span>CAPÍTULO {String(chapter.number).padStart(2, '0')}</span><span>{chapter.icon} {chapter.place}</span></div>
+            <div className="chapter-art-label"><span>CAPÍTULO {String(chapter.number).padStart(2, '0')}</span><span><GameIcon name={JOURNEY_ICON_ART[chapter.journey]} /> {chapter.place}</span></div>
           </div>
 
           <div className="chapter-reading">
             <div className="chapter-heading">
               <span className="chapter-overline">UMA HISTÓRIA DE {chapter.character.toLocaleUpperCase('pt-BR')}</span>
               <h2>{chapter.title}</h2>
-              <span className="chapter-place">📍 {chapter.place}</span>
+              <span className="chapter-place"><GameIcon symbol="📍" /> {chapter.place}</span>
             </div>
 
             {progress?.unlocked ? <>
@@ -220,14 +222,14 @@ export default function StoryPage() {
             </div>
 
             <div className="keepsake-card">
-              <span className="keepsake-flower" aria-hidden="true">🌼</span>
+              <span className="keepsake-flower" aria-hidden="true"><GameIcon symbol="🌼" /></span>
               <div><span>LEVE ESTA LEMBRANÇA</span><strong>“{chapter.keepsake}.”</strong></div>
-              <span className="keepsake-character" aria-hidden="true">🐊</span>
+              <span className="keepsake-character" aria-hidden="true"><GameIcon symbol="🐊" /></span>
             </div>
-            </> : <div className="chapter-locked" role="status"><span aria-hidden="true">🔒</span><p>{lockMessage}</p><a href="/">Continuar recuperando pétalas →</a></div>}
+            </> : <div className="chapter-locked" role="status"><span aria-hidden="true"><GameIcon symbol="🔒" /></span><p>{lockMessage}</p><a href="/">Continuar recuperando pétalas →</a></div>}
 
             <aside className="chapter-sources">
-              <div className="sources-heading"><span aria-hidden="true">📚</span><div><strong>História imaginada, memória verdadeira</strong><p>Os diálogos e encontros são ficção. Estas fontes documentam os lugares e as pessoas que inspiraram o capítulo.</p></div></div>
+              <div className="sources-heading"><span aria-hidden="true"><GameIcon symbol="📚" /></span><div><strong>História imaginada, memória verdadeira</strong><p>Os diálogos e encontros são ficção. Estas fontes documentam os lugares e as pessoas que inspiraram o capítulo.</p></div></div>
               {chapter.fact && <p className="chapter-fact">{chapter.fact}</p>}
               <ul>
                 {chapter.sources.map((source) => (
@@ -236,14 +238,14 @@ export default function StoryPage() {
               </ul>
             </aside>
 
-            {rewardMessage && <div className="story-reward" role="status"><span>🌱</span>{rewardMessage}</div>}
+            {rewardMessage && <div className="story-reward" role="status"><span><GameIcon symbol="🌱" /></span>{rewardMessage}</div>}
             {error && <div className="story-error" role="alert">{error}</div>}
-            {journeyComplete && <div className="trail-complete" role="status"><strong>🌸 Uma trilha inteira virou lembrança.</strong><p>Você guardou todos os capítulos deste caminho. Essas histórias e seus bônus seguem com você, mesmo nas próximas eras.</p><a href="#trilhas-dos-lugares">Encontrar uma nova história no mapa →</a></div>}
+            {journeyComplete && <div className="trail-complete" role="status"><strong><GameIcon symbol="🌸" /> Uma trilha inteira virou lembrança.</strong><p>Você guardou todos os capítulos deste caminho. Essas histórias e seus bônus seguem com você, mesmo nas próximas eras.</p><a href="#trilhas-dos-lugares">Encontrar uma nova história no mapa →</a></div>}
 
             <div className="chapter-actions">
               <button className="story-button secondary" disabled={previousIndex < 0} onClick={() => chooseChapter(previousIndex, true)}>← <span>Capítulo anterior</span></button>
               {!collected ? (
-                <button className="story-button primary" disabled={busy || !progress?.unlocked} onClick={keepMemory}><span>{progress?.unlocked ? 'Guardar esta lembrança' : 'Lembrança ainda não descoberta'}</span><span aria-hidden="true">📖</span></button>
+                <button className="story-button primary" disabled={busy || !progress?.unlocked} onClick={keepMemory}><span>{progress?.unlocked ? 'Guardar esta lembrança' : 'Lembrança ainda não descoberta'}</span><span aria-hidden="true"><GameIcon symbol="📖" /></span></button>
               ) : (
                 <span className="memory-saved"><span aria-hidden="true">✓</span> Lembrança guardada</span>
               )}
@@ -262,7 +264,7 @@ export default function StoryPage() {
       </div>
 
       <CityNotebook nickname={gameState.profile.nickname} />
-      <section className="story-truth-note"><span>💚</span><p><strong>Feito com carinho por Joinville.</strong> Esta é uma obra de ficção interativa. Retratos e cenas são ilustrações originais; encontros, falas e acontecimentos narrativos não são fatos biográficos.</p></section>
+      <section className="story-truth-note"><span><GameIcon symbol="💚" /></span><p><strong>Feito com carinho por Joinville.</strong> Esta é uma obra de ficção interativa. Retratos e cenas são ilustrações originais; encontros, falas e acontecimentos narrativos não são fatos biográficos.</p></section>
       <footer className="story-footer"><a href="/">← Fritz e a jornada das flores</a><span>Leia uma história. Guarde uma lembrança. Continue jogando.</span></footer>
     </main>
   );

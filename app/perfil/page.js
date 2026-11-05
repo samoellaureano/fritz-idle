@@ -1,5 +1,6 @@
 'use client';
 
+import GameIcon from '@/app/components/GameIcon';
 import { useEffect, useState } from 'react';
 import { AVATARS, avatarFor } from '@/lib/community';
 import { gameRequest as request } from '@/lib/client-request';
@@ -47,7 +48,7 @@ export default function ProfilePage() {
   return (
     <main className="story-page community-page">
       <header className="story-topbar">
-        <a className="story-brand" href="/"><span aria-hidden="true"><img src="/fritz-logo.svg" alt="" width="40" height="40" /></span><span>Fritz <span>em Joinville</span></span></a>
+        <a className="story-brand" href="/"><span aria-hidden="true"><img src="/icons/fritz.webp" alt="" width="40" height="40" /></span><span>Fritz <span>em Joinville</span></span></a>
         {profile && <a className="back-to-game" href="/">← Voltar a jogar</a>}
       </header>
       <section className="community-hero profile-hero" style={{ backgroundImage: `linear-gradient(90deg, #10211df2, #10211d80), url("${avatarFor(avatarId).art}")` }}>
@@ -74,7 +75,7 @@ export default function ProfilePage() {
               <h3>Insígnias do museu</h3><MuseumBadges items={progress.museum} />
               {!progress.museum.some((item) => item.owned) && <p>Adquira suas primeiras insígnias com Pórticos no museu.</p>}
               <div className="achievement-list">{progress.achievements.map((item) => <article className={`achievement-card ${item.unlocked ? 'achievement-unlocked' : ''}`} key={item.id}>
-                <span className="achievement-icon">{item.unlocked ? item.icon : '🔒'}</span>
+                <span className="achievement-icon">{item.unlocked ? <GameIcon symbol={item.icon} /> : <GameIcon symbol="🔒" />}</span>
                 <div><h3>{item.name}</h3><p>{item.description}</p></div><span>{item.unlocked ? 'Conquistada' : 'A descobrir'}</span>
               </article>)}</div>
             </section>}

@@ -1,5 +1,6 @@
 'use client';
 
+import GameIcon from '@/app/components/GameIcon';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ENCOURAGEMENTS, MESSAGE_COOLDOWN_SECONDS, MESSAGE_MAX_LENGTH } from '@/lib/community';
 import { gameRequest as request } from '@/lib/client-request';
@@ -19,7 +20,7 @@ function RankingEntry({ entry, own }) {
       <Avatar id={entry.avatar_id} decorative />
       <EraPortal points={Number(entry.porticos)} count={Number(entry.rebirths)} />
       <div className="ranking-copy"><strong>{entry.nickname}{own && <small> você</small>} <MuseumBadges items={entry.museum} /></strong>
-        <div className="ranking-stats"><span>🌱 {number(entry.seeds)} sementes</span><span>📖 {number(entry.memories)} histórias</span><span>🌸 {number(entry.lifetime)} pétalas</span></div>
+        <div className="ranking-stats"><span><GameIcon symbol="🌱" /> {number(entry.seeds)} sementes</span><span><GameIcon symbol="📖" /> {number(entry.memories)} histórias</span><span><GameIcon symbol="🌸" /> {number(entry.lifetime)} pétalas</span></div>
       </div>
     </li>
   );
@@ -105,7 +106,7 @@ export default function CommunityPage() {
   return (
     <main className="story-page community-page">
       <header className="story-topbar">
-        <a className="story-brand" href="/"><span aria-hidden="true"><img src="/fritz-logo.svg" alt="" width="40" height="40" /></span><span>Fritz <span>em Joinville</span></span></a>
+        <a className="story-brand" href="/"><span aria-hidden="true"><img src="/icons/fritz.webp" alt="" width="40" height="40" /></span><span>Fritz <span>em Joinville</span></span></a>
         <nav className="story-nav-actions" aria-label="Navegação da comunidade"><a className="back-to-game" href="/historia">Diário ilustrado</a><a className="back-to-game" href="/">← Voltar a jogar</a></nav>
       </header>
       <section className="community-hero mural-hero">

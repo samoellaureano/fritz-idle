@@ -5,7 +5,10 @@ import GameTooltips from '@/app/components/GameTooltips';
 export const metadata = {
   title: 'Fritz em Joinville — A Jornada das Flores',
   description: 'Ajude Fritz a percorrer Joinville, encontrar seus amigos e trazer as pétalas de volta à Cidade das Flores.',
-  icons: { icon: '/fritz-logo.svg' },
+  icons: {
+    icon: { url: '/fritz-icon.png', type: 'image/png', sizes: '64x64' },
+    apple: { url: '/fritz-apple-icon.png', sizes: '180x180' },
+  },
 };
 
 export default function RootLayout({ children }) {
