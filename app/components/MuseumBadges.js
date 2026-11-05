@@ -5,7 +5,7 @@ export default function MuseumBadges({ items = [] }) {
   return (
     <span className="museum-badges" aria-label="Insígnias do museu">
       {MUSEUM_ITEMS.filter((item) => ids.includes(item.id)).map((item) => (
-        <span className="museum-badge" key={item.id} title={item.name} aria-label={item.name}>{item.icon}</span>
+        <span className="museum-badge" key={item.id} tabIndex={0} data-tooltip={item.name} aria-label={item.name}>{item.icon}</span>
       ))}
     </span>
   );

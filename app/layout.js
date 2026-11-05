@@ -1,5 +1,6 @@
 import './globals.css';
 import { localMemoryEnabled } from '@/lib/local-mode';
+import GameTooltips from '@/app/components/GameTooltips';
 
 export const metadata = {
   title: 'Fritz em Joinville — A Jornada das Flores',
@@ -10,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
-      <body>{localMemoryEnabled() && <aside className="local-mode-banner" role="note">Ambiente local de teste · Dados somente em memória · Reiniciar o servidor apaga o progresso · Supabase desativado</aside>}{children}</body>
+      <body>{localMemoryEnabled() && <aside className="local-mode-banner" role="note">Ambiente local de teste · Dados somente em memória · Reiniciar o servidor apaga o progresso · Supabase desativado</aside>}{children}<GameTooltips /></body>
     </html>
   );
 }

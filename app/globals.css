@@ -16,6 +16,9 @@
 
 * { box-sizing: border-box; }
 
+.game-tooltip { position: fixed; z-index: 10000; left: 8px; top: 8px; width: max-content; max-width: min(300px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); overflow: auto; padding: 10px 13px; border: 1px solid var(--green-deep); border-radius: 12px; background: var(--surface-raised); color: var(--ink); box-shadow: 0 8px 26px #0006; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+[data-tooltip]:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
 .era-portal-art { width: 48px; height: 48px; flex: 0 0 auto; vertical-align: middle; }
 .era-portal-badge { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; flex: 0 0 auto; max-width: 100%; padding: 3px 6px; border: 1px solid #f3cb7850; border-radius: 12px; color: var(--gold); background: #463c252e; font-size: 11px; }
 .era-portal-badge .era-portal-art { width: 22px; height: 22px; }

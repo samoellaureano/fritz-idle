@@ -196,7 +196,7 @@ export default function StoryPage() {
                 disabled={locked}
                 onClick={() => chooseChapter(index)}
                 aria-current={index === selectedIndex ? 'step' : undefined}
-                title={locked ? unlockHint : `Ler capítulo ${item.number}: ${item.title}`}
+                data-tooltip={locked ? unlockHint : `Ler capítulo ${item.number}: ${item.title}`}
               >
                 <span className="chapter-number">{locked ? '🔒' : chapterState?.completed ? '✓' : String(item.number).padStart(2, '0')}</span>
                 <span className="chapter-nav-copy"><strong>{item.title}</strong><small>{locked ? unlockHint : item.place}</small></span>

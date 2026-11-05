@@ -37,7 +37,7 @@ Na aba **Museu e eras**, sete miniaturas fictícias originais podem ser adquirid
 
 Há uma única troca de era, simbolizada pelo **Pórtico de Joinville**, liberada no **nível 20 de jornada**. A recompensa é `nível / 20`, permitindo frações: nível 20 = 1 Pórtico, 30 = 1,5, 40 = 2. Cada Pórtico disponível soma +10% de produção; gastar no museu remove esse bônus da moeda e adiciona o bônus permanente da peça. O saldo de Pórticos é o primeiro critério do ranking e acompanha o avatar. A Roda da Memória é somente uma peça do museu, não uma moeda de reinício.
 
-O reset exige confirmação digitada e mostra a prévia/perdas. Zera saldos de pétalas e sementes, lugares, melhorias, gestores contratados, viveiro e XP da era. **Preserva** pétalas históricas, personagens encontrados, capítulos e seus bônus, conquistas já obtidas, museu, Pórticos, cliques históricos, identidade e mensagens. Os intervalos do presente diário e do compartilhamento não reiniciam, nem a duração do buff. Há uma celebração do Fritz que respeita a preferência por movimento reduzido.
+O reset mostra a prévia/perdas e exige clicar em **Confirmar redefinição**, sem digitar uma palavra. É possível cancelar antes da confirmação. Zera saldos de pétalas e sementes, lugares, melhorias, gestores contratados, viveiro e XP da era. **Preserva** pétalas históricas, personagens encontrados, capítulos e seus bônus, conquistas já obtidas, museu, Pórticos, cliques históricos, identidade e mensagens. Os intervalos do presente diário e do compartilhamento não reiniciam, nem a duração do buff. Há uma celebração do Fritz que respeita a preferência por movimento reduzido.
 
 XP e nível são calculados exclusivamente no servidor:
 
@@ -79,6 +79,8 @@ A bolsa não cria sementes sozinha: exige viveiro e gestores ativos. Seu bônus 
 Nos lugares, o botão **max xN** mostra quantas unidades cabem nas pétalas disponíveis, atualizando com a produção. A prévia soma os mesmos custos arredondados por unidade usados pelo servidor; o total final é confirmado ao comprar e pode crescer com novas pétalas ou mudar se outra aba gastar o saldo. Sem saldo para uma unidade, mostra **max x0** desabilitado. O logo próprio do Fritz, com sorriso e uma flor, acompanha os cabeçalhos do jogo, diário, perfil, mural e o ícone da aba.
 
 O rendimento “pétalas/s cada” de cada lugar mostra a produção efetiva por unidade, incluindo melhorias, personagens, histórias, museu, Pórticos disponíveis e compartilhamento ativo. Os toques automáticos dos gestores entram somente na produção total, não no rendimento individual dos lugares.
+
+As dicas de recursos, rendimento, compra máxima, capítulos, Pórticos e insígnias usam tooltips no visual do jogo, exibidos ao passar o cursor ou focar pelo teclado. Escape fecha a dica; ao rolar, dicas do cursor fecham e as de foco acompanham o elemento enquanto estiver visível. O texto fica limitado à largura da tela e pode ser alcançado com o cursor sem desaparecer.
 
 ### Sementes e gestores
 

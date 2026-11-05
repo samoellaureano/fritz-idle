@@ -230,11 +230,11 @@ test('browser museum spending, explicit reset confirmation, celebration, badges 
     const confirmation = page.getByRole('dialog', { name: 'Levar a memória, recomeçar a economia?' });
     await confirmation.waitFor();
     assert.ok(await confirmation.evaluate((node) => node.scrollWidth <= node.clientWidth), 'reset confirmation must fit mobile');
-    assert.ok(await confirmation.getByRole('button', { name: 'Confirmar redefinição' }).isDisabled());
+    assert.ok(await confirmation.getByRole('button', { name: 'Confirmar redefinição' }).isEnabled());
+    assert.equal(await confirmation.getByRole('textbox').count(), 0);
     await confirmation.getByRole('button', { name: 'Continuar esta jornada' }).click();
     assert.equal((await fixture.api(actor, '/api/game')).data.rebirth.count, 0);
     await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).click();
-    await confirmation.getByRole('textbox', { name: 'Digite REINICIAR para confirmar' }).fill('REINICIAR');
     await confirmation.getByRole('button', { name: 'Confirmar redefinição' }).click();
     const celebration = page.getByRole('dialog', { name: 'A gente leva o que ama.' });
     await celebration.waitFor();

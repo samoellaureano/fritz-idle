@@ -129,7 +129,7 @@ export default function Home() {
             </button>
           ))}
         </nav>
-        <div className="seed-pill" title="Pórticos disponíveis para adquirir insígnias permanentes no museu">
+        <div className="seed-pill" tabIndex={0} data-tooltip="Pórticos disponíveis para adquirir insígnias permanentes no museu">
           <span aria-hidden="true">🏰</span> {format(state.rebirth.points)} <span className="seed-word">Pórticos</span>
         </div>
       </header>
@@ -140,8 +140,8 @@ export default function Home() {
         <form action="/auth/logout" method="post"><button type="submit">Sair da conta</button></form>
       </div>
       <div className="resource-dock" aria-label="Recursos da jornada">
-        <strong title="Pétalas disponíveis">🌸 {format(display)}</strong>
-        <span title="Sementes disponíveis">🌱 {format(state.seeds)} · {format(state.seedsPerSecond)}/s</span>
+        <strong tabIndex={0} data-tooltip="Pétalas disponíveis">🌸 {format(display)}</strong>
+        <span tabIndex={0} data-tooltip="Sementes disponíveis">🌱 {format(state.seeds)} · {format(state.seedsPerSecond)}/s</span>
         <span>Nível {state.rebirth.level} · Era {state.rebirth.count + 1}</span>
         {state.share.until > Date.now() && <span>✨ +20% até {new Date(state.share.until).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>}
       </div>
@@ -234,12 +234,12 @@ export default function Home() {
                     return (
                       <article className={`place-card ${affordable ? 'affordable' : ''}`} key={generator.id}>
                         <div className={`place-icon place-tone-${index % 5}`}>{generator.icon}</div>
-                        <div className="place-copy"><h3>{generator.name}</h3><p>{generator.place}</p><span className="place-rate" title="Rendimento por unidade com melhorias e bônus ativos; não inclui os toques automáticos dos gestores.">✦ +{generator.effectiveCps < 1000 ? generator.effectiveCps.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : format(generator.effectiveCps)} pétalas/s cada</span></div>
+                        <div className="place-copy"><h3>{generator.name}</h3><p>{generator.place}</p><span className="place-rate" tabIndex={0} data-tooltip="Rendimento por unidade com melhorias e bônus ativos; não inclui os toques automáticos dos gestores.">✦ +{generator.effectiveCps < 1000 ? generator.effectiveCps.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : format(generator.effectiveCps)} pétalas/s cada</span></div>
                         <div className="place-owned"><strong>{generator.owned}</strong><span>ativos</span></div>
                         <button className="buy-button" disabled={!affordable || busy} onClick={() => handleBuy(generator.id)}>
                           <span>{format(generator.cost)}</span><small>🌸</small>
                         </button>
-                        <button className="max-button" aria-label={`Comprar o máximo de ${generator.name}`} aria-description={maxDescription} title={maxDescription} disabled={!maxQuantity || busy} onClick={() => handleBuy(generator.id, 'max')}><span>max</span><strong>x{maxQuantity.toLocaleString('pt-BR')}</strong></button>
+                        <button className="max-button" aria-label={`Comprar o máximo de ${generator.name}`} aria-description={maxDescription} data-tooltip={maxDescription} disabled={!maxQuantity || busy} onClick={() => handleBuy(generator.id, 'max')}><span>max</span><strong>x{maxQuantity.toLocaleString('pt-BR')}</strong></button>
                       </article>
                     );
                   })}
