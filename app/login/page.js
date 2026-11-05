@@ -1,9 +1,26 @@
 import { publicConfig, siteOrigin } from '@/lib/supabase/config';
+import { localMemoryEnabled } from '@/lib/local-mode';
 
 export const dynamic = 'force-dynamic';
 
 export default async function LoginPage({ searchParams }) {
   const query = await searchParams;
+  const local = localMemoryEnabled();
+  if (local) return (
+    <main className="login-screen">
+      <section className="login-card">
+        <img src="/fritz-joinville.jpg" alt="Fritz recebe você em uma Joinville florida" width="640" height="360" />
+        <div className="login-copy">
+          <span className="eyebrow">VALIDAÇÃO LOCAL · BANCO EM MEMÓRIA</span>
+          <h1>Um jardim de teste, só neste computador.</h1>
+          <p>Entre como <strong>Fritz_Teste</strong> para validar a progressão desde o início, sem Google e sem acessar o Supabase.</p>
+          <p className="login-note">Pétalas, sementes, histórias e conquistas começam do zero. Perfil, progresso e mural são compartilhados entre as abas deste servidor local, mas nunca são enviados para produção.</p>
+          <form action="/auth/local" method="post"><button className="story-button" type="submit">Entrar como Fritz_Teste</button></form>
+          <p className="login-note">Os dados ficam apenas na memória. Recarregar a página ou sair da conta não apaga o progresso; encerrar e iniciar o servidor novamente cria um teste novo do zero.</p>
+        </div>
+      </section>
+    </main>
+  );
   let configured = true;
   try {
     publicConfig();

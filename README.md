@@ -1,16 +1,39 @@
 # Fritz em Joinville — A Jornada das Flores
 
-Jogo idle com três trilhas e 16 capítulos ilustrados, personagens gestores, lugares de Joinville, pétalas, sementes, progresso offline, melhorias, presente diário e novas eras. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
+Jogo idle com 17 trilhas e 58 capítulos ilustrados, personagens gestores, lugares de Joinville, pétalas, sementes, progresso offline, melhorias, presente diário e novas eras. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
 
 O **Caderno da Cidade**, no mesmo diário, complementa a aventura com a **Cidade das Bicicletas**, o Memorial da Bicicleta e a memória industrial de **Döhler (1881), Wetzel (1932), Tupy (1938), Consul (1950) e Ciser (1959)**. As cenas de Fritz são ficção original; fatos e datas têm links para a Prefeitura e as histórias institucionais das empresas. As menções são históricas, sem patrocínio ou endosso declarado, e não indicam visitação pública às fábricas.
 
 O contexto histórico pode ser lido desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. As trilhas jogáveis ficam em `/historia?jornada=flores`, `/historia?jornada=bicicletas` e `/historia?jornada=industria`: oito capítulos das flores, três das bicicletas e cinco dos ofícios, com ilustrações originais próprias. Cada capítulo é liberado por pétalas históricas e rende uma recompensa única de pétalas, +2% de produção permanente e XP na era em que foi guardado. Releituras não repetem recompensas.
 
-Os 13 lugares estão agrupados pelas mesmas jornadas e **produzem pétalas**, preservando seus IDs, custos e taxas-base. O botão **max** compra, numa única operação, todas as unidades que o saldo comporta, respeitando o custo arredondado individual de cada unidade. O saldo de pétalas aparece também em um contador compacto fixo durante a rolagem.
+### Trilhas dos lugares
+
+Em `/historia#trilhas-dos-lugares`, um mapa recolhível reúne **14 jornadas próprias, com três capítulos cada**. Cada trilha tem uma ilustração SVG original, começo, desenvolvimento e desfecho. Nas novas jornadas, é preciso atingir o total de pétalas históricas indicado **e guardar a lembrança anterior**; a sequência é validada pelo servidor. As três jornadas anteriores mantêm seus desbloqueios originais. Capítulos fechados mostram uma prévia ilustrada sem revelar a narrativa. Histórias guardadas, bônus e conclusão das trilhas sobrevivem às novas eras, sem repetir recompensas ou XP.
+
+| Jornada | Link |
+|---|---|
+| Rua das Palmeiras e Museu Nacional de Imigração e Colonização | `/historia?jornada=palmeiras-imigracao` |
+| Catedral de Joinville | `/historia?jornada=catedral` |
+| Mercado Público Municipal | `/historia?jornada=mercado-publico` |
+| Monumento a Barca | `/historia?jornada=monumento-barca` |
+| Museu Arqueológico de Sambaqui | `/historia?jornada=sambaqui` |
+| Escola do Teatro Bolshoi | `/historia?jornada=escola-bolshoi` |
+| O Farol | `/historia?jornada=o-farol` |
+| Empadas Jerke | `/historia?jornada=empadas-jerke` |
+| Instituto Juarez Machado | `/historia?jornada=instituto-juarez` |
+| Museu de Arte e Cidadela Cultural Antárctica | `/historia?jornada=museu-arte` |
+| Casa da Memória e Cemitério dos Imigrantes | `/historia?jornada=cemiterio-imigrantes` |
+| Sociedade Harmonia Lyra | `/historia?jornada=harmonia-lyra` |
+| Deutsche Schule | `/historia?jornada=deutsche-schule` |
+| Opa Jerke | `/historia?jornada=opa-jerke` |
+
+As narrativas são ficção original de Fritz, não transcrições dos roteiros turísticos nem depoimentos de pessoas reais. Cada capítulo separa um contexto factual com fonte do Visite Joinville. O Farol é retratado como edifício urbano ligado à inovação, não como farol marítimo; os povos dos sambaquis são reconhecidos como anteriores à colonização europeia. Não há coleta de objetos de acervos, sítios ou memoriais, nem incentivo ao consumo de álcool. As menções não indicam patrocínio, endosso ou garantia de visitação. As novas trilhas são narrativas: não adicionam geradores nem alteram custos dos lugares existentes, e os saves atuais continuam compatíveis sem migração de banco.
+
+Os 13 lugares estão agrupados pelas três jornadas originais e **produzem pétalas**, preservando seus IDs, custos e taxas-base. O botão **max** compra, numa única operação, todas as unidades que o saldo comporta, respeitando o custo arredondado individual de cada unidade. O saldo de pétalas aparece também em um contador compacto fixo durante a rolagem.
 
 ### Museu e novas eras
 
-Na aba **Museu e eras**, sete miniaturas fictícias originais podem ser adquiridas uma única vez com **Pórticos**: Roda da Memória (1), bicicleta (2), tear (4), engrenagem (6), caderno do aprendiz (8), geladeira (10) e parafuso (12). As peças dão bônus próprios permanentes de produção e toques. Suas insígnias aparecem ao lado do apelido no ranking e nas mensagens, além do perfil. O museu tem fontes históricas; não representa acervos reais, produtos oficiais ou patrocínios.
+Na aba **Museu e eras**, sete miniaturas fictícias originais podem ser adquiridas uma única vez com **Pórticos**: Roda da Memória (1), bicicleta (1), tear (1,5), engrenagem (2), caderno do aprendiz (2,5), geladeira (3) e parafuso (4). O acervo completo custa **15 Pórticos**, em vez de 43. As peças dão bônus próprios permanentes de produção e toques. Suas insígnias aparecem ao lado do apelido no ranking e nas mensagens, além do perfil. O museu tem fontes históricas; não representa acervos reais, produtos oficiais ou patrocínios.
 
 Há uma única troca de era, simbolizada pelo **Pórtico de Joinville**, liberada no **nível 20 de jornada**. A recompensa é `nível / 20`, permitindo frações: nível 20 = 1 Pórtico, 30 = 1,5, 40 = 2. Cada Pórtico disponível soma +10% de produção; gastar no museu remove esse bônus da moeda e adiciona o bônus permanente da peça. O saldo de Pórticos é o primeiro critério do ranking e acompanha o avatar. A Roda da Memória é somente uma peça do museu, não uma moeda de reinício.
 
@@ -19,18 +42,41 @@ O reset exige confirmação digitada e mostra a prévia/perdas. Zera saldos de p
 XP e nível são calculados exclusivamente no servidor:
 
 ```
-XP = log2(1 + petalasDaEra / 1000)
-   + 0.75 * novasHistoriasDaEra
-   + 0.5 * log2(1 + lugaresCompradosNaEra)
-   + 0.25 * niveisDeMelhorias
-   + 0.5 * gestoresContratados
-   + 0.25 * log2(1 + toquesNaEra)
-   + 0.5 * insigniasAdquiridasNaEra
+XP = 0.6 * log2(1 + petalasDaEra / 1000)
+   + min(3, 0.1 * novasHistoriasDaEra)
+   + min(2, 0.25 * log2(1 + lugaresCompradosNaEra))
+   + min(1, 0.1 * niveisDeMelhorias)
+   + 0.75 * gestoresContratados
+   + min(0.5, 0.05 * log2(1 + toquesNaEra))
+   + min(0.5, 0.25 * insigniasAdquiridasNaEra)
 nivel = 1 + floor(XP)
 porticosNaTroca = nivel >= 20 ? nivel / 20 : 0
 ```
 
+Os limites equilibram a contribuição de leitura, compras e cliques sem permitir que substituam toda a economia. Todas as histórias continuam dando sua recompensa de pétalas e +2% de produção, mesmo após os 3 XP de leitura. Gestores têm mais peso; pétalas continuam contribuindo sem teto, permitindo avançar mesmo sem novas histórias em eras seguintes. Não existe requisito adicional de contratação para reiniciar: o nível 20 continua sendo a única condição, e o alinhamento com a automação é resultado dos pesos, não uma trava oculta.
+
+Na simulação de referência, o primeiro Pórtico libera em **46m40** para o leitor com cliques e **56min** sem cliques, depois de experimentar o viveiro e contratar outro gestor. Duas sessões de 20 minutos por dia mantêm a conclusão das histórias, lugares e gestores em **24h18 corridas**. Desenvolver todos esses objetivos a cada era e comprar insígnias conforme o saldo permite completar o museu em **12 eras** na simulação; reiniciar sempre no nível 20 exige **15 eras**. Essas são estratégias medidas, não mínimos garantidos nem prazos universais.
+
+O rebalanceamento recalcula o nível da era atual com os novos pesos, podendo reduzi-lo; não remove saldos, Pórticos já ganhos, histórias, peças adquiridas ou seus bônus. Os preços menores valem para próximas compras; compras anteriores não são cobradas novamente nem reembolsadas.
+
 Saves antigos são migrados no primeiro acesso: Rodas já recebidas viram Pórticos 1:1, sem perder museu, sementes, histórias ou saldos. O contador existente de pétalas/compras da era é respeitado; na ausência dele, usam-se pétalas históricas e lugares ativos. Histórias existentes inicializam o XP de leitura somente na migração; depois da troca não contam de novo. Conquistas detectáveis antes do reset são guardadas permanentemente. Mutações usam CAS; o número esperado da era impede repetir a troca entre abas/dispositivos. `/api/prestige` agora rejeita o antigo reset por sementes, sem alterar o save.
+
+### Equipamentos criativos para Fritz
+
+Além das quatro melhorias originais, há seis equipamentos, todos com até cinco níveis e custo multiplicado por 2,8 por nível. Seus bônus são somados aos da mesma categoria e reiniciam na troca de era:
+
+| Equipamento | Primeiro nível (pétalas) | Bônus por nível |
+|---|---:|---|
+| Capa de chuva florida | 6.500 | +2 pétalas por toque |
+| Cestinha de descobertas | 25.000 | +25% no valor dos toques |
+| Campainha das flores | 150.000 | +10% na produção dos lugares |
+| Café para o caminho | 750.000 | +30 minutos de progresso offline |
+| Regador de afetos | 6.000.000 | +15% na produção dos lugares |
+| Bolsa de futuros jardins | 1.000.000.000 | +10% de sementes dos gestores |
+
+A bolsa não cria sementes sozinha: exige viveiro e gestores ativos. Seu bônus também vale offline e combina com o compartilhamento. Os equipamentos de toque também melhoram os toques automáticos dos gestores, sem contar como cliques manuais. Com todas as melhorias offline no máximo, o limite passa de 8 para 15,5 horas. O XP de melhorias continua limitado a 1, evitando antecipar eras apenas pela quantidade de equipamentos.
+
+Nos lugares, o botão **max xN** mostra quantas unidades cabem nas pétalas disponíveis, atualizando com a produção. A prévia soma os mesmos custos arredondados por unidade usados pelo servidor; o total final é confirmado ao comprar e pode crescer com novas pétalas ou mudar se outra aba gastar o saldo. Sem saldo para uma unidade, mostra **max x0** desabilitado. O logo próprio do Fritz, com sorriso e uma flor, acompanha os cabeçalhos do jogo, diário, perfil, mural e o ícone da aba.
 
 ### Sementes e gestores
 
@@ -60,6 +106,28 @@ Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)
 **Healthcheck:** https://fritzidle.com.br/api/health
 
 O deploy usa Render Free e Supabase Free. Enquanto o aplicativo OAuth Google estiver em modo **Testing**, apenas as contas cadastradas como usuários de teste podem entrar.
+
+## Validação local sem Supabase
+
+Execute `npm run dev:local` e abra http://localhost:3001/login. Clique em **Entrar como Fritz_Teste**: o usuário de teste já tem perfil e começa **do zero**, sem pétalas, sementes, histórias, museu ou gestores. Não é preciso criar uma conta Google, configurar chaves ou alterar o banco de produção.
+
+Neste modo, sessão, progresso, perfil, ranking e mensagens ficam **somente na memória do processo Node**. O jogo usa as mesmas regras, validações, recompensas e controle de concorrência da versão com Supabase. Recarregar a página, navegar entre telas ou sair/entrar preserva o progresso enquanto o servidor continua ativo. As abas que entrarem como usuário de teste compartilham a mesma partida. O mural mostra apenas os perfis e mensagens locais, nunca jogadores reais.
+
+Para recomeçar do zero, encerre o comando e execute `npm run dev:local` novamente. Reiniciar o processo descarta todos os dados e sessões; a recarga de código em desenvolvimento normalmente mantém a memória. Um aviso em todas as telas identifica o ambiente de teste.
+
+O comando restringe o servidor a `127.0.0.1:3001`, fixa `SITE_URL=http://localhost:3001`, ativa `FRITZ_LOCAL_MEMORY=1` somente em `NODE_ENV=development` e esvazia as credenciais Supabase no processo filho. A sessão de teste usa cookie HttpOnly, expira em 12 horas e é revogada ao sair. `/auth/local` não está disponível em produção; mesmo que a flag seja definida por engano, o modo de memória permanece desativado em `NODE_ENV=production`.
+
+**Produção continua usando Supabase + Google**, sem alteração no Render ou nas migrações. `npm run dev` também mantém o fluxo Supabase normal. Não execute dois servidores Next ao mesmo tempo na mesma pasta de build; encerre o servidor local antes de `npm run build`.
+
+Testes unitários: `npm test`. Para validar as APIs contra o servidor de memória já iniciado: `$env:FRITZ_LOCAL_TESTS='1'; node --test tests\local-memory.integration.test.mjs` (PowerShell). Esse teste usa e modifica apenas a partida local; depois, reinicie o servidor para voltar ao zero.
+
+### Validação da progressão e da cadência
+
+`node --test tests\progression-cadence.test.mjs tests\era-progression-flow.test.mjs` simula partidas com relógio controlado, sem esperar horas reais e sem injetar saldo na partida. Cobre os 58 capítulos, 13 lugares, seis gestores, viveiro, ganho offline, compartilhamento, novas eras e a compra das sete peças do museu com Pórticos efetivamente conquistados.
+
+O modelo compara leitura de 45–60 segundos por capítulo, até dois cliques por segundo nos primeiros dez minutos de atividade (fora da leitura), presente diário e compras por retorno de produção. Também cobre quem não lê, quem não clica, quem não usa o presente e sessões espaçadas. A duração de leitura é uma hipótese da simulação, não uma trava do jogo. O cenário casual de referência é **duas sessões de 20 minutos por dia**, com meta de concluir a primeira jornada em **24–48 horas corridas**; o museu completo é uma progressão separada. Isso não garante duração mínima para quem joga continuamente ou lê mais rápido.
+
+Para validar as APIs reais locais de progresso: `$env:FRITZ_LOCAL_TESTS='1'; node --test tests\progression-runtime.integration.test.mjs`. O teste exige a tela de login em memória e rejeita outro ambiente. Ele altera apenas o usuário local: resgata presentes disponíveis, lê capítulo, compra melhoria/lugares, coleta pétalas e ativa o bônus de compartilhamento. Não execute junto com outra validação que dependa do saldo ou dos intervalos desse usuário.
 
 ## 1. Criar o Supabase gratuito
 

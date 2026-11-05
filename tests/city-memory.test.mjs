@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES, INDUSTRY_STORY } from '../lib/city-memory.js';
 import { STORY_CHAPTERS } from '../lib/story.js';
 import { GENERATORS, newPlayer, runGameAction } from '../lib/game.js';
+import { CITY_CHAPTERS } from '../lib/journeys.js';
 
 test('city notebook covers bicycles and dated industrial memories with official source links', () => {
   assert.equal(BICYCLE_MEMORY.id, 'cidade-das-bicicletas');
@@ -35,7 +36,7 @@ test('new trails extend the eight flower chapters and keep the Station economy',
   player.lifetime = 2000000;
   player.memories = STORY_CHAPTERS.map((chapter) => chapter.id);
   const { state, player: saved } = runGameAction(player, 'game', {}, now);
-  assert.equal(state.storyChapters.length, 16);
+  assert.equal(state.storyChapters.length, STORY_CHAPTERS.length + CITY_CHAPTERS.length);
   assert.equal(state.storyMemoryCount, 8);
   assert.equal(state.storyProductionBonus, .16);
   assert.deepEqual(saved.memories, player.memories);

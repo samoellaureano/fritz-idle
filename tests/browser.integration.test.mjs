@@ -6,7 +6,7 @@ import { ENCOURAGEMENTS } from '../lib/community.js';
 import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES } from '../lib/city-memory.js';
 import { MUSEUM_ITEMS } from '../lib/progression.js';
 import { STORY_CHAPTERS } from '../lib/story.js';
-import { CITY_CHAPTERS } from '../lib/journeys.js';
+import { CITY_CHAPTERS, JOURNEYS } from '../lib/journeys.js';
 
 const enabled = cloudEnabled && process.env.FRITZ_BROWSER_TESTS === '1';
 
@@ -41,6 +41,24 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     await page.goto(`${fixture.origin}/historia?jornada=industria`);
     await page.locator('.chapter-nav-item').first().waitFor();
     assert.equal(await page.locator('.chapter-nav-item').count(), 5);
+    for (const journey of JOURNEYS.filter((item) => item.category === 'lugares')) {
+      await page.goto(`${fixture.origin}/historia?jornada=${journey.id}`);
+      await page.locator('.chapter-nav-item').first().waitFor();
+      assert.equal(await page.locator('.chapter-nav-item').count(), 3);
+      assert.equal(await page.locator('.chapter-nav-item:disabled').count(), 2);
+      assert.equal(await page.locator('#trilhas-dos-lugares').getAttribute('open'), '');
+      const chapters = CITY_CHAPTERS.filter((item) => item.journey === journey.id);
+      assert.equal(await page.locator('.chapter-art').getAttribute('src'), chapters[0].art);
+      for (const [index, chapter] of chapters.entries()) {
+        await page.getByRole('button', { name: 'Guardar esta lembrança', exact: true }).click();
+        await page.locator('.memory-saved').waitFor();
+        assert.equal(await page.locator('.chapter-heading h2').innerText(), chapter.title);
+        if (index < chapters.length - 1) await page.getByRole('button', { name: 'Próximo capítulo →', exact: true }).click();
+      }
+      assert.ok((await page.locator('.landmark-picker .journey-choice.active').innerText()).includes('Trilha completa'));
+      assert.equal(await page.locator('.trail-complete').count(), 1);
+      assert.equal(await page.getByRole('link', { name: 'Escolher outra trilha →', exact: true }).getAttribute('href'), '#trilhas-dos-lugares');
+    }
     await page.goto(`${fixture.origin}/perfil`);
     await page.locator('.profile-collection .museum-badge').waitFor();
     assert.ok(await page.locator('.profile-collection .achievement-unlocked').count() > 0);
@@ -199,13 +217,13 @@ test('browser museum spending, explicit reset confirmation, celebration, badges 
     await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
     assert.ok(await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).isDisabled());
     await fixture.seed(actor, {
-      seeds: 50, porticos: 2, lifetime: 500000000, cycle_petals: 500000000,
+      seeds: 50, porticos: 1, lifetime: 1e12, cycle_petals: 1e12,
       cycle_purchases: 50, memories: STORY_CHAPTERS.map((item) => item.id),
     });
     await page.reload();
     await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
     assert.equal(await page.locator('.museum-item').count(), MUSEUM_ITEMS.length);
-    await page.getByRole('button', { name: 'Adquirir Bicicleta das flores · 2 Pórticos', exact: true }).click();
+    await page.getByRole('button', { name: 'Adquirir Bicicleta das flores · 1 Pórticos', exact: true }).click();
     await page.getByRole('button', { name: 'Guardada no museu ✓', exact: true }).waitFor();
     await page.setViewportSize({ width: 320, height: 740 });
     await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).click();

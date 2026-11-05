@@ -1,10 +1,16 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import { publicConfig } from './lib/supabase/config';
+import { localMemoryEnabled, isLoopbackRequest } from './lib/local-mode';
 
 export async function proxy(request) {
   let response = NextResponse.next({ request });
   try {
+    if (localMemoryEnabled()) {
+      if (!isLoopbackRequest(request)) return new NextResponse('Modo local disponível apenas neste computador.', { status: 403 });
+      response.headers.set('Cache-Control', 'private, no-store');
+      return response;
+    }
     const { url, key } = publicConfig();
     const client = createServerClient(url, key, {
       cookies: {

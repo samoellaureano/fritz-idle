@@ -15,6 +15,17 @@ function format(value) {
   return value.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 }
 
+function JourneyChoice({ journey, chapters, selected, onChoose }) {
+  const completed = chapters.filter((chapter) => chapter.completed).length;
+  return (
+    <button className={`journey-choice ${selected ? 'active' : ''}`} onClick={() => onChoose(journey.id)} aria-pressed={selected}>
+      {journey.art && <img className="journey-thumbnail" src={journey.art} alt="" loading="lazy" />}
+      <span className="journey-symbol" aria-hidden="true">{journey.icon}</span><strong>{journey.name}</strong><small>{journey.description}</small>
+      <span>{completed}/{chapters.length} lembranças{completed === chapters.length ? ' · Trilha completa ✓' : ''}</span>
+    </button>
+  );
+}
+
 export default function StoryPage() {
   const [gameState, setGameState] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -59,9 +70,8 @@ export default function StoryPage() {
 
   useEffect(() => {
     if (!hasGameState || !window.location.hash) return;
-    // The notebook mounts after the authenticated save loads, after native anchor scrolling.
     const target = document.getElementById(window.location.hash.slice(1));
-    if (target?.closest('.city-notebook')) target.scrollIntoView({ behavior: 'instant' });
+    if (target?.closest('.city-notebook') || target?.id === 'trilhas-dos-lugares') target.scrollIntoView({ behavior: 'instant' });
   }, [hasGameState]);
 
   const chapters = useMemo(() => ALL_CHAPTERS.filter((chapter) => chapter.journey === journeyId), [journeyId]);
@@ -73,6 +83,11 @@ export default function StoryPage() {
   const previousIndex = selectedIndex - 1;
   const nextIndex = chapters.findIndex((item, index) => index > selectedIndex && chapterProgress[index]?.unlocked);
   const collected = progress?.completed ?? false;
+  const journeyComplete = completedCount === chapters.length;
+  const previousRequired = chapter.previousId && !gameState?.storyChapters.find((item) => item.id === chapter.previousId)?.completed;
+  const lockMessage = previousRequired
+    ? 'Guarde a lembrança do capítulo anterior para seguir esta trilha.'
+    : `Recupere ${format(chapter.at)} pétalas no total para descobrir este capítulo.`;
 
   function chooseChapter(index) {
     if (!chapterProgress[index]?.unlocked) return;
@@ -88,6 +103,10 @@ export default function StoryPage() {
     setRewardMessage('');
     setError('');
     window.history.replaceState(null, '', `/historia?jornada=${id}`);
+    requestAnimationFrame(() => document.getElementById('trilha-atual')?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+      block: 'start',
+    }));
   }
 
   async function keepMemory() {
@@ -122,7 +141,7 @@ export default function StoryPage() {
     <main className="story-page">
       <header className="story-topbar">
         <a className="story-brand" href="/" aria-label="Voltar ao jogo Fritz em Joinville">
-          <span aria-hidden="true">🐊</span>
+          <span aria-hidden="true"><img src="/fritz-logo.svg" alt="" width="40" height="40" /></span>
           <span>Fritz <span>em Joinville</span></span>
         </a>
         <div className="story-nav-actions">
@@ -137,14 +156,23 @@ export default function StoryPage() {
         <span className="story-eyebrow"><span className="story-eyebrow-dot" /> UM DIÁRIO DE JOINVILLE</span>
         <h1>Há coisas que a cidade <span>não esquece.</span></h1>
         <p>{gameState.profile.nickname}, este diário também é seu. Uma aventura para ler sem pressa — entre um punhado de pétalas e o próximo lugar onde Fritz vai precisar de você.</p>
-        <nav className="journey-picker" aria-label="Trilhas do diário">
-          {JOURNEYS.map((journey) => {
-            const stories = gameState.storyChapters.filter((item) => item.journey === journey.id);
-            return <button className={`journey-choice ${journeyId === journey.id ? 'active' : ''}`} key={journey.id} onClick={() => chooseJourney(journey.id)} aria-pressed={journeyId === journey.id}>
-              <span>{journey.icon}</span><strong>{journey.name}</strong><small>{journey.description}</small>
-              <span>{stories.filter((item) => item.completed).length}/{stories.length} lembranças</span>
-            </button>;
-          })}
+        <nav className="journey-catalog" aria-label="Trilhas do diário">
+          <div className="journey-picker">
+            {JOURNEYS.filter((journey) => journey.category !== 'lugares').map((journey) => (
+              <JourneyChoice key={journey.id} journey={journey} selected={journeyId === journey.id} onChoose={chooseJourney}
+                chapters={gameState.storyChapters.filter((item) => item.journey === journey.id)} />
+            ))}
+          </div>
+          <details className="landmark-trails" id="trilhas-dos-lugares" open={JOURNEYS.find((journey) => journey.id === journeyId)?.category === 'lugares' || undefined}>
+            <summary><strong>🗺️ Trilhas pelos lugares de Joinville</strong><span>14 jornadas · 42 novas lembranças · escolha seu caminho</span></summary>
+            <p>Cada lugar guarda uma história em três passos. Recupere pétalas e guarde cada lembrança para abrir a próxima. Siga uma trilha por vez, no seu ritmo.</p>
+            <div className="journey-picker landmark-picker">
+              {JOURNEYS.filter((journey) => journey.category === 'lugares').map((journey) => (
+                <JourneyChoice key={journey.id} journey={journey} selected={journeyId === journey.id} onChoose={chooseJourney}
+                  chapters={gameState.storyChapters.filter((item) => item.journey === journey.id)} />
+              ))}
+            </div>
+          </details>
         </nav>
         <div className="story-progress-summary">
           <span>📖 {completedCount} de {chapters.length} lembranças nesta trilha · nível {gameState.rebirth.level}</span>
@@ -153,12 +181,14 @@ export default function StoryPage() {
         </div>
       </section>
 
-      <div className="story-layout">
+      <div className="story-layout" id="trilha-atual">
         <nav className="chapter-list" aria-label="Capítulos da jornada">
           <span className="chapter-list-title">{JOURNEYS.find((journey) => journey.id === journeyId).name.toLocaleUpperCase('pt-BR')}</span>
           {chapters.map((item, index) => {
             const chapterState = chapterProgress[index];
             const locked = !chapterState?.unlocked;
+            const needsPrevious = item.previousId && !gameState.storyChapters.find((entry) => entry.id === item.previousId)?.completed;
+            const unlockHint = needsPrevious ? 'Guarde a lembrança anterior' : `${format(item.at)} pétalas para descobrir`;
             return (
               <button
                 key={item.id}
@@ -166,10 +196,10 @@ export default function StoryPage() {
                 disabled={locked}
                 onClick={() => chooseChapter(index)}
                 aria-current={index === selectedIndex ? 'step' : undefined}
-                title={locked ? `Desbloqueie ao recuperar ${format(item.at)} pétalas.` : `Ler capítulo ${item.number}: ${item.title}`}
+                title={locked ? unlockHint : `Ler capítulo ${item.number}: ${item.title}`}
               >
                 <span className="chapter-number">{locked ? '🔒' : chapterState?.completed ? '✓' : String(item.number).padStart(2, '0')}</span>
-                <span className="chapter-nav-copy"><strong>{item.title}</strong><small>{locked ? `${format(item.at)} pétalas para descobrir` : item.place}</small></span>
+                <span className="chapter-nav-copy"><strong>{item.title}</strong><small>{locked ? unlockHint : item.place}</small></span>
               </button>
             );
           })}
@@ -190,6 +220,7 @@ export default function StoryPage() {
               <span className="chapter-place">📍 {chapter.place}</span>
             </div>
 
+            {progress?.unlocked ? <>
             <div className="story-prose">
               <p className="reader-dedication">{gameState.profile.nickname}, Fritz abre o diário ao seu lado. Esta lembrança de {chapter.place} espera um lugar na sua jornada.</p>
               {chapter.paragraphs.map((paragraph, index) => <p key={`${chapter.id}-${index}`}>{paragraph}</p>)}
@@ -200,9 +231,11 @@ export default function StoryPage() {
               <div><span>LEVE ESTA LEMBRANÇA</span><strong>“{chapter.keepsake}.”</strong></div>
               <span className="keepsake-character" aria-hidden="true">🐊</span>
             </div>
+            </> : <div className="chapter-locked" role="status"><span aria-hidden="true">🔒</span><p>{lockMessage}</p><a href="/">Continuar recuperando pétalas →</a></div>}
 
             <aside className="chapter-sources">
               <div className="sources-heading"><span aria-hidden="true">📚</span><div><strong>História imaginada, memória verdadeira</strong><p>Os diálogos e encontros são ficção. Estas fontes documentam os lugares e as pessoas que inspiraram o capítulo.</p></div></div>
+              {chapter.fact && <p className="chapter-fact">{chapter.fact}</p>}
               <ul>
                 {chapter.sources.map((source) => (
                   <li key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}<span aria-hidden="true"> ↗</span></a></li>
@@ -212,16 +245,19 @@ export default function StoryPage() {
 
             {rewardMessage && <div className="story-reward" role="status"><span>🌱</span>{rewardMessage}</div>}
             {error && <div className="story-error" role="alert">{error}</div>}
+            {journeyComplete && <div className="trail-complete" role="status"><strong>🌸 Uma trilha inteira virou lembrança.</strong><p>Você guardou todos os capítulos deste caminho. Essas histórias e seus bônus seguem com você, mesmo nas próximas eras.</p><a href="#trilhas-dos-lugares">Encontrar uma nova história no mapa →</a></div>}
 
             <div className="chapter-actions">
               <button className="story-button secondary" disabled={previousIndex < 0} onClick={() => chooseChapter(previousIndex)}>← <span>Capítulo anterior</span></button>
               {!collected ? (
-                <button className="story-button primary" disabled={busy || !progress?.unlocked} onClick={keepMemory}><span>{progress?.unlocked ? 'Guardar esta lembrança' : `${format(chapter.at)} pétalas para descobrir`}</span><span aria-hidden="true">📖</span></button>
+                <button className="story-button primary" disabled={busy || !progress?.unlocked} onClick={keepMemory}><span>{progress?.unlocked ? 'Guardar esta lembrança' : 'Lembrança ainda não descoberta'}</span><span aria-hidden="true">📖</span></button>
               ) : (
                 <span className="memory-saved"><span aria-hidden="true">✓</span> Lembrança guardada</span>
               )}
               {nextIndex >= 0 ? (
                 <button className="story-button next" disabled={!collected} onClick={() => chooseChapter(nextIndex)}><span>Próximo capítulo</span> →</button>
+              ) : journeyComplete ? (
+                <a className="story-button next" href="#trilhas-dos-lugares"><span>Escolher outra trilha</span> →</a>
               ) : (
                 <a className="story-button next" href="/"><span>Voltar à aventura</span> →</a>
               )}

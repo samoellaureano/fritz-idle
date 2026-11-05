@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { authClient } from '@/lib/supabase/server';
 import { siteOrigin } from '@/lib/supabase/config';
+import { localMemoryEnabled } from '@/lib/local-mode';
 
 export const dynamic = 'force-dynamic';
 const redirectOptions = { status: 303, headers: { 'Cache-Control': 'private, no-store' } };
 
 export async function GET(request) {
+  if (localMemoryEnabled()) return NextResponse.redirect(new URL('/login', request.url), redirectOptions);
   try {
     const code = new URL(request.url).searchParams.get('code');
     if (code) {

@@ -61,7 +61,7 @@ export default function CityMuseum({ state, busy, error, onPurchase, onRebirth }
             <p className="museum-bonus">+{number(item.productionBonus * 100)}% produção · +{item.clickFlat} por toque, permanentes</p>
             <a href={item.source.url} target="_blank" rel="noreferrer">Inspiração histórica ↗</a>
             <button className="story-button secondary" disabled={busy || item.owned || state.rebirth.points < item.cost} onClick={() => onPurchase(item.id)}>
-              {item.owned ? 'Guardada no museu ✓' : `Adquirir ${item.name} · ${item.cost} Pórticos`}
+              {item.owned ? 'Guardada no museu ✓' : `Adquirir ${item.name} · ${number(item.cost)} Pórticos`}
             </button>
           </article>
         ))}
@@ -75,6 +75,8 @@ export default function CityMuseum({ state, busy, error, onPurchase, onRebirth }
         <h3>Prévia: {number(rebirth.reward)} Pórticos de Joinville</h3>
         <ul className="rebirth-breakdown">{rebirth.breakdown.map((part) => <li key={part.id}><span>{part.label}</span><strong>{number(part.points)} XP</strong></li>)}</ul>
         <p className="museum-formula">Nível = 1 + parte inteira do XP acima. A troca é nível ÷ 20: 20 = 1 Pórtico, 30 = 1,5 e 40 = 2. Cada Pórtico disponível soma +10% de produção; as insígnias compradas têm bônus próprios permanentes. O XP da era reinicia, sem repetir recompensas de histórias já guardadas.</p>
+        <p>O XP equilibra a cidade: pétalas sustentam o avanço e cada gestor soma 0,75 XP. Histórias, compras, melhorias, toques e insígnias têm limites de contribuição para não antecipar demais a troca. As histórias continuam dando pétalas e bônus permanentes mesmo após o limite de XP.</p>
+        <p>Antes de recomeçar, experimente o viveiro e seus gestores. O nível 20 abre uma escolha, não encerra a jornada: desenvolver a automação e seguir explorando aumenta os Pórticos da troca.</p>
         <button className="story-button primary" disabled={!rebirth.ready || busy} onClick={() => { setConfirmation(''); setConfirming(true); }}>Abrir uma nova era</button>
         {!rebirth.ready && <p>Explore, leia e melhore a cidade até o nível {rebirth.requiredLevel}.</p>}
       </section>

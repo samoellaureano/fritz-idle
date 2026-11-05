@@ -22,7 +22,7 @@ test('cloud museum and rebirth validate input, isolate saves and serialize spend
     assert.equal((await fixture.api(actor, '/api/rebirth', 'POST', { expectedCycle: 0 })).status, 400);
     const memories = STORY_CHAPTERS.map((chapter) => chapter.id);
     await fixture.seed(actor, {
-      seeds: 50, porticos: 2, cycle_petals: 500000000, lifetime: 500000000,
+      seeds: 50, porticos: 1, cycle_petals: 1e12, lifetime: 1e12,
       cycle_purchases: 50, memories, last_daily: Date.now(),
     });
 
@@ -76,7 +76,7 @@ test('cloud seed generator, managers, max purchase, trail rewards and daily shar
       assert.equal((await fixture.api(null, `/api/${route}`, 'POST', input)).status, 401);
       assert.equal((await fixture.api(actor, `/api/${route}`, 'POST', input, { Origin: 'https://other.invalid' })).status, 403);
     }
-    await fixture.seed(actor, { coins: 600000000, lifetime: 600000000, cycle_petals: 600000000, seeds: 30 });
+    await fixture.seed(actor, { coins: 600000000, lifetime: 1e12, cycle_petals: 1e12, seeds: 30 });
     assert.equal((await fixture.api(actor, '/api/manager', 'POST', { characterId: 'francisca', seeds: 999 })).status, 400);
     assert.equal((await fixture.api(actor, '/api/buy', 'POST', { generatorId: 'fritz-jr', quantity: 99 })).status, 400);
     const generator = await fixture.api(actor, '/api/seed-generator', 'POST');

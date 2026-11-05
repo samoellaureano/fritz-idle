@@ -104,7 +104,7 @@ export default function CommunityPage() {
   return (
     <main className="story-page community-page">
       <header className="story-topbar">
-        <a className="story-brand" href="/"><span aria-hidden="true">🐊</span><span>Fritz <span>em Joinville</span></span></a>
+        <a className="story-brand" href="/"><span aria-hidden="true"><img src="/fritz-logo.svg" alt="" width="40" height="40" /></span><span>Fritz <span>em Joinville</span></span></a>
         <nav className="story-nav-actions" aria-label="Navegação da comunidade"><a className="back-to-game" href="/historia">Diário ilustrado</a><a className="back-to-game" href="/">← Voltar a jogar</a></nav>
       </header>
       <section className="community-hero mural-hero">

@@ -33,7 +33,7 @@ test('new accounts start independently and actions do not mutate their input', (
   assert.equal(result.state.totalClicks, 1);
   assert.equal(result.state.characters.filter((item) => item.unlocked).length, 1);
   assert.equal(result.state.generators.length, 13);
-  assert.equal(result.state.upgrades.length, 4);
+  assert.equal(result.state.upgrades.length, 10);
 });
 
 test('all generator costs, production and lifetime spending rules remain stable', () => {
@@ -53,7 +53,7 @@ test('all generator costs, production and lifetime spending rules remain stable'
 
 test('upgrades enforce costs, five levels and their original effects', () => {
   let player = newPlayer(NOW);
-  player.coins = 1e9;
+  player.coins = 1e12;
   for (const upgrade of UPGRADES) {
     for (let i = 0; i < 5; i++) {
       const before = player.coins;
@@ -64,9 +64,9 @@ test('upgrades enforce costs, five levels and their original effects', () => {
     assert.match(run(player, 'upgrade', { upgradeId: upgrade.id }).error, /máximo/);
   }
   const state = run(player).state;
-  assert.equal(state.clickValue, 21);
-  assert.equal(state.multipliers.production, 2);
-  assert.equal(state.multipliers.offlineHours, 13);
+  close(state.clickValue, 76);
+  close(state.multipliers.production, 3.25);
+  assert.equal(state.multipliers.offlineHours, 15.5);
 });
 
 test('offline production is capped and never negative', () => {

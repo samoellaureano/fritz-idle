@@ -47,7 +47,7 @@ export default function ProfilePage() {
   return (
     <main className="story-page community-page">
       <header className="story-topbar">
-        <a className="story-brand" href="/"><span aria-hidden="true">🐊</span><span>Fritz <span>em Joinville</span></span></a>
+        <a className="story-brand" href="/"><span aria-hidden="true"><img src="/fritz-logo.svg" alt="" width="40" height="40" /></span><span>Fritz <span>em Joinville</span></span></a>
         {profile && <a className="back-to-game" href="/">← Voltar a jogar</a>}
       </header>
       <section className="community-hero profile-hero" style={{ backgroundImage: `linear-gradient(90deg, #10211df2, #10211d80), url("${avatarFor(avatarId).art}")` }}>

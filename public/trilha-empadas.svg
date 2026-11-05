@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <path fill="#314e4b" d="M0 0h960v540H0z"/><path fill="#c5a27c" d="M80 65h420v300H80z"/><path fill="#8aaf9f" d="M100 85h380v260H100z"/><path stroke="#f0d6a5" stroke-width="12" d="M290 85v260M100 215h380"/>
+  <path fill="#c2ac7a" d="M0 390h960v150H0z"/><path fill="#e5d6b3" d="M160 415q270-47 565 0l-40 90H200z"/>
+  <g fill="#cf9252" stroke="#f5cb83" stroke-width="8"><path d="m230 390 18 58h94l18-58zM410 384l18 58h94l18-58zM587 391l18 58h94l18-58z"/><ellipse cx="295" cy="390" rx="65" ry="28"/><ellipse cx="475" cy="384" rx="65" ry="28"/><ellipse cx="652" cy="391" rx="65" ry="28"/></g>
+  <path d="M292 367v16m178-22v16m181-8v16M290 332q-19-20 0-39m178 39q-19-20 0-39m181 39q-19-20 0-39" fill="none" stroke="#f6ddaf" stroke-width="5" stroke-linecap="round"/>
+  <g fill="none" stroke="#97b29e" stroke-width="6"><circle cx="638" cy="303" r="42"/><circle cx="796" cy="303" r="42"/><path d="m638 303 56-75 43 75H638l81-49h77m-102-26-8-22h-24m57 48 16-48h39"/></g>
+</svg>

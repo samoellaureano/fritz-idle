@@ -11,8 +11,8 @@ const NOW = 1_800_000_000_000;
 const run = (player, action = 'game', input = {}, now = NOW) => runGameAction(player, action, input, now);
 const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-6, `${actual} != ${expected}`);
 const ready = () => ({
-  ...newPlayer(NOW), seeds: 50, porticos: 50, coins: 1234, lifetime: 500000000,
-  cycle_petals: 500000000, cycle_purchases: 50, total_clicks: 20, last_daily: NOW,
+  ...newPlayer(NOW), seeds: 50, porticos: 50, coins: 1234, lifetime: 1e12,
+  cycle_petals: 1e12, cycle_purchases: 50, total_clicks: 20, last_daily: NOW,
   memories: STORY_CHAPTERS.map((item) => item.id),
   generators: { 'fritz-jr': 3 }, upgrades: { 'mapa-da-cidade': 4 },
 });
@@ -53,8 +53,7 @@ test('every museum insignia spends portals, never seeds, exactly once', () => {
 
 test('era level boundary and proportional fractional rewards are exact', () => {
   for (const level of [19, 20, 21, 30, 40, 60]) {
-    // Petals alone contribute exactly level - 1 XP.
-    const player = { ...newPlayer(NOW), cycle_petals: 1000 * (2 ** (level - 1) - 1) };
+    const player = { ...newPlayer(NOW), cycle_petals: 1000 * (2 ** ((level - .75) / .6) - 1) };
     const preview = rebirthPreview(player);
     assert.equal(preview.level, level);
     assert.equal(preview.ready, level >= 20);
@@ -63,8 +62,41 @@ test('era level boundary and proportional fractional rewards are exact', () => {
     if (level < 20) assert.match(result.error, /nível 20/);
     else assert.equal(result.state.rebirthAward, level / 20);
   }
-  const edge = 1000 * (2 ** 19 - 1);
+  const edge = 1000 * (2 ** (19 / .6) - 1);
+  assert.equal(rebirthPreview({ ...newPlayer(NOW), cycle_petals: edge }).level, 20);
   assert.equal(rebirthPreview({ ...newPlayer(NOW), cycle_petals: edge - 1 }).level, 19);
+});
+
+test('support activities have bounded XP while petals and managers sustain later eras', () => {
+  const player = { ...newPlayer(NOW), cycle_stories: 58, cycle_purchases: 1e6,
+    cycle_clicks: 1e6, cycle_museum: 7, upgrades: { 'mapa-da-cidade': 5, 'passos-de-palmeira': 5 } };
+  const before = rebirthPreview(player);
+  assert.equal(before.experience, 7);
+  assert.equal(before.ready, false);
+  assert.deepEqual(Object.fromEntries(before.breakdown.map((part) => [part.id, part.points])),
+    { petals: 0, stories: 3, places: 2, upgrades: 1, characters: 0, clicks: .5, museum: .5 });
+  const after = rebirthPreview({ ...player, cycle_stories: 1000, cycle_purchases: 1e12,
+    cycle_clicks: 1e12, cycle_museum: 1000, upgrades: { 'mapa-da-cidade': 1000 } });
+  assert.equal(after.experience, before.experience);
+  close(rebirthPreview({ ...player, managers: ['fritz', 'francisca'] }).experience - before.experience, 1.5);
+  assert.ok(rebirthPreview({ ...player, cycle_petals: 1e12 }).experience > before.experience);
+  assert.equal(MUSEUM_ITEMS.reduce((sum, item) => sum + item.cost, 0), 15);
+});
+
+test('rebalancing recalculates XP without rewriting existing currency, purchases or permanent rewards', () => {
+  const player = { ...newPlayer(NOW), porticos: 3.75, seeds: 20, coins: 123,
+    museum: MUSEUM_ITEMS.map((item) => item.id), memories: STORY_CHAPTERS.map((item) => item.id),
+    cycle_petals: 100000, cycle_stories: 8, cycle_clicks: 500,
+    generators: { 'fritz-jr': 3 }, managers: ['fritz', 'francisca'], seed_generator: true,
+    achievements: ['first-click'], rebirths: 5 };
+  const result = run(player);
+  for (const key of ['porticos', 'seeds', 'coins', 'museum', 'memories', 'generators', 'managers', 'rebirths']) {
+    assert.deepEqual(result.player[key], player[key]);
+  }
+  assert.ok(result.player.achievements.includes('first-click'));
+  close(result.state.storyProductionBonus, 8 * .02);
+  for (const item of MUSEUM_ITEMS) assert.ok(result.state.museum.find((piece) => piece.id === item.id).owned);
+  assert.match(run(result.player, 'museum', { itemId: 'bicicleta' }).error, /já está/);
 });
 
 test('each era activity contributes XP without reusing historical story rewards', () => {
@@ -153,16 +185,17 @@ test('max buys exactly all affordable places at per-unit rounded costs', () => {
 
 test('new story trails enforce thresholds, permanent one-time rewards and unique illustrations', () => {
   for (const chapter of CITY_CHAPTERS) {
-    const base = { ...newPlayer(NOW), lifetime: chapter.at };
-    assert.match(run({ ...base, lifetime: chapter.at - 1 }, 'story', { chapterId: chapter.id }).error, /não foi descoberto/);
+    const memories = chapter.previousId ? [chapter.previousId] : [];
+    const base = { ...newPlayer(NOW), lifetime: chapter.at, memories };
+    if (chapter.at > 0) assert.match(run({ ...base, lifetime: chapter.at - 1 }, 'story', { chapterId: chapter.id }).error, /não foi descoberto/);
     const result = run(base, 'story', { chapterId: chapter.id });
-    assert.equal(result.state.storyMemoryCount, 1);
+    assert.equal(result.state.storyMemoryCount, memories.length + 1);
     assert.equal(result.player.cycle_stories, 1);
-    assert.equal(result.state.storyProductionBonus, .02);
+    close(result.state.storyProductionBonus, .02 * (memories.length + 1));
     assert.match(run(result.player, 'story', { chapterId: chapter.id }).error, /já está/);
     assert.ok(existsSync(new URL(`../public${chapter.art}`, import.meta.url)));
   }
-  assert.equal(new Set(CITY_CHAPTERS.map((chapter) => chapter.art)).size, 8);
+  assert.equal(new Set(CITY_CHAPTERS.map((chapter) => chapter.art)).size, 22);
 });
 
 test('share grants a daily timed buff and offline integration stops exactly at expiry', () => {

@@ -5,6 +5,7 @@ import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
 import EraPortal from '@/app/components/EraPortal';
 import CityMuseum from '@/app/components/CityMuseum';
+import { generatorPurchase } from '@/lib/purchases';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -32,6 +33,7 @@ export default function Home() {
     if (nextState.saveVersion < versionRef.current) return;
     versionRef.current = nextState.saveVersion;
     setState(nextState);
+    setDisplay(nextState.coins);
     syncRef.current = { coins: nextState.coins, cps: nextState.cps, at: Date.now() };
   }, []);
 
@@ -112,7 +114,7 @@ export default function Home() {
     <main className="game-shell">
       <header className="topbar">
         <a className="brand" href="#inicio" aria-label="Fritz em Joinville — início">
-          <span className="brand-mark" aria-hidden="true">🐊</span>
+          <span className="brand-mark" aria-hidden="true"><img src="/fritz-logo.svg" alt="" width="40" height="40" /></span>
           <span>Fritz <span className="brand-muted">em Joinville</span></span>
         </a>
         <nav className="main-nav" aria-label="Navegação do jogo">
@@ -212,7 +214,7 @@ export default function Home() {
                     <span className={`chapter-preview ${state.nextChapter.color}`} aria-hidden="true">{state.nextChapter.icon}</span>
                   </div>
                 ) : (
-                  <div className="complete-chapter"><span>🌷</span><div><h3>{state.profile.nickname}, Joinville floresceu outra vez!</h3><p>Todos os amigos estão juntos. Explore as trilhas das bicicletas e dos ofícios, ou atravesse o Pórtico no nível 20.</p></div></div>
+                  <div className="complete-chapter"><span>🌷</span><div><h3>{state.profile.nickname}, Joinville floresceu outra vez!</h3><p>Todos os amigos estão juntos. <a href="/historia#trilhas-dos-lugares">Explore as 14 trilhas dos lugares de Joinville</a>, as bicicletas e os ofícios, ou atravesse o Pórtico no nível 20.</p></div></div>
                 )}
               </section>
 
@@ -221,12 +223,14 @@ export default function Home() {
                   <div><span className="section-kicker">CADA CANTO CONTA</span><h2>Ative os lugares da cidade</h2></div>
                   <span className="section-aside">Pontos de Joinville que fazem história</span>
                 </div>
-                <p className="section-intro">Bicicletas e memórias das indústrias também fazem a cidade florescer. Geradores são fantasia, não produção real das empresas. <a href="/historia#memoria-industrial">Conheça as fontes no diário.</a></p>
-                {state.journeys.map((journey) => <section className="places-journey" key={journey.id}>
+                <p className="section-intro">Bicicletas e memórias das indústrias também fazem a cidade florescer. Geradores são fantasia, não produção real das empresas. <a href="/historia#trilhas-dos-lugares">Descubra também 14 trilhas de histórias pelos lugares de Joinville.</a></p>
+                {state.journeys.filter((journey) => state.generators.some((generator) => generator.journey === journey.id)).map((journey) => <section className="places-journey" key={journey.id}>
                 <h3>{journey.icon} {journey.name}</h3><p>{journey.description} <a href={`/historia?jornada=${journey.id}`}>Seguir esta trilha →</a></p>
                 <div className="places-list">
                   {state.generators.filter((generator) => generator.journey === journey.id).map((generator, index) => {
                     const affordable = display >= generator.cost;
+                    const maxQuantity = generatorPurchase(generator, generator.owned, display).quantity;
+                    const maxDescription = `${maxQuantity.toLocaleString('pt-BR')} unidades com as pétalas disponíveis. O total é confirmado pelo servidor na compra.`;
                     return (
                       <article className={`place-card ${affordable ? 'affordable' : ''}`} key={generator.id}>
                         <div className={`place-icon place-tone-${index % 5}`}>{generator.icon}</div>
@@ -235,7 +239,7 @@ export default function Home() {
                         <button className="buy-button" disabled={!affordable || busy} onClick={() => handleBuy(generator.id)}>
                           <span>{format(generator.cost)}</span><small>🌸</small>
                         </button>
-                        <button className="max-button" aria-label={`Comprar o máximo de ${generator.name}`} disabled={!affordable || busy} onClick={() => handleBuy(generator.id, 'max')}>max</button>
+                        <button className="max-button" aria-label={`Comprar o máximo de ${generator.name}`} aria-description={maxDescription} title={maxDescription} disabled={!maxQuantity || busy} onClick={() => handleBuy(generator.id, 'max')}><span>max</span><strong>x{maxQuantity.toLocaleString('pt-BR')}</strong></button>
                       </article>
                     );
                   })}
@@ -251,7 +255,7 @@ export default function Home() {
                 <div className="upgrade-grid">
                   {state.upgrades.map((upgrade, index) => (
                     <article className="upgrade-card" key={upgrade.id}>
-                      <div className={`upgrade-icon upgrade-tone-${index}`}>{upgrade.icon}</div>
+                      <div className={`upgrade-icon upgrade-tone-${index % 4}`}>{upgrade.icon}</div>
                       <div className="upgrade-copy"><h3>{upgrade.name}</h3><p>{upgrade.description}</p></div>
                       <div className="upgrade-bottom"><span>NÍVEL {upgrade.owned}/{upgrade.maxOwned}</span><button disabled={display < upgrade.cost || upgrade.owned >= upgrade.maxOwned || busy} onClick={() => handleUpgrade(upgrade.id)}>{upgrade.owned >= upgrade.maxOwned ? 'Completa' : `${format(upgrade.cost)} 🌸`}</button></div>
                     </article>

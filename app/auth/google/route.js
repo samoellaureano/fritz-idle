@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { authClient } from '@/lib/supabase/server';
 import { sameOrigin, siteOrigin } from '@/lib/supabase/config';
+import { localMemoryEnabled } from '@/lib/local-mode';
 
 export async function POST(request) {
+  if (localMemoryEnabled()) return new NextResponse('Use o acesso de teste em /login no modo local.', { status: 404 });
   try {
     if (!sameOrigin(request)) return new NextResponse('Origem não autorizada.', { status: 403 });
     const { data, error } = await (await authClient()).auth.signInWithOAuth({
