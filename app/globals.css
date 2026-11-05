@@ -714,10 +714,12 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .places-journey { margin-top: 24px; }
 .places-journey > h3 { color: var(--gold); font-size: 16px; margin-bottom: 6px; }
 .places-journey > p { color: var(--muted); font-size: 12px; line-height: 1.7; }
-.place-card { grid-template-columns: 41px minmax(0, 1fr) 38px 86px 44px; }
+.place-card { grid-template-columns: 41px minmax(0, 1fr) 38px 86px 56px; }
 .brand-mark img, .story-brand > span:first-child img { display: block; width: 100%; height: 100%; border-radius: inherit; }
-.max-button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; padding: 7px 3px; border: 1px solid #b7d88466; border-radius: 8px; background: #b7d88418; color: var(--green); cursor: pointer; font-weight: 700; }
-.max-button strong { max-width: 100%; font-size: 11px; overflow-wrap: anywhere; }
+.max-button { display: inline-flex; align-items: center; justify-content: center; justify-self: end; gap: 4px; min-width: 0; max-width: 56px; min-height: 28px; padding: 4px 6px; border: 1px solid #f3cb7850; border-radius: 999px; background: transparent; color: var(--gold); cursor: pointer; font-size: 9px; font-weight: 600; line-height: 1.2; transition: background .16s, border-color .16s; }
+.max-button strong { min-width: 0; max-width: 100%; font-size: 10px; overflow-wrap: anywhere; }
+.max-button:not(:disabled):hover { border-color: var(--gold); background: #f3cb7815; }
+.max-button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .max-button:disabled { opacity: .4; cursor: not-allowed; }
 .manager-actions { margin-top: auto; padding-top: 12px; width: 100%; }
 .manager-actions p { color: var(--gold); font-size: 12px; line-height: 1.7; }
@@ -769,7 +771,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .progress-share { grid-template-columns: 1fr; }
   .progress-card-preview { max-width: 400px; justify-self: center; }
   .place-card { grid-template-columns: 32px minmax(0, 1fr) 28px 70px; gap: 7px; }
-  .max-button { grid-column: 4; padding: 6px; }
+  .max-button { grid-column: 4; }
   .chapter-nav-item:nth-of-type(even) { margin-left: 0; }
   .chapter-nav-item::after { display: none; }
   .resource-dock { gap: 6px 12px; font-size: 11px; padding: 8px 10px; }
