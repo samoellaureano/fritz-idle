@@ -55,6 +55,19 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     await page.goto(`${fixture.origin}/historia?jornada=bicicletas`);
     await page.getByRole('button', { name: 'Guardar esta lembrança', exact: true }).click();
     await page.locator('.memory-saved').waitFor();
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    for (const width of [1280, 375]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const name of ['Próximo capítulo →', '← Capítulo anterior']) {
+        await page.getByRole('button', { name, exact: true }).click();
+        await page.waitForFunction(() => Math.abs(document.querySelector('#trilha-atual > article').getBoundingClientRect().top) < 2);
+        assert.ok(await page.locator('#trilha-atual > article .chapter-art').evaluate((image) => {
+          const bounds = image.getBoundingClientRect();
+          return bounds.top >= -2 && bounds.top < window.innerHeight && bounds.bottom > 0;
+        }));
+      }
+    }
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
     assert.equal(await page.locator('.chapter-nav-item').count(), 3);
     assert.equal(await page.locator('.chapter-art').getAttribute('src'), CITY_CHAPTERS[0].art);
     await page.goto(`${fixture.origin}/historia?jornada=industria`);

@@ -30,6 +30,7 @@ export default function StoryPage() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const versionRef = useRef(-1);
+  const chapterRef = useRef(null);
   const hasGameState = gameState !== null;
 
   const applyState = useCallback((state) => {
@@ -85,12 +86,18 @@ export default function StoryPage() {
     ? 'Guarde a lembrança do capítulo anterior para seguir esta trilha.'
     : `Recupere ${format(chapter.at)} pétalas no total para descobrir este capítulo.`;
 
-  function chooseChapter(index) {
+  function chooseChapter(index, scrollToReading = false) {
     if (!chapterProgress[index]?.unlocked) return;
     setSelectedIndex(index);
     setRewardMessage('');
     setError('');
     window.history.replaceState(null, '', `/historia?jornada=${journeyId}&capitulo=${chapters[index].id}`);
+    if (scrollToReading) {
+      requestAnimationFrame(() => chapterRef.current?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        block: 'start',
+      }));
+    }
   }
 
   function chooseJourney(id) {
@@ -192,7 +199,7 @@ export default function StoryPage() {
           <div className="chapter-list-note"><span>✨</span><p>Cada história guardada aumenta em 2% a produção da sua cidade — e rende pétalas para a próxima aventura.</p></div>
         </nav>
 
-        <article className="story-chapter" aria-live="polite">
+        <article className="story-chapter" ref={chapterRef} aria-live="polite">
           <div className="chapter-art-wrap">
             <img className="chapter-art" src={chapter.art} alt={chapter.artAlt} />
             <div className="chapter-art-overlay" />
@@ -234,14 +241,14 @@ export default function StoryPage() {
             {journeyComplete && <div className="trail-complete" role="status"><strong>🌸 Uma trilha inteira virou lembrança.</strong><p>Você guardou todos os capítulos deste caminho. Essas histórias e seus bônus seguem com você, mesmo nas próximas eras.</p><a href="#trilhas-dos-lugares">Encontrar uma nova história no mapa →</a></div>}
 
             <div className="chapter-actions">
-              <button className="story-button secondary" disabled={previousIndex < 0} onClick={() => chooseChapter(previousIndex)}>← <span>Capítulo anterior</span></button>
+              <button className="story-button secondary" disabled={previousIndex < 0} onClick={() => chooseChapter(previousIndex, true)}>← <span>Capítulo anterior</span></button>
               {!collected ? (
                 <button className="story-button primary" disabled={busy || !progress?.unlocked} onClick={keepMemory}><span>{progress?.unlocked ? 'Guardar esta lembrança' : 'Lembrança ainda não descoberta'}</span><span aria-hidden="true">📖</span></button>
               ) : (
                 <span className="memory-saved"><span aria-hidden="true">✓</span> Lembrança guardada</span>
               )}
               {nextIndex >= 0 ? (
-                <button className="story-button next" disabled={!collected} onClick={() => chooseChapter(nextIndex)}><span>Próximo capítulo</span> →</button>
+                <button className="story-button next" disabled={!collected} onClick={() => chooseChapter(nextIndex, true)}><span>Próximo capítulo</span> →</button>
               ) : journeyComplete ? (
                 <a className="story-button next" href="#trilhas-dos-lugares"><span>Escolher outra trilha</span> →</a>
               ) : (
