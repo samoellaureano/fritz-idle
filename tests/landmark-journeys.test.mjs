@@ -32,13 +32,31 @@ test('all fourteen requested places have their own three-step illustrated narrat
     assert.equal(chapters[1].previousId, chapters[0].id);
     assert.equal(chapters[2].previousId, chapters[1].id);
     assert.ok(chapters[0].at < chapters[1].at && chapters[1].at < chapters[2].at);
-    assert.ok(readFileSync(new URL(`../public${journey.art}`, import.meta.url), 'utf8').includes('viewBox="0 0 960 540"'));
+    assert.ok(journey.art.endsWith('.webp'));
     for (const chapter of chapters) {
       assert.ok(chapter.title && chapter.keepsake && chapter.artAlt && chapter.fact);
       assert.equal(chapter.paragraphs.length, 2);
       assert.equal(new URL(chapter.sources[0].url).hostname, 'www.visitejoinville.com.br');
       assert.equal(chapter.sources[0].url, journey.source);
     }
+  }
+});
+
+test('all journey covers and chapters use available illustrations with optimized city scenes', () => {
+  const cityArt = new Set(CITY_CHAPTERS.map((chapter) => chapter.art));
+  assert.equal(cityArt.size, 22);
+  for (const art of cityArt) {
+    const image = readFileSync(new URL(`../public${art}`, import.meta.url));
+    assert.equal(image.toString('ascii', 0, 4), 'RIFF', art);
+    assert.equal(image.toString('ascii', 8, 12), 'WEBP', art);
+    assert.ok(image.length < 600 * 1024, `${art} must remain below 600 KiB`);
+  }
+  for (const journey of JOURNEYS) {
+    assert.ok(journey.art, `${journey.id} needs an illustrated cover`);
+    const chapters = journey.id === 'flores'
+      ? STORY_CHAPTERS : CITY_CHAPTERS.filter((chapter) => chapter.journey === journey.id);
+    assert.equal(journey.art, chapters[0].art);
+    assert.ok(readFileSync(new URL(`../public${journey.art}`, import.meta.url)).length > 0);
   }
 });
 

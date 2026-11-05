@@ -12,8 +12,15 @@ export default function GameTooltips() {
     let dismissed = null;
     let previousDescription = null;
     let timer;
+    let showTimer;
+    let pending = null;
+    function cancelPending() {
+      clearTimeout(showTimer);
+      pending = null;
+    }
     function hide() {
       clearTimeout(timer);
+      cancelPending();
       if (active) {
         if (previousDescription === null) active.removeAttribute('aria-describedby');
         else active.setAttribute('aria-describedby', previousDescription);
@@ -28,6 +35,7 @@ export default function GameTooltips() {
       if (target === dismissed) return;
       dismissed = null;
       clearTimeout(timer);
+      cancelPending();
       if (active !== target) {
         hide();
         active = target;
@@ -40,20 +48,36 @@ export default function GameTooltips() {
     function leave(event) {
       if (event.type === 'pointerout' && active === document.activeElement) return;
       if (event.relatedTarget instanceof Element
-        && (event.relatedTarget.closest('[data-tooltip]') === active || event.relatedTarget.closest('[role="tooltip"]'))) return;
+        && ((active && event.relatedTarget.closest('[data-tooltip]') === active)
+          || (pending && event.relatedTarget.closest('[data-tooltip]') === pending)
+          || event.relatedTarget.closest('[role="tooltip"]'))) return;
+      cancelPending();
       clearTimeout(timer);
       timer = setTimeout(hide, 120);
     }
     function over(event) {
-      if (event.target instanceof Element && event.target.closest('[role="tooltip"]')) clearTimeout(timer);
-      else show(event);
+      if (!(event.target instanceof Element)) return;
+      if (event.target.closest('[role="tooltip"]')) {
+        clearTimeout(timer);
+        return;
+      }
+      const target = event.target.closest('[data-tooltip]');
+      if (!target || target === dismissed) return;
+      clearTimeout(timer);
+      if (target === active || target === pending) return;
+      hide();
+      pending = target;
+      showTimer = setTimeout(() => {
+        if (target.isConnected) show({ target, type: 'pointerover' });
+        else cancelPending();
+      }, 600);
     }
     function move(event) {
       if (dismissed && (event.movementX || event.movementY)) dismissed = null;
     }
     function escape(event) {
       if (event.key === 'Escape') {
-        dismissed = active;
+        dismissed = active || pending;
         hide();
       }
     }
