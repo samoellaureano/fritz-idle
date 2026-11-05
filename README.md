@@ -4,6 +4,12 @@ Jogo idle com oito capítulos ilustrados, personagens e pontos de Joinville, pé
 
 Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)**. Cada conta tem sua própria jornada, compartilhada entre aparelhos. O servidor calcula todas as recompensas: o navegador não pode gravar um saldo arbitrário.
 
+**Jogar:** https://fritz-idle.onrender.com
+
+**Healthcheck:** https://fritz-idle.onrender.com/api/health
+
+O deploy usa Render Free e Supabase Free. Enquanto o aplicativo OAuth Google estiver em modo **Testing**, apenas as contas cadastradas como usuários de teste podem entrar.
+
 ## 1. Criar o Supabase gratuito
 
 1. Em https://supabase.com/dashboard, crie um projeto no plano **Free**. Guarde a senha do banco num gerenciador de senhas; o jogo não precisa dela.
@@ -72,9 +78,11 @@ O arquivo local `data/game.db` não é apagado, enviado ou atribuído automatica
 
 ### Healthcheck e cron externo
 
-`GET https://SEU_SERVICO.onrender.com/api/health` é público, sem cache e sem acesso ao banco. Indica apenas que o processo web responde; **não certifica Google/Supabase**, não renova a sessão de login e não altera o progresso.
+`GET https://fritz-idle.onrender.com/api/health` é público, sem cache e sem acesso ao banco. Indica apenas que o processo web responde; **não certifica Google/Supabase**, não renova a sessão de login e não altera o progresso.
 
 Em um agendador externo de sua preferência, configure GET nessa URL, por exemplo a cada **10 minutos**, resposta esperada **200**, sem cookies ou credenciais. Um monitor pode ajudar a detectar indisponibilidade, mas **não há garantia de serviço sempre ativo no plano Free**. Respeite as regras e cotas do provedor; o cron não elimina cold starts, suspensões ou limites.
+
+No [cron-job.org](https://console.cron-job.org/jobs), o job **Fritz Idle - Render healthcheck** está habilitado a cada 10 minutos (`*/10 * * * *`), com método GET e histórico de respostas. A execução de teste retornou **200 OK** com `{"status":"ok"}`. Consulte o histórico do job para verificar as execuções agendadas.
 
 O Render Free pode suspender serviços ociosos após 15 minutos e tem cota mensal de horas gratuitas compartilhada pelo workspace (atualmente 750h). Manter vários serviços acordados pode esgotá-la. Supabase Free também possui cotas e pode pausar projetos por inatividade: não dependa de um ping web para evitar isso. Se for necessária disponibilidade garantida, use um plano apropriado. Consulte as regras atuais: [Render Free](https://render.com/docs/free) e [Supabase Pricing](https://supabase.com/pricing).
 
