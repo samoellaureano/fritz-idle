@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { newPlayer, runGameAction, GENERATORS, UPGRADES, MAX_OFFLINE_SECONDS } from '../lib/game.js';
 import { STORY_CHAPTERS } from '../lib/story.js';
+import { CITY_CHAPTERS, JOURNEYS } from '../lib/journeys.js';
 import { executeSavedAction, SaveConflictError } from '../lib/save-store.js';
 import { sameOrigin, siteOrigin } from '../lib/supabase/config.js';
 
@@ -105,6 +106,44 @@ test('all chapters enforce unlocks, one-time rewards and permanent memory bonuse
     assert.match(run(first.player, 'story', { chapterId: chapter.id }).error, /já está/);
   }
   assert.match(run(newPlayer(NOW), 'story', { chapterId: 'bad' }).error, /inválido/);
+});
+
+test('journey achievements follow the new chapter totals and retain existing achievement ids', () => {
+  const allChapters = [...STORY_CHAPTERS, ...CITY_CHAPTERS];
+  assert.equal(JOURNEYS.length, 17);
+  assert.equal(allChapters.length, 58);
+  assert.equal(CITY_CHAPTERS.filter((chapter) => chapter.journey === 'bicicletas').length, 3);
+  assert.equal(CITY_CHAPTERS.filter((chapter) => chapter.journey === 'industria').length, 5);
+  const placeJourneyIds = JOURNEYS.filter((journey) => journey.category === 'lugares').map((journey) => journey.id);
+  assert.equal(placeJourneyIds.length, 14);
+
+  const achievement = (state, id) => state.achievements.find((item) => item.id === id);
+  const player = newPlayer(NOW);
+  player.memories = STORY_CHAPTERS.map((chapter) => chapter.id);
+  let state = run(player).state;
+  assert.equal(achievement(state, 'story-reader').unlocked, true);
+  assert.equal(achievement(state, 'flowers-journey').unlocked, true);
+  assert.equal(achievement(state, 'bicycles-journey').unlocked, false);
+
+  player.memories = CITY_CHAPTERS
+    .filter((chapter) => chapter.journey === placeJourneyIds[0])
+    .map((chapter) => chapter.id);
+  state = run(player).state;
+  assert.equal(achievement(state, 'first-place-journey').unlocked, true);
+  assert.equal(achievement(state, 'five-place-journeys').unlocked, false);
+  player.memories = CITY_CHAPTERS
+    .filter((chapter) => placeJourneyIds.slice(0, 5).includes(chapter.journey))
+    .map((chapter) => chapter.id);
+  state = run(player).state;
+  assert.equal(achievement(state, 'five-place-journeys').unlocked, true);
+
+  player.memories = allChapters.map((chapter) => chapter.id);
+  state = run(player).state;
+  assert.equal(achievement(state, 'bicycles-journey').unlocked, true);
+  assert.equal(achievement(state, 'industry-journey').unlocked, true);
+  assert.equal(achievement(state, 'all-place-journeys').unlocked, true);
+  assert.equal(achievement(state, 'all-journeys').unlocked, true);
+  assert.equal(achievement(state, 'first-click').id, 'first-click');
 });
 
 test('retired seed prestige cannot reset or award currency', () => {

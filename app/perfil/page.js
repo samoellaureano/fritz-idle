@@ -74,6 +74,8 @@ export default function ProfilePage() {
               <p>Nível {progress.rebirth.level} · Era {progress.rebirth.count + 1} · {progress.storyMemoryCount} histórias guardadas</p>
               <h3>Insígnias do museu</h3><MuseumBadges items={progress.museum} />
               {!progress.museum.some((item) => item.owned) && <p>Adquira suas primeiras insígnias com Pórticos no museu.</p>}
+              <h3>Conquistas da jornada · {progress.achievements.filter((item) => item.unlocked).length}/{progress.achievements.length}</h3>
+              <p>As conquistas acompanham os capítulos e as 17 jornadas de Joinville, mesmo quando você começa uma nova era.</p>
               <div className="achievement-list">{progress.achievements.map((item) => <article className={`achievement-card ${item.unlocked ? 'achievement-unlocked' : ''}`} key={item.id}>
                 <span className="achievement-icon">{item.unlocked ? <GameIcon symbol={item.icon} /> : <GameIcon symbol="🔒" />}</span>
                 <div><h3>{item.name}</h3><p>{item.description}</p></div><span>{item.unlocked ? 'Conquistada' : 'A descobrir'}</span>

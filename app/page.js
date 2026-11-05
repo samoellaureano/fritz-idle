@@ -286,8 +286,8 @@ export default function Home() {
 
           {tab === 'colecao' && (
             <section className="section-block full-tab">
-              <div className="section-heading"><div><span className="section-kicker">PEQUENAS GRANDES VITÓRIAS</span><h2>Memórias que ficam</h2></div><span className="chapter-counter">{state.achievements.filter((item) => item.unlocked).length} / {state.achievements.length} lembranças</span></div>
-              <p className="section-intro">Cada conquista registra um pedacinho da aventura. Progresso e personagens sobrevivem até quando você planta novas raízes.</p>
+              <div className="section-heading"><div><span className="section-kicker">PEQUENAS GRANDES VITÓRIAS</span><h2>Conquistas da jornada</h2></div><span className="chapter-counter">{state.achievements.filter((item) => item.unlocked).length} / {state.achievements.length} conquistas</span></div>
+              <p className="section-intro">Complete capítulos e jornadas: 8 histórias das flores, 3 de bicicletas, 5 de ofícios e 14 trilhas dos lugares. As conquistas ficam guardadas quando você planta novas raízes.</p>
               <div className="achievement-list">
                 {state.achievements.map((achievement) => (
                   <article className={`achievement-card ${achievement.unlocked ? 'achievement-unlocked' : ''}`} key={achievement.id}>
