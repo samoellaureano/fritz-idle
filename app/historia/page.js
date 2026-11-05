@@ -1,18 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { STORY_CHAPTERS } from '@/lib/story';
+import { gameRequest as request } from '@/lib/client-request';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
   return value.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
-}
-
-async function request(path, options) {
-  const response = await fetch(path, options);
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Não foi possível carregar as histórias.');
-  return data;
 }
 
 export default function StoryPage() {
@@ -21,11 +15,18 @@ export default function StoryPage() {
   const [rewardMessage, setRewardMessage] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const versionRef = useRef(-1);
+
+  const applyState = useCallback((state) => {
+    if (state.saveVersion < versionRef.current) return;
+    versionRef.current = state.saveVersion;
+    setGameState(state);
+  }, []);
 
   const refresh = useCallback(async () => {
     try {
       const state = await request('/api/game');
-      setGameState(state);
+      applyState(state);
       const chapterId = new URLSearchParams(window.location.search).get('capitulo');
       const requestedIndex = STORY_CHAPTERS.findIndex((chapter) => chapter.id === chapterId);
       if (requestedIndex >= 0 && state.storyChapters[requestedIndex]?.unlocked) {
@@ -34,7 +35,7 @@ export default function StoryPage() {
     } catch (cause) {
       setError(cause.message);
     }
-  }, []);
+  }, [applyState]);
 
   useEffect(() => {
     refresh();
@@ -75,7 +76,7 @@ export default function StoryPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chapterId: chapter.id }),
       });
-      setGameState(updatedState);
+      applyState(updatedState);
       setRewardMessage(`Uma lembrança virou raiz: +${format(updatedState.memoryReward)} pétalas e +2% de produção permanente.`);
     } catch (cause) {
       setError(cause.message);

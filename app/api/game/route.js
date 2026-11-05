@@ -1,8 +1,7 @@
-import { NextResponse } from 'next/server';
-import { getState } from '@/lib/game';
+import { gameApi } from '@/lib/game-api';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  return NextResponse.json(getState());
+export async function GET(request) {
+  return gameApi(request, 'game');
 }

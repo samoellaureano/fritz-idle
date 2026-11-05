@@ -1,35 +1,90 @@
 # Fritz em Joinville — A Jornada das Flores
 
-Stack: **Node.js + Next.js (App Router) + SQLite3 (better-sqlite3)**
+Jogo idle com oito capítulos ilustrados, personagens e pontos de Joinville, pétalas, progresso offline, melhorias, presente diário e prestígio. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
 
-## Como rodar
+Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)**. Cada conta tem sua própria jornada, compartilhada entre aparelhos. O servidor calcula todas as recompensas: o navegador não pode gravar um saldo arbitrário.
 
-```bash
-npm install
-npm run dev
+## 1. Criar o Supabase gratuito
+
+1. Em https://supabase.com/dashboard, crie um projeto no plano **Free**. Guarde a senha do banco num gerenciador de senhas; o jogo não precisa dela.
+2. No **SQL Editor**, execute [001_game_saves.sql](supabase/migrations/001_game_saves.sql).
+3. Em **Project Settings → API / API Keys**, obtenha a URL do projeto, a chave **publishable** (ou `anon`) e a chave secreta de servidor (**secret** ou `service_role`).
+4. Copie `.env.example` para `.env.local` e preencha as variáveis. **Nunca envie chaves secretas no chat, no Git ou em variáveis `NEXT_PUBLIC_*`.** O arquivo local é ignorado pelo Git.
+
+| Variável | Valor |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://SEU_PROJETO.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave publishable ou anon |
+| `SUPABASE_SERVICE_ROLE_KEY` | Chave secret ou service_role, exclusiva do servidor |
+| `SITE_URL` | Origem exata do jogo, sem caminho: local `http://localhost:3001`, produção `https://SEU_SERVICO.onrender.com` |
+
+A tabela usa RLS: usuários autenticados só podem consultar seu próprio save, sem permissão de escrita direta. Somente o servidor grava. Atualizações com controle de versão evitam perda de cliques e duplicação de recompensas em abas/aparelhos simultâneos.
+
+## 2. Configurar o Google
+
+1. Crie um projeto em https://console.cloud.google.com/.
+2. Configure **Google Auth Platform / OAuth consent screen**: nome do jogo, público e contato de suporte. Enquanto estiver em modo **Testing**, cadastre os e-mails permitidos em **Test users**.
+3. Crie um **OAuth Client ID**, tipo **Web application**.
+4. Em **Authorized JavaScript origins**, adicione `http://localhost:3001` e, quando conhecida, a origem HTTPS do Render.
+5. Em **Authorized redirect URIs**, adicione **o callback do Supabase**, não o callback do jogo:
+   `https://SEU_PROJETO.supabase.co/auth/v1/callback`.
+6. No Supabase, em **Authentication → Sign In / Providers → Google**, ative Google e informe Client ID e Client Secret do Google. Não coloque o Client Secret Google no código ou no Render.
+7. Em **Authentication → URL Configuration**, defina **Site URL** como a URL do jogo e adicione à lista **Redirect URLs**:
+   - `http://localhost:3001/auth/callback`
+   - `https://SEU_SERVICO.onrender.com/auth/callback`
+8. Use apenas os escopos padrão de identidade (`openid`, `email`, `profile`). Para acesso público fora dos usuários de teste, publique a configuração OAuth e atenda às exigências do Google.
+
+O fluxo usa PKCE e cookies de sessão. O retorno do Supabase vai para `/auth/callback`; páginas e APIs exigem usuário verificado. Ao expirar a sessão, o jogo retorna ao login sem apagar o save.
+
+## 3. Rodar localmente
+
+```powershell
+Copy-Item .env.example .env.local
+# Preencha .env.local antes de iniciar.
+npm ci
+npm run dev -- --port 3001
 ```
 
-Abra http://localhost:3000. No jogo, você recolhe pétalas da Cidade das Flores, ativa lugares conhecidos de Joinville, encontra personagens ligados à história local, completa conquistas e planta Sementes da Cidade para reiniciar com um bônus permanente.
+Abra http://localhost:3001 e entre com Google. `/historia` contém o diário ilustrado e suas recompensas permanentes.
 
-Acesse `/historia` para ler os oito capítulos ilustrados de Fritz. As referências externas de cada capítulo documentam a memória local; cenas e diálogos são ficção. Guarde cada lembrança no diário para receber pétalas e +2% de produção permanente sem reiniciar sua partida.
+```powershell
+npm test
+npm run build
+npm start -- --port 3001
+```
 
-O banco é criado automaticamente em `data/game.db`. O progresso antigo, os cliques e os geradores já comprados são preservados na atualização. A jornada inclui progresso offline, presente diário, melhorias, personagens colecionáveis, conquistas, lembranças narrativas e prestígio.
+Os testes locais verificam economia, progresso offline, prestígio, capítulos, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
+
+### Save antigo em SQLite
+
+O arquivo local `data/game.db` não é apagado, enviado ou atribuído automaticamente a ninguém. Ele pertencia a uma partida global. Contas Google começam uma nova jornada. Guarde uma cópia segura antes de trocar a versão; uma eventual importação precisa identificar explicitamente o proprietário. O runtime novo não usa SQLite nem disco persistente.
+
+## 4. Deploy no Render Free
+
+1. Publique esta versão no GitHub (commit + push). O Render não recebe mudanças que existem apenas no computador.
+2. No Render, escolha **New → Blueprint**, conecte o repositório e use [render.yaml](render.yaml). O serviço está configurado como **free**, sem disco pago.
+3. Informe as quatro variáveis acima. Use a URL HTTPS definitiva do serviço em `SITE_URL`.
+4. Confirme a mesma URL na configuração do Supabase e nas origens Google. Se precisar alterar variáveis públicas, faça um novo build/deploy.
+5. Build: `npm ci && npm run build`. Start: `npm start -- --hostname 0.0.0.0 --port $PORT`. Node 22.
+6. Após o deploy, acesse `/api/health`: deve retornar HTTP 200 e `{"status":"ok"}` sem login.
+7. Entre com Google, jogue, saia e entre novamente. Teste também em outro aparelho e com outra conta: o progresso deve persistir por conta, sem compartilhar saldos.
+8. Reinicie/redeploy o serviço e confirme a preservação do save. No Supabase, teste com uma chave de usuário que não é possível ler outro `user_id` nem fazer INSERT/UPDATE direto na tabela.
+
+### Healthcheck e cron externo
+
+`GET https://SEU_SERVICO.onrender.com/api/health` é público, sem cache e sem acesso ao banco. Indica apenas que o processo web responde; **não certifica Google/Supabase**, não renova a sessão de login e não altera o progresso.
+
+Em um agendador externo de sua preferência, configure GET nessa URL, por exemplo a cada **10 minutos**, resposta esperada **200**, sem cookies ou credenciais. Um monitor pode ajudar a detectar indisponibilidade, mas **não há garantia de serviço sempre ativo no plano Free**. Respeite as regras e cotas do provedor; o cron não elimina cold starts, suspensões ou limites.
+
+O Render Free pode suspender serviços ociosos após 15 minutos e tem cota mensal de horas gratuitas compartilhada pelo workspace (atualmente 750h). Manter vários serviços acordados pode esgotá-la. Supabase Free também possui cotas e pode pausar projetos por inatividade: não dependa de um ping web para evitar isso. Se for necessária disponibilidade garantida, use um plano apropriado. Consulte as regras atuais: [Render Free](https://render.com/docs/free) e [Supabase Pricing](https://supabase.com/pricing).
 
 ## Estrutura
 
-- `lib/db.js` — conexão SQLite e criação das tabelas
-- `lib/game.js` — regras do jogo (geradores, custos, progresso offline)
-- `app/api/game` — GET: estado atual (aplica progresso offline)
-- `app/api/click` — POST: clique manual
-- `app/api/buy` — POST: compra de gerador
-- `app/page.js` — interface
-
-## Deploy no Render
-
-O `render.yaml` já está configurado (Blueprint). O SQLite fica em um disco persistente
-montado em `/var/data` (variável `DATA_DIR`). Discos exigem plano pago (`starter`) e
-limitam o serviço a 1 instância — o que é o ideal para SQLite.
-
-1. Suba o projeto para o GitHub/GitLab/Bitbucket.
-2. Acesse https://dashboard.render.com/blueprint/new?repo=URL_DO_SEU_REPOSITORIO
-3. Clique em **Apply**.
+- `lib/game.js`: motor puro e regras da jornada.
+- `lib/save-store.js`: execução com controle otimista de concorrência.
+- `lib/supabase/`: clientes de autenticação e persistência exclusivos do servidor.
+- `lib/game-api.js`: autenticação, validação e tratamento das APIs.
+- `supabase/migrations/`: esquema e políticas de acesso.
+- `app/auth/`: entrada Google, callback e saída.
+- `proxy.js`: proteção das páginas e atualização dos cookies.
+- `app/api/health/`: liveness independente do banco.

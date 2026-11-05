@@ -1,8 +1,7 @@
-import { NextResponse } from 'next/server';
-import { click } from '@/lib/game';
+import { gameApi } from '@/lib/game-api';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST() {
-  return NextResponse.json(click());
+export async function POST(request) {
+  return gameApi(request, 'click');
 }

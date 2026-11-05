@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { gameRequest as request } from '@/lib/client-request';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -14,13 +15,6 @@ function format(value) {
   return `${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} ${units[unitIndex]}`;
 }
 
-async function request(path, options) {
-  const response = await fetch(path, options);
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Não foi possível concluir a ação.');
-  return data;
-}
-
 export default function Home() {
   const [state, setState] = useState(null);
   const [display, setDisplay] = useState(0);
@@ -29,8 +23,11 @@ export default function Home() {
   const [busy, setBusy] = useState(false);
   const [tab, setTab] = useState('jornada');
   const syncRef = useRef({ coins: 0, cps: 0, at: Date.now() });
+  const versionRef = useRef(-1);
 
   const applyState = useCallback((nextState) => {
+    if (nextState.saveVersion < versionRef.current) return;
+    versionRef.current = nextState.saveVersion;
     setState(nextState);
     syncRef.current = { coins: nextState.coins, cps: nextState.cps, at: Date.now() };
   }, []);
@@ -133,6 +130,11 @@ export default function Home() {
           <span aria-hidden="true">🌱</span> {state.seeds} <span className="seed-word">sementes</span>
         </div>
       </header>
+
+      <div className="account-bar">
+        <span>Progresso salvo na sua conta Google</span>
+        <form action="/auth/logout" method="post"><button type="submit">Sair da conta</button></form>
+      </div>
 
       <section className="hero" id="inicio">
         <div className="hero-art">

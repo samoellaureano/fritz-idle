@@ -33,6 +33,18 @@ button, a { font: inherit; touch-action: manipulation; }
 button { color: inherit; }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
+.account-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding-top: 12px; color: var(--muted); font-size: 12px; }
+.account-bar button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); cursor: pointer; }
+.login-screen { min-height: 100dvh; display: grid; place-items: center; padding: 24px 16px; }
+.login-card { width: 100%; max-width: 640px; overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); }
+.login-card > img { display: block; width: 100%; height: auto; max-height: 300px; object-fit: cover; }
+.login-copy { padding: clamp(20px, 5vw, 36px); }
+.login-copy h1 { font-size: clamp(26px, 6vw, 36px); line-height: 1.15; }
+.login-copy p { color: var(--muted); line-height: 1.7; overflow-wrap: anywhere; }
+.login-copy .story-button { width: 100%; min-height: 48px; }
+.login-copy button:disabled { opacity: .5; cursor: not-allowed; }
+.login-note { font-size: 12px; }
+
 .game-shell { max-width: 1320px; margin: 0 auto; padding: 0 42px; }
 
 .topbar {
