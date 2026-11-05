@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { cloudEnabled, cloudFixture } from './helpers/cloud.mjs';
 import { ENCOURAGEMENTS } from '../lib/community.js';
-import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES } from '../lib/city-memory.js';
 import { MUSEUM_ITEMS } from '../lib/progression.js';
 import { STORY_CHAPTERS } from '../lib/story.js';
 import { CITY_CHAPTERS, JOURNEYS } from '../lib/journeys.js';
@@ -157,35 +156,21 @@ test('browser onboarding, personalized game and diary, community messages and mo
       page.getByRole('button', { name: /Recolher pétalas/ }).click(),
     ]);
     assert.equal((await fixture.api(actor, '/api/game')).data.totalClicks, 1);
-    await page.getByRole('link', { name: 'Cidade das Bicicletas', exact: true }).click();
+    await page.goto(`${fixture.origin}/historia?jornada=bicicletas`);
     await page.locator('.reader-dedication').waitFor();
     assert.ok((await page.locator('.reader-dedication').innerText()).includes(nickname));
-    await page.waitForFunction(() => {
-      const top = document.getElementById('cidade-das-bicicletas')?.getBoundingClientRect().top;
-      return top !== undefined && top >= 0 && top < 100;
-    }, null, { timeout: 5000 });
-    assert.equal(await page.locator('.chapter-nav-item').count(), 8);
-    const notebook = page.locator('#caderno-da-cidade');
-    assert.ok((await notebook.innerText()).includes(nickname));
-    for (const source of [...BICYCLE_MEMORY.sources, ...INDUSTRIAL_MEMORIES.map((company) => company.source)]) {
-      assert.equal(await notebook.getByRole('link', { name: `${source.label} ↗`, exact: true }).getAttribute('href'), source.url);
-    }
-    await page.getByRole('link', { name: '🏭 Memória industrial', exact: true }).click();
-    await page.waitForFunction(() => {
-      const top = document.getElementById('memoria-industrial')?.getBoundingClientRect().top;
-      return top !== undefined && top >= 0 && top < 100;
-    }, null, { timeout: 5000 });
-    for (const company of INDUSTRIAL_MEMORIES) {
-      assert.ok((await page.locator(`#memoria-${company.id}`).innerText()).includes(company.fact));
-    }
+    assert.equal(await page.locator('.chapter-nav-item').count(), 3);
+    assert.equal(await page.locator('.chapter-heading h2').innerText(), CITY_CHAPTERS[0].title);
+    assert.equal(await page.locator('#caderno-da-cidade').count(), 0);
+    await page.goto(`${fixture.origin}/historia?jornada=industria`);
+    await page.locator('.reader-dedication').waitFor();
+    assert.equal(await page.locator('.chapter-nav-item').count(), 5);
+    assert.equal(await page.locator('.chapter-heading h2').innerText(), CITY_CHAPTERS.find((chapter) => chapter.journey === 'industria').title);
     const unchanged = await fixture.api(actor, '/api/game');
     assert.equal(unchanged.data.storyMemoryCount, 0);
     assert.equal(unchanged.data.totalClicks, 1);
-    await page.reload();
-    await page.waitForFunction(() => {
-      const top = document.getElementById('memoria-industrial')?.getBoundingClientRect().top;
-      return top !== undefined && top >= 0 && top < 100;
-    }, null, { timeout: 5000 });
+    await page.goto(`${fixture.origin}/historia?jornada=flores`);
+    await page.locator('.reader-dedication').waitFor();
     await Promise.all([
       page.waitForResponse((response) => response.url().endsWith('/api/story') && response.status() === 200),
       page.getByRole('button', { name: /Guardar esta lembrança/ }).click(),

@@ -6,7 +6,6 @@ import { STORY_CHAPTERS } from '@/lib/story';
 import { CITY_CHAPTERS, JOURNEYS } from '@/lib/journeys';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
-import CityNotebook from '@/app/components/CityNotebook';
 import EraPortal from '@/app/components/EraPortal';
 import { formatCompactNumber as format } from '@/lib/format-number';
 import { JOURNEY_ICON_ART } from '@/lib/icon-art';
@@ -70,7 +69,7 @@ export default function StoryPage() {
   useEffect(() => {
     if (!hasGameState || !window.location.hash) return;
     const target = document.getElementById(window.location.hash.slice(1));
-    if (target?.closest('.city-notebook') || target?.id === 'trilhas-dos-lugares') target.scrollIntoView({ behavior: 'instant' });
+    if (target?.id === 'trilhas-dos-lugares') target.scrollIntoView({ behavior: 'instant' });
   }, [hasGameState]);
 
   const chapters = useMemo(() => ALL_CHAPTERS.filter((chapter) => chapter.journey === journeyId), [journeyId]);
@@ -263,7 +262,6 @@ export default function StoryPage() {
         </article>
       </div>
 
-      <CityNotebook nickname={gameState.profile.nickname} />
       <section className="story-truth-note"><span><GameIcon symbol="💚" /></span><p><strong>Feito com carinho por Joinville.</strong> Esta é uma obra de ficção interativa. Retratos e cenas são ilustrações originais; encontros, falas e acontecimentos narrativos não são fatos biográficos.</p></section>
       <footer className="story-footer"><a href="/">← Fritz e a jornada das flores</a><span>Leia uma história. Guarde uma lembrança. Continue jogando.</span></footer>
     </main>

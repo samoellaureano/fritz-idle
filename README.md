@@ -14,9 +14,7 @@ Logo, favicon, avatares, recursos, lugares, melhorias, conquistas, museu e cart�
 
 As referências visuais consultadas incluem a [Rua das Palmeiras e o Museu da Imigração](https://www.visitejoinville.com.br/turismoemjoinville/rua-das-palmeiras-e-museu-da-imigracao), o [Pórtico da Rua XV e o Moinho da Expoville](https://www.visitejoinville.com.br/en/turismoemjoinville/portico-da-rua-xv-e-complexo-expoville) e o [Memorial da Bicicleta](https://www.joinville.sc.gov.br/institucional/secult/upm/eme/). As artes reinterpretam elementos locais, sem reproduzir fotos, brasões ou marcas comerciais, e não são reproduções arquitetônicas exatas.
 
-O **Caderno da Cidade**, no mesmo diário, complementa a aventura com a **Cidade das Bicicletas**, o Memorial da Bicicleta e a memória industrial de **Döhler (1881), Wetzel (1932), Tupy (1938), Consul (1950) e Ciser (1959)**. As cenas de Fritz são ficção original; fatos e datas têm links para a Prefeitura e as histórias institucionais das empresas. As menções são históricas, sem patrocínio ou endosso declarado, e não indicam visitação pública às fábricas.
-
-O contexto histórico pode ser lido desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. As trilhas jogáveis ficam em `/historia?jornada=flores`, `/historia?jornada=bicicletas` e `/historia?jornada=industria`: oito capítulos das flores, três das bicicletas e cinco dos ofícios, com ilustrações originais próprias. Cada capítulo é liberado por pétalas históricas e rende uma recompensa única de pétalas, +2% de produção permanente e XP na era em que foi guardado. Releituras não repetem recompensas.
+As trilhas jogáveis ficam em `/historia?jornada=flores`, `/historia?jornada=bicicletas` e `/historia?jornada=industria`: oito capítulos das flores, três das bicicletas e cinco dos ofícios, com ilustrações originais próprias e fatos históricos com fontes em cada capítulo. Cada capítulo é liberado por pétalas históricas e rende uma recompensa única de pétalas, +2% de produção permanente e XP na era em que foi guardado. Releituras não repetem recompensas.
 
 ### Trilhas dos lugares
 

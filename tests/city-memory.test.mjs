@@ -1,14 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES, INDUSTRY_STORY } from '../lib/city-memory.js';
+import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES } from '../lib/city-memory.js';
 import { STORY_CHAPTERS } from '../lib/story.js';
 import { GENERATORS, newPlayer, runGameAction } from '../lib/game.js';
 import { CITY_CHAPTERS } from '../lib/journeys.js';
 
-test('city notebook covers bicycles and dated industrial memories with official source links', () => {
-  assert.equal(BICYCLE_MEMORY.id, 'cidade-das-bicicletas');
-  assert.ok(BICYCLE_MEMORY.facts.some((fact) => fact.includes('Cidade das Bicicletas')));
-  assert.ok(BICYCLE_MEMORY.facts.some((fact) => fact.includes('Memorial da Bicicleta')));
+test('bicycle and industry journeys keep their recreated chapters and historical sources', () => {
   assert.equal(BICYCLE_MEMORY.sources.length, 2);
   assert.deepEqual(INDUSTRIAL_MEMORIES.map(({ name, year }) => [name, year]), [
     ['Döhler', 1881], ['Wetzel', 1932], ['Tupy', 1938], ['Consul', 1950], ['Ciser', 1959],
@@ -22,21 +19,28 @@ test('city notebook covers bicycles and dated industrial memories with official 
     assert.ok(allowedHosts.has(url.hostname));
     assert.ok(source.label);
   }
-  assert.ok(BICYCLE_MEMORY.paragraphs.length >= 3);
-  assert.ok(INDUSTRY_STORY.length >= 2);
   for (const company of INDUSTRIAL_MEMORIES) {
     assert.ok(company.fact.includes(String(company.year)));
-    assert.ok(company.keepsake.includes('Fritz'));
-    assert.ok(company.scene && company.closing);
+  }
+
+  const bicycleChapters = CITY_CHAPTERS.filter((chapter) => chapter.journey === 'bicicletas');
+  assert.equal(bicycleChapters.length, 3);
+  assert.deepEqual(bicycleChapters.map(({ title }) => title), [
+    'A campainha da manhã', 'O portão e a multidão de rodas', 'Duas cidades num só caminho',
+  ]);
+  for (const chapter of bicycleChapters) {
+    assert.ok(chapter.fact && chapter.paragraphs.length > 0 && chapter.keepsake);
+    assert.deepEqual(chapter.sources, BICYCLE_MEMORY.sources);
   }
 
   const industryChapters = CITY_CHAPTERS.filter((chapter) => chapter.journey === 'industria');
   assert.equal(industryChapters.length, INDUSTRIAL_MEMORIES.length);
   for (const [index, chapter] of industryChapters.entries()) {
     assert.equal(chapter.id, `oficio-${INDUSTRIAL_MEMORIES[index].id}`);
-    assert.equal(chapter.fact, INDUSTRIAL_MEMORIES[index].fact);
+    assert.equal(chapter.place, `${INDUSTRIAL_MEMORIES[index].name} · memória desde ${INDUSTRIAL_MEMORIES[index].year}`);
+    assert.ok(chapter.fact && chapter.paragraphs.length > 0 && chapter.keepsake);
     assert.equal(chapter.paragraphs.length, 2);
-    assert.deepEqual(chapter.paragraphs, [INDUSTRIAL_MEMORIES[index].scene, INDUSTRIAL_MEMORIES[index].closing]);
+    assert.deepEqual(chapter.sources, [INDUSTRIAL_MEMORIES[index].source]);
   }
 });
 
@@ -51,7 +55,7 @@ test('new trails extend the eight flower chapters and keep the Station economy',
   assert.equal(state.storyProductionBonus, .16);
   assert.deepEqual(saved.memories, player.memories);
   assert.deepEqual(saved.generators, player.generators);
-  for (const chapterId of [BICYCLE_MEMORY.id, 'memoria-industrial', ...INDUSTRIAL_MEMORIES.map((company) => company.id)]) {
+  for (const chapterId of ['cidade-das-bicicletas', 'memoria-industrial', ...INDUSTRIAL_MEMORIES.map((company) => company.id)]) {
     assert.match(runGameAction(player, 'story', { chapterId }, now).error, /inválido/);
   }
   assert.equal(GENERATORS.length, 13);

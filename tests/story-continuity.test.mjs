@@ -48,7 +48,7 @@ test('all 58 chapters separate sourced context from short child-friendly adventu
 
 test('the flower adventure hands each clue to the next chapter and resolves its opening quest', () => {
   const handoffs = [
-    /carta/, /outro Fritz/, /Instituto Juarez Machado/, /Luiz Henrique Schwanke/,
+    /carta/, /colina/, /Instituto Juarez Machado/, /Luiz Henrique Schwanke/,
     /escutada/, /Morro da Boa Vista/, /Festa das Flores/,
   ];
   handoffs.forEach((clue, index) => {

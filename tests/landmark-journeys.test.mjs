@@ -53,15 +53,15 @@ test('historical corrections keep real people out of invented scenes', () => {
   const princess = STORY_CHAPTERS.find((chapter) => chapter.id === 'a-carta-de-francisca');
   const princessStory = [...princess.paragraphs, princess.fact].join(' ');
   assert.match(princess.title, /inventou/);
-  assert.match(princessStory, /Não é uma carta do acervo/);
+  assert.match(princessStory, /Não era do acervo do museu/);
   assert.match(princessStory, /nunca visitou Joinville/);
-  assert.match(princessStory, /não morou ali/);
-  assert.match(princessStory, /invenção de Fritz/);
+  assert.match(princessStory, /o casal nunca esteve aqui/);
+  assert.match(princessStory, /invenção do personagem/);
   assert.ok(princess.sources.some((source) => source.url.includes('ndmais.com.br')));
 
   const artistStory = STORY_CHAPTERS.find((chapter) => chapter.id === 'o-atelier-na-colina');
   assert.equal(artistStory.character, 'Legado de Fritz Alt');
-  assert.match(artistStory.paragraphs.join(' '), /não encontra o escultor/i);
+  assert.match(artistStory.paragraphs.join(' '), /não encontrou o escultor/i);
   assert.match(artistStory.paragraphs.join(' '), /dois Fritzes/i);
 
   const cemetery = LANDMARK_JOURNEYS.find((journey) => journey.id === 'cemiterio-imigrantes');
