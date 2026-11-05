@@ -7,13 +7,9 @@ import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
 import CityNotebook from '@/app/components/CityNotebook';
 import EraPortal from '@/app/components/EraPortal';
+import { formatCompactNumber as format } from '@/lib/format-number';
 
 const ALL_CHAPTERS = [...STORY_CHAPTERS.map((chapter) => ({ ...chapter, journey: 'flores' })), ...CITY_CHAPTERS];
-
-function format(value) {
-  if (!Number.isFinite(value)) return '0';
-  return value.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
-}
 
 function JourneyChoice({ journey, chapters, selected, onChoose }) {
   const completed = chapters.filter((chapter) => chapter.completed).length;
@@ -147,7 +143,7 @@ export default function StoryPage() {
         <div className="story-nav-actions">
           <a className="player-identity" href="/perfil"><Avatar id={gameState.profile.avatarId} decorative /><EraPortal points={gameState.rebirth.points} count={gameState.rebirth.count} /><span>{gameState.profile.nickname}</span></a>
           <a className="back-to-game" href="/mural">Mural da cidade</a>
-          <span className="story-save"><span aria-hidden="true">🌸</span> {format(gameState.coins)} pétalas</span>
+          <span className="story-save" tabIndex={0} aria-label={`${gameState.coins.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} pétalas disponíveis`} data-tooltip={`${gameState.coins.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} pétalas disponíveis`}><span aria-hidden="true">🌸</span> {format(gameState.coins)}</span>
           <a className="back-to-game" href="/"><span>↖</span> Voltar a jogar</a>
         </div>
       </header>

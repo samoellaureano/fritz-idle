@@ -38,8 +38,42 @@ test('all fourteen requested places have their own three-step illustrated narrat
       assert.equal(chapter.paragraphs.length, 2);
       assert.equal(new URL(chapter.sources[0].url).hostname, 'www.visitejoinville.com.br');
       assert.equal(chapter.sources[0].url, journey.source);
+      assert.deepEqual(chapter.sources.slice(1), journey.additionalSources ?? []);
+      for (const source of chapter.sources) {
+        const url = new URL(source.url);
+        assert.equal(url.protocol, 'https:');
+        assert.ok(['www.visitejoinville.com.br', 'www.joinville.sc.gov.br', 'ndmais.com.br'].includes(url.hostname));
+        assert.ok(source.label);
+      }
     }
   }
+});
+
+test('historical corrections keep real people out of invented scenes', () => {
+  const princess = STORY_CHAPTERS.find((chapter) => chapter.id === 'a-carta-de-francisca');
+  const princessStory = princess.paragraphs.join(' ');
+  assert.match(princess.title, /inventou/);
+  assert.match(princessStory, /Não é uma carta do acervo/);
+  assert.match(princessStory, /nunca visitou Joinville/);
+  assert.match(princessStory, /não morou ali/);
+  assert.match(princessStory, /invenção de Fritz/);
+  assert.ok(princess.sources.some((source) => source.url.includes('ndmais.com.br')));
+
+  const artistStory = STORY_CHAPTERS.find((chapter) => chapter.id === 'o-atelier-na-colina');
+  assert.equal(artistStory.character, 'Legado de Fritz Alt');
+  assert.match(artistStory.paragraphs.join(' '), /não encontra o escultor/i);
+  assert.match(artistStory.paragraphs.join(' '), /dois Fritzes/);
+
+  const cemetery = LANDMARK_JOURNEYS.find((journey) => journey.id === 'cemiterio-imigrantes');
+  assert.equal(cemetery.name, 'Cemitério do Imigrante');
+  assert.match(cemetery.fact, /afrodescendentes e luso-brasileiros/);
+  assert.ok(cemetery.additionalSources.some((source) => source.url.includes('joinville.sc.gov.br')));
+
+  const farol = LANDMARK_JOURNEYS.find((journey) => journey.id === 'o-farol');
+  assert.match(farol.fact, /1952 e 1954/);
+  assert.match(farol.fact, /não um farol marítimo/);
+  const sambaqui = LANDMARK_JOURNEYS.find((journey) => journey.id === 'sambaqui');
+  assert.match(sambaqui.fact, /há mais de 5 mil anos/);
 });
 
 test('all journey covers and chapters use available illustrations with optimized city scenes', () => {

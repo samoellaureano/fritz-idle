@@ -6,18 +6,7 @@ import Avatar from '@/app/components/Avatar';
 import EraPortal from '@/app/components/EraPortal';
 import CityMuseum from '@/app/components/CityMuseum';
 import { generatorPurchase } from '@/lib/purchases';
-
-function format(value) {
-  if (!Number.isFinite(value)) return '0';
-  if (value < 1000) return value.toLocaleString('pt-BR', { maximumFractionDigits: value < 10 ? 1 : 0 });
-  const units = ['mil', 'mi', 'bi', 'tri'];
-  let unitIndex = -1;
-  while (value >= 1000 && unitIndex < units.length - 1) {
-    value /= 1000;
-    unitIndex++;
-  }
-  return `${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} ${units[unitIndex]}`;
-}
+import { formatCompactNumber as format } from '@/lib/format-number';
 
 export default function Home() {
   const [state, setState] = useState(null);

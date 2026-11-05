@@ -447,7 +447,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .story-brand > span:first-child { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid rgba(183, 216, 132, .19); border-radius: 11px; background: rgba(183, 216, 132, .09); font-size: 18px; }
 .story-brand > span:last-child > span { color: var(--muted); font-weight: 500; }
 .story-nav-actions { display: flex; align-items: center; gap: 14px; }
-.story-save { color: var(--gold); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.story-save { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; padding: 5px 8px; border: 1px solid #f3cb7850; border-radius: 999px; background: #f3cb780a; color: var(--gold); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .back-to-game { min-height: 42px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid rgba(183, 216, 132, .22); border-radius: 7px; color: var(--green); text-decoration: none; font-size: 10px; font-weight: 700; transition: background .16s, color .16s; }
 .back-to-game:hover { background: var(--green); color: #18251a; }
 .story-intro { max-width: 1230px; margin: 0 auto; padding: 47px 0 26px; }
@@ -639,7 +639,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .story-brand { gap: 7px; font-size: 11px; }
   .story-brand > span:first-child { width: 27px; height: 27px; font-size: 15px; }
   .story-nav-actions { gap: 7px; }
-  .story-save { font-size: 8px; }
   .back-to-game { min-height: 42px; gap: 5px; padding: 7px 8px; font-size: 8px; }
   .story-intro { padding: 26px 0 15px; }
   .story-eyebrow { font-size: 7px; }
@@ -700,7 +699,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .nav-link { font-size: 8px; }
   .story-page { padding-right: 10px; padding-left: 10px; }
   .story-brand { font-size: 10px; }
-  .story-save { font-size: 7px; }
   .back-to-game { padding-right: 6px; padding-left: 6px; font-size: 7px; }
   .chapter-nav-item { width: 73vw; min-width: 73vw; }
   .chapter-reading { padding-right: 11px; padding-left: 11px; }

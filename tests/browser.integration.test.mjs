@@ -26,6 +26,18 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto(fixture.origin);
+    await page.locator('.resource-dock').waitFor();
+    assert.match(await page.locator('.resource-dock > strong').innerText(), /600 mi/);
+    await page.goto(`${fixture.origin}/historia`);
+    await page.locator('.story-save').waitFor();
+    assert.equal((await page.locator('.story-save').innerText()).trim(), '🌸 600 mi');
+    assert.equal(await page.locator('.story-save').getAttribute('aria-label'), '600.000.000 pétalas disponíveis');
+    for (const width of [320, 375, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert.ok(await page.locator('.story-save').evaluate((node) => node.getBoundingClientRect().width < 140));
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+    }
+    await page.goto(fixture.origin);
     await page.getByRole('button', { name: 'Personagens', exact: true }).click();
     await page.getByRole('button', { name: 'Adquirir · 500 mi 🌸', exact: true }).click();
     await page.getByRole('button', { name: 'Viveiro ativo', exact: true }).waitFor();

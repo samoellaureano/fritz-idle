@@ -2,6 +2,8 @@
 
 Jogo idle com 17 trilhas e 58 capítulos ilustrados, personagens gestores, lugares de Joinville, pétalas, sementes, progresso offline, melhorias, presente diário e novas eras. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
 
+As narrativas distinguem os fatos locais das invenções do diário de Fritz. Dona Francisca não visitou Joinville nem morou no Palácio dos Príncipes; a carta da aventura é imaginada, não uma peça do acervo. As trilhas de bicicletas, ofícios e lugares combinam referências documentadas com cenas lúdicas, sem alterar desbloqueios ou recompensas já guardadas.
+
 O **Caderno da Cidade**, no mesmo diário, complementa a aventura com a **Cidade das Bicicletas**, o Memorial da Bicicleta e a memória industrial de **Döhler (1881), Wetzel (1932), Tupy (1938), Consul (1950) e Ciser (1959)**. As cenas de Fritz são ficção original; fatos e datas têm links para a Prefeitura e as histórias institucionais das empresas. As menções são históricas, sem patrocínio ou endosso declarado, e não indicam visitação pública às fábricas.
 
 O contexto histórico pode ser lido desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. As trilhas jogáveis ficam em `/historia?jornada=flores`, `/historia?jornada=bicicletas` e `/historia?jornada=industria`: oito capítulos das flores, três das bicicletas e cinco dos ofícios, com ilustrações originais próprias. Cada capítulo é liberado por pétalas históricas e rende uma recompensa única de pétalas, +2% de produção permanente e XP na era em que foi guardado. Releituras não repetem recompensas.
@@ -29,7 +31,7 @@ Em `/historia#trilhas-dos-lugares`, um mapa recolhível reúne **14 jornadas pr�
 
 As narrativas são ficção original de Fritz, não transcrições dos roteiros turísticos nem depoimentos de pessoas reais. Cada capítulo separa um contexto factual com fonte do Visite Joinville. O Farol é retratado como edifício urbano ligado à inovação, não como farol marítimo; os povos dos sambaquis são reconhecidos como anteriores à colonização europeia. Não há coleta de objetos de acervos, sítios ou memoriais, nem incentivo ao consumo de álcool. As menções não indicam patrocínio, endosso ou garantia de visitação. As novas trilhas são narrativas: não adicionam geradores nem alteram custos dos lugares existentes, e os saves atuais continuam compatíveis sem migração de banco.
 
-Os 13 lugares estão agrupados pelas três jornadas originais e **produzem pétalas**, preservando seus IDs, custos e taxas-base. O botão **max** compra, numa única operação, todas as unidades que o saldo comporta, respeitando o custo arredondado individual de cada unidade. O saldo de pétalas aparece também em um contador compacto fixo durante a rolagem.
+Os 13 lugares estão agrupados pelas três jornadas originais e **produzem pétalas**, preservando seus IDs, custos e taxas-base. O botão **max** compra, numa única operação, todas as unidades que o saldo comporta, respeitando o custo arredondado individual de cada unidade. O saldo de pétalas aparece também em um contador compacto fixo durante a rolagem. Jogo, diário, ranking e cartão de compartilhamento usam a mesma abreviação numérica: `mil`, `mi`, `bi`, `tri`, `quad`, `quint`, `sext`, `sept`, `oct`, `non` e `dec`. Acima dessas unidades, usam notação científica compacta (por exemplo, `1,23e36`). No diário, o saldo fica numa pequena cápsula; o valor completo está disponível ao focar ou passar o cursor.
 
 ### Museu e novas eras
 

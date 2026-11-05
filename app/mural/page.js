@@ -7,8 +7,9 @@ import Avatar from '@/app/components/Avatar';
 import EraPortal from '@/app/components/EraPortal';
 import MuseumBadges from '@/app/components/MuseumBadges';
 import ProgressShare from '@/app/components/ProgressShare';
+import { formatCompactNumber } from '@/lib/format-number';
 
-const number = (value) => Number(value).toLocaleString('pt-BR', { notation: 'compact', maximumFractionDigits: 2 });
+const number = (value) => formatCompactNumber(Number(value));
 const time = (value) => new Date(value).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
 function RankingEntry({ entry, own }) {

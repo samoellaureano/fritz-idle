@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { gameRequest as request } from '@/lib/client-request';
+import { formatCompactNumber as number } from '@/lib/format-number';
 
-const number = (value) => value.toLocaleString('pt-BR', { notation: 'compact', maximumFractionDigits: 1 });
 const SHARE_URL = 'https://fritzidle.com.br';
 
 export function drawProgressCard(canvas, state) {

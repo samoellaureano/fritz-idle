@@ -27,6 +27,16 @@ test('city notebook covers bicycles and dated industrial memories with official 
   for (const company of INDUSTRIAL_MEMORIES) {
     assert.ok(company.fact.includes(String(company.year)));
     assert.ok(company.keepsake.includes('Fritz'));
+    assert.ok(company.scene && company.closing);
+  }
+
+  const industryChapters = CITY_CHAPTERS.filter((chapter) => chapter.journey === 'industria');
+  assert.equal(industryChapters.length, INDUSTRIAL_MEMORIES.length);
+  for (const [index, chapter] of industryChapters.entries()) {
+    assert.equal(chapter.id, `oficio-${INDUSTRIAL_MEMORIES[index].id}`);
+    assert.equal(chapter.fact, INDUSTRIAL_MEMORIES[index].fact);
+    assert.equal(chapter.paragraphs.length, 2);
+    assert.match(chapter.paragraphs.join(' '), /sem fingir que visitou a fábrica/);
   }
 });
 
