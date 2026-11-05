@@ -234,7 +234,7 @@ export default function Home() {
                     return (
                       <article className={`place-card ${affordable ? 'affordable' : ''}`} key={generator.id}>
                         <div className={`place-icon place-tone-${index % 5}`}>{generator.icon}</div>
-                        <div className="place-copy"><h3>{generator.name}</h3><p>{generator.place}</p><span className="place-rate">✦ +{format(generator.cps)} pétalas/s cada</span></div>
+                        <div className="place-copy"><h3>{generator.name}</h3><p>{generator.place}</p><span className="place-rate" title="Rendimento por unidade com melhorias e bônus ativos; não inclui os toques automáticos dos gestores.">✦ +{generator.effectiveCps < 1000 ? generator.effectiveCps.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : format(generator.effectiveCps)} pétalas/s cada</span></div>
                         <div className="place-owned"><strong>{generator.owned}</strong><span>ativos</span></div>
                         <button className="buy-button" disabled={!affordable || busy} onClick={() => handleBuy(generator.id)}>
                           <span>{format(generator.cost)}</span><small>🌸</small>

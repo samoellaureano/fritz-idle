@@ -78,6 +78,8 @@ A bolsa não cria sementes sozinha: exige viveiro e gestores ativos. Seu bônus 
 
 Nos lugares, o botão **max xN** mostra quantas unidades cabem nas pétalas disponíveis, atualizando com a produção. A prévia soma os mesmos custos arredondados por unidade usados pelo servidor; o total final é confirmado ao comprar e pode crescer com novas pétalas ou mudar se outra aba gastar o saldo. Sem saldo para uma unidade, mostra **max x0** desabilitado. O logo próprio do Fritz, com sorriso e uma flor, acompanha os cabeçalhos do jogo, diário, perfil, mural e o ícone da aba.
 
+O rendimento “pétalas/s cada” de cada lugar mostra a produção efetiva por unidade, incluindo melhorias, personagens, histórias, museu, Pórticos disponíveis e compartilhamento ativo. Os toques automáticos dos gestores entram somente na produção total, não no rendimento individual dos lugares.
+
 ### Sementes e gestores
 
 Ao recuperar **500 milhões de pétalas na era**, o **Viveiro dos gestores** fica disponível na aba Personagens por **500 milhões de pétalas disponíveis**. O saldo histórico de outras eras não libera a compra. Fritz entra automaticamente e gera 1 semente/minuto. Sementes não dão mais bônus de produção por saldo e não são usadas no museu: acumulam como recurso e contratam os outros gestores encontrados.
