@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: fritz-idle
+    runtime: node
+    plan: starter            # discos persistentes exigem plano pago
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: fritz-data
+      mountPath: /var/data
+      sizeGB: 1
