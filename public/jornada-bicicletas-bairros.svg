@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Bicicletas aproximam bairros por uma ponte florida">
+<rect width="1000" height="600" fill="#34584e"/><circle cx="800" cy="115" r="70" fill="#eed093"/><path d="M0 350Q200 250 400 370T1000 320V600H0" fill="#749374"/><path d="M400 600Q620 420 540 300L570 300Q790 420 640 600" fill="#547e8b"/>
+<path d="M70 400h850v45H70" fill="#d4b27e"/><path d="M100 390v-80m160 80v-80m160 80v-80m160 80v-80m160 80v-80m160 80v-80M100 315h800" stroke="#d4b27e" stroke-width="12"/>
+<g fill="none" stroke="#f5dfaa" stroke-width="9" stroke-linecap="round"><circle cx="270" cy="345" r="42"/><circle cx="445" cy="345" r="42"/><path d="M270 345l55-85 45 85H270m55-85h95l-50 85m75 0-40-105h35M310 250h28"/><circle cx="610" cy="345" r="42"/><circle cx="785" cy="345" r="42"/><path d="M610 345l55-85 45 85H610m55-85h95l-50 85m75 0-40-105h35M650 250h28"/></g>
+<g fill="#e7a1a4"><circle cx="95" cy="500" r="25"/><circle cx="280" cy="490" r="20"/><circle cx="820" cy="480" r="28"/><circle cx="940" cy="515" r="20"/></g><g fill="#f4d28b"><circle cx="95" cy="500" r="8"/><circle cx="280" cy="490" r="7"/><circle cx="820" cy="480" r="9"/><circle cx="940" cy="515" r="7"/></g>
+</svg>

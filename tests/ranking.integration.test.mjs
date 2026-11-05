@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { cloudEnabled, cloudFixture } from './helpers/cloud.mjs';
 
-test('cloud ranking orders wheels before seeds, memories and lifetime without identity leaks', { skip: !cloudEnabled }, async () => {
+test('cloud ranking orders portals before seeds, memories and lifetime without identity leaks', { skip: !cloudEnabled }, async () => {
   const fixture = await cloudFixture();
   try {
     const actors = [];
@@ -23,18 +23,19 @@ test('cloud ranking orders wheels before seeds, memories and lifetime without id
     assert.deepEqual(ranked.map((r) => r.profile_id), [actors[3], actors[2], actors[0], actors[1]].map((a) => a.profile.id));
     assert.equal(result.data.me.profile_id, actors[0].profile.id);
     for (const row of result.data.ranking) {
-      assert.deepEqual(Object.keys(row).sort(), ['profile_id', 'nickname', 'avatar_id', 'seeds', 'memories', 'lifetime', 'rank', 'wheels', 'rebirths'].sort());
+      assert.deepEqual(Object.keys(row).sort(), ['profile_id', 'nickname', 'avatar_id', 'seeds', 'memories', 'lifetime', 'rank', 'porticos', 'rebirths', 'museum'].sort());
     }
     assert.ok(!JSON.stringify(result.data).includes(actors[0].id));
     assert.equal((await fixture.api(actors[0], '/api/profile', 'POST', { nickname: 'Cheat', avatarId: 'fritz', seeds: 999 })).status, 400);
     await fixture.seed(actors[1], { seeds: 3, memories: [], lifetime: 100 });
     const refreshed = await fixture.api(actors[1], '/api/community');
     assert.equal(refreshed.data.ranking.filter((r) => ownIds.includes(r.profile_id))[0].profile_id, actors[1].profile.id);
-    await fixture.seed(actors[0], { seeds: 0, wheels: 40, rebirths: 1 });
+    await fixture.seed(actors[0], { seeds: 0, porticos: 1.5, rebirths: 1, museum: ['bicicleta'] });
     const reborn = await fixture.api(actors[0], '/api/community');
     const first = reborn.data.ranking.filter((r) => ownIds.includes(r.profile_id))[0];
     assert.equal(first.profile_id, actors[0].profile.id);
-    assert.equal(Number(first.wheels), 40);
+    assert.equal(Number(first.porticos), 1.5);
+    assert.deepEqual(first.museum, ['bicicleta']);
     assert.equal(Number(first.rebirths), 1);
   } finally {
     await fixture.cleanup();

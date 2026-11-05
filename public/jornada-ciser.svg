@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Pequenas pecas sustentando uma flor">
+<rect width="1000" height="600" fill="#30403d"/><circle cx="780" cy="130" r="80" fill="#c0ab79"/><path d="M0 480Q500 350 1000 450V600H0" fill="#70836b"/>
+<g transform="rotate(-25 500 300)" fill="#e0bd80" stroke="#a88654" stroke-width="9"><path d="M275 185l60-55 100 85-60 55z"/><path d="M400 240l260 220 45-60-260-220z"/><path d="M475 270l35-40m15 80 35-40m15 80 35-40m15 80 35-40" fill="none"/></g>
+<path d="M690 250l75-40 75 40v90l-75 40-75-40z" fill="#d3ad76"/><circle cx="765" cy="295" r="32" fill="#30403d"/><path d="M765 280v-80q-60-45-45-15 15 25 45 15" stroke="#b7ce95" stroke-width="10" fill="none"/><g fill="#e6a2a3"><circle cx="750" cy="155" r="24"/><circle cx="780" cy="155" r="24"/><circle cx="765" cy="135" r="24"/></g><circle cx="765" cy="153" r="12" fill="#f5d794"/>
+</svg>

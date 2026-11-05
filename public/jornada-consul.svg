@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Uma cozinha acolhedora e uma flor na geladeira">
+<rect width="1000" height="600" fill="#414f45"/><rect x="100" y="90" width="230" height="230" rx="25" fill="#e9c687"/><path d="M215 90v230M100 205h230" stroke="#947962" stroke-width="10"/>
+<rect y="475" width="1000" height="125" fill="#7c8464"/><rect x="540" y="80" width="245" height="435" rx="28" fill="#d5e1c7" stroke="#b4c2a8" stroke-width="12"/><path d="M540 235h245M575 150v40m0 85v90" stroke="#728d85" stroke-width="12"/>
+<path d="M660 350v85m0-35q-70-55-55-15 25 35 55 15m0-30q60-65 60-20-20 30-60 20" fill="#8caa72"/><g fill="#de9496"><circle cx="660" cy="335" r="25"/><circle cx="640" cy="315" r="25"/><circle cx="680" cy="315" r="25"/></g><circle cx="660" cy="320" r="12" fill="#f2d595"/>
+<path d="M135 430h245v25H135m25 0v100m195-100v100" stroke="#d4ab77" stroke-width="18"/>
+</svg>

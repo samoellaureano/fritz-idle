@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Uma bicicleta retorna a uma casa iluminada ao entardecer">
+<rect width="1000" height="600" fill="#353d55"/><circle cx="185" cy="115" r="60" fill="#ecbb96"/><g fill="#ebd29c"><circle cx="450" cy="65" r="3"/><circle cx="860" cy="80" r="4"/><circle cx="540" cy="125" r="3"/></g>
+<path d="M0 390Q500 250 1000 370V600H0" fill="#627a64"/><path d="M590 600Q560 440 735 340L760 340Q670 430 770 600" fill="#c7aa81"/>
+<path d="M615 365V210h250v155" fill="#d4bc99"/><path d="M590 210l150-110 150 110" fill="#b57f72"/><g fill="#f5dba0"><rect x="650" y="245" width="50" height="60"/><rect x="790" y="245" width="45" height="60"/><path d="M720 365v-90q25-35 50 0v90"/></g>
+<g fill="none" stroke="#f0ce8b" stroke-width="11" stroke-linecap="round"><circle cx="280" cy="430" r="65"/><circle cx="545" cy="430" r="65"/><path d="M280 430l80-125 70 125H280m80-125h145l-75 125m115 0-60-160h42M337 290h48"/></g>
+<path d="M495 305h75l-10 40h-53z" fill="#b6926d"/><g fill="#e7a3b0"><circle cx="520" cy="290" r="20"/><circle cx="551" cy="293" r="17"/><circle cx="100" cy="495" r="22"/><circle cx="900" cy="475" r="25"/></g><g fill="#e9d394"><circle cx="520" cy="290" r="7"/><circle cx="551" cy="293" r="6"/><circle cx="100" cy="495" r="7"/><circle cx="900" cy="475" r="8"/></g>
+</svg>

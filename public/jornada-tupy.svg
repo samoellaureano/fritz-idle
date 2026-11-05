@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Um caderno aberto diante de janelas de aprendizado">
+<rect width="1000" height="600" fill="#2c4249"/><g fill="#efd297"><rect x="110" y="90" width="160" height="190" rx="40"/><rect x="740" y="90" width="160" height="190" rx="40"/></g>
+<path d="M0 510Q500 340 1000 480V600H0" fill="#588272"/><path d="M270 480V220q110-35 230 20 120-55 230-20v260q-120-35-230 20-120-55-230-20z" fill="#ebd9b1" stroke="#a37d57" stroke-width="12"/>
+<g stroke="#699889" stroke-width="10"><path d="M500 240v260M310 300h135m-135 50h135m-135 50h135M550 300h135m-135 50h135m-135 50h135"/></g><path d="M465 300q50-60 60 0v80l-30 35-30-35z" fill="#d89092"/>
+</svg>

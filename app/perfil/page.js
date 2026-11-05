@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { AVATARS, avatarFor } from '@/lib/community';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
-import MemoryWheel from '@/app/components/MemoryWheel';
+import EraPortal from '@/app/components/EraPortal';
+import MuseumBadges from '@/app/components/MuseumBadges';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -60,13 +61,23 @@ export default function ProfilePage() {
         <form className="community-card profile-form" onSubmit={save}>
           <div className="profile-name-row">
             <Avatar id={avatarId} />
-            {progress && <MemoryWheel points={Number(progress.wheels)} count={Number(progress.rebirths)} />}
+            {progress && <EraPortal points={progress.rebirth.points} count={progress.rebirth.count} />}
             <div className="profile-name-input">
               <label htmlFor="nickname">Seu apelido em Joinville</label>
               <input id="nickname" name="nickname" value={nickname} onChange={(event) => setNickname(event.target.value)}
                 required minLength={3} maxLength={24} autoComplete="nickname" aria-describedby="nickname-hint" />
               <p id="nickname-hint">De 3 a 24 letras ou números, sem espaços. Pode usar - e _. O apelido é único, sem diferenciar maiúsculas de minúsculas.</p>
             </div>
+            {progress && <section className="profile-collection" aria-labelledby="profile-collection-title">
+              <h2 id="profile-collection-title">Suas memórias e conquistas</h2>
+              <p>Nível {progress.rebirth.level} · Era {progress.rebirth.count + 1} · {progress.storyMemoryCount} histórias guardadas</p>
+              <h3>Insígnias do museu</h3><MuseumBadges items={progress.museum} />
+              {!progress.museum.some((item) => item.owned) && <p>Adquira suas primeiras insígnias com Pórticos no museu.</p>}
+              <div className="achievement-list">{progress.achievements.map((item) => <article className={`achievement-card ${item.unlocked ? 'achievement-unlocked' : ''}`} key={item.id}>
+                <span className="achievement-icon">{item.unlocked ? item.icon : '🔒'}</span>
+                <div><h3>{item.name}</h3><p>{item.description}</p></div><span>{item.unlocked ? 'Conquistada' : 'A descobrir'}</span>
+              </article>)}</div>
+            </section>}
           </div>
           <fieldset className="avatar-fieldset">
             <legend>Escolha seu avatar</legend>

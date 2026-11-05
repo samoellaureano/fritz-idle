@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Uma engrenagem e o calor de um oficio">
+<rect width="1000" height="600" fill="#3f3936"/><circle cx="780" cy="150" r="100" fill="#b87b56"/><path d="M0 500Q500 370 1000 450V600H0" fill="#696753"/>
+<g transform="translate(500 300)" fill="#dfa974"><path d="M-50-190h100l14 45 55 30 47-9 50 87-33 37v64l33 37-50 87-47-9-55 30-14 45h-100l-14-45-55-30-47 9-50-87 33-37v-64l-33-37 50-87 47 9 55-30z"/><circle r="95" fill="#3f3936"/><circle r="48" fill="#b3ca91"/></g>
+<path d="M140 450h110l25-90H115zM740 450h110l25-90H715z" fill="#bc7d5f"/><g fill="#f6d891"><circle cx="205" cy="300" r="7"/><circle cx="830" cy="310" r="10"/><circle cx="760" cy="240" r="8"/></g>
+</svg>

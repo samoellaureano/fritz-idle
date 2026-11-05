@@ -29,16 +29,17 @@ test('city notebook covers bicycles and dated industrial memories with official 
   }
 });
 
-test('notebook keeps eight rewarded chapters and the original Station economy with expanded generators', () => {
+test('new trails extend the eight flower chapters and keep the Station economy', () => {
   const now = 1800000000000;
   const player = newPlayer(now);
   player.lifetime = 2000000;
   player.memories = STORY_CHAPTERS.map((chapter) => chapter.id);
   const { state, player: saved } = runGameAction(player, 'game', {}, now);
-  assert.equal(state.storyChapters.length, 8);
+  assert.equal(state.storyChapters.length, 16);
   assert.equal(state.storyMemoryCount, 8);
   assert.equal(state.storyProductionBonus, .16);
-  assert.deepEqual(saved, player);
+  assert.deepEqual(saved.memories, player.memories);
+  assert.deepEqual(saved.generators, player.generators);
   for (const chapterId of [BICYCLE_MEMORY.id, 'memoria-industrial', ...INDUSTRIAL_MEMORIES.map((company) => company.id)]) {
     assert.match(runGameAction(player, 'story', { chapterId }, now).error, /inválido/);
   }

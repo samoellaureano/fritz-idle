@@ -2,10 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { STORY_CHAPTERS } from '@/lib/story';
+import { CITY_CHAPTERS, JOURNEYS } from '@/lib/journeys';
 import { gameRequest as request } from '@/lib/client-request';
 import Avatar from '@/app/components/Avatar';
 import CityNotebook from '@/app/components/CityNotebook';
-import MemoryWheel from '@/app/components/MemoryWheel';
+import EraPortal from '@/app/components/EraPortal';
+
+const ALL_CHAPTERS = [...STORY_CHAPTERS.map((chapter) => ({ ...chapter, journey: 'flores' })), ...CITY_CHAPTERS];
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -15,6 +18,7 @@ function format(value) {
 export default function StoryPage() {
   const [gameState, setGameState] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [journeyId, setJourneyId] = useState('flores');
   const [rewardMessage, setRewardMessage] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -31,11 +35,14 @@ export default function StoryPage() {
     try {
       const state = await request('/api/game');
       applyState(state);
-      const chapterId = new URLSearchParams(window.location.search).get('capitulo');
-      const requestedIndex = STORY_CHAPTERS.findIndex((chapter) => chapter.id === chapterId);
-      if (requestedIndex >= 0 && state.storyChapters[requestedIndex]?.unlocked) {
-        setSelectedIndex(requestedIndex);
-      }
+      const params = new URLSearchParams(window.location.search);
+      const chapterId = params.get('capitulo');
+      const requestedChapter = ALL_CHAPTERS.find((chapter) => chapter.id === chapterId);
+      const requestedJourney = requestedChapter?.journey ?? params.get('jornada') ?? 'flores';
+      const validJourney = JOURNEYS.some((journey) => journey.id === requestedJourney) ? requestedJourney : 'flores';
+      setJourneyId(validJourney);
+      const requestedIndex = ALL_CHAPTERS.filter((chapter) => chapter.journey === validJourney).findIndex((chapter) => chapter.id === chapterId);
+      setSelectedIndex(requestedIndex >= 0 && state.storyChapters.find((chapter) => chapter.id === chapterId)?.unlocked ? requestedIndex : 0);
     } catch (cause) {
       setError(cause.message);
     }
@@ -57,16 +64,14 @@ export default function StoryPage() {
     if (target?.closest('.city-notebook')) target.scrollIntoView({ behavior: 'instant' });
   }, [hasGameState]);
 
-  const chapterProgress = useMemo(
-    () => gameState?.storyChapters ?? [],
-    [gameState]
-  );
-  const chapter = STORY_CHAPTERS[selectedIndex];
+  const chapters = useMemo(() => ALL_CHAPTERS.filter((chapter) => chapter.journey === journeyId), [journeyId]);
+  const chapterProgress = useMemo(() => chapters.map((chapter) => gameState?.storyChapters.find((item) => item.id === chapter.id)), [gameState, chapters]);
+  const chapter = chapters[selectedIndex];
   const progress = chapterProgress[selectedIndex];
-  const completedCount = chapterProgress.filter((item) => item.completed).length;
-  const unlockedCount = chapterProgress.filter((item) => item.unlocked).length;
+  const completedCount = chapterProgress.filter((item) => item?.completed).length;
+  const unlockedCount = chapterProgress.filter((item) => item?.unlocked).length;
   const previousIndex = selectedIndex - 1;
-  const nextIndex = STORY_CHAPTERS.findIndex((item, index) => index > selectedIndex && chapterProgress[index]?.unlocked);
+  const nextIndex = chapters.findIndex((item, index) => index > selectedIndex && chapterProgress[index]?.unlocked);
   const collected = progress?.completed ?? false;
 
   function chooseChapter(index) {
@@ -74,7 +79,15 @@ export default function StoryPage() {
     setSelectedIndex(index);
     setRewardMessage('');
     setError('');
-    window.history.replaceState(null, '', `/historia?capitulo=${STORY_CHAPTERS[index].id}`);
+    window.history.replaceState(null, '', `/historia?jornada=${journeyId}&capitulo=${chapters[index].id}`);
+  }
+
+  function chooseJourney(id) {
+    setJourneyId(id);
+    setSelectedIndex(0);
+    setRewardMessage('');
+    setError('');
+    window.history.replaceState(null, '', `/historia?jornada=${id}`);
   }
 
   async function keepMemory() {
@@ -113,7 +126,7 @@ export default function StoryPage() {
           <span>Fritz <span>em Joinville</span></span>
         </a>
         <div className="story-nav-actions">
-          <a className="player-identity" href="/perfil"><Avatar id={gameState.profile.avatarId} decorative /><MemoryWheel points={gameState.rebirth.points} count={gameState.rebirth.count} /><span>{gameState.profile.nickname}</span></a>
+          <a className="player-identity" href="/perfil"><Avatar id={gameState.profile.avatarId} decorative /><EraPortal points={gameState.rebirth.points} count={gameState.rebirth.count} /><span>{gameState.profile.nickname}</span></a>
           <a className="back-to-game" href="/mural">Mural da cidade</a>
           <span className="story-save"><span aria-hidden="true">🌸</span> {format(gameState.coins)} pétalas</span>
           <a className="back-to-game" href="/"><span>↖</span> Voltar a jogar</a>
@@ -124,21 +137,26 @@ export default function StoryPage() {
         <span className="story-eyebrow"><span className="story-eyebrow-dot" /> UM DIÁRIO DE JOINVILLE</span>
         <h1>Há coisas que a cidade <span>não esquece.</span></h1>
         <p>{gameState.profile.nickname}, este diário também é seu. Uma aventura para ler sem pressa — entre um punhado de pétalas e o próximo lugar onde Fritz vai precisar de você.</p>
-        <nav className="city-notebook-nav" aria-label="Outras páginas do diário">
-          <a className="story-button secondary" href="#cidade-das-bicicletas">🚲 Joinville, Cidade das Bicicletas</a>
-          <a className="story-button secondary" href="#memoria-industrial">🏭 Tupy, Döhler e a memória industrial</a>
+        <nav className="journey-picker" aria-label="Trilhas do diário">
+          {JOURNEYS.map((journey) => {
+            const stories = gameState.storyChapters.filter((item) => item.journey === journey.id);
+            return <button className={`journey-choice ${journeyId === journey.id ? 'active' : ''}`} key={journey.id} onClick={() => chooseJourney(journey.id)} aria-pressed={journeyId === journey.id}>
+              <span>{journey.icon}</span><strong>{journey.name}</strong><small>{journey.description}</small>
+              <span>{stories.filter((item) => item.completed).length}/{stories.length} lembranças</span>
+            </button>;
+          })}
         </nav>
         <div className="story-progress-summary">
-          <span>📖 {completedCount} de {STORY_CHAPTERS.length} lembranças guardadas</span>
-          <span className="story-progress-track"><span style={{ width: `${(completedCount / STORY_CHAPTERS.length) * 100}%` }} /></span>
+          <span>📖 {completedCount} de {chapters.length} lembranças nesta trilha · nível {gameState.rebirth.level}</span>
+          <span className="story-progress-track"><span style={{ width: `${(completedCount / chapters.length) * 100}%` }} /></span>
           <span>🌱 +{Math.round(completedCount * 2)}% produção permanente</span>
         </div>
       </section>
 
       <div className="story-layout">
         <nav className="chapter-list" aria-label="Capítulos da jornada">
-          <span className="chapter-list-title">A JORNADA DAS FLORES</span>
-          {STORY_CHAPTERS.map((item, index) => {
+          <span className="chapter-list-title">{JOURNEYS.find((journey) => journey.id === journeyId).name.toLocaleUpperCase('pt-BR')}</span>
+          {chapters.map((item, index) => {
             const chapterState = chapterProgress[index];
             const locked = !chapterState?.unlocked;
             return (
@@ -198,7 +216,7 @@ export default function StoryPage() {
             <div className="chapter-actions">
               <button className="story-button secondary" disabled={previousIndex < 0} onClick={() => chooseChapter(previousIndex)}>← <span>Capítulo anterior</span></button>
               {!collected ? (
-                <button className="story-button primary" disabled={busy} onClick={keepMemory}><span>Guardar esta lembrança</span><span aria-hidden="true">🌱</span></button>
+                <button className="story-button primary" disabled={busy || !progress?.unlocked} onClick={keepMemory}><span>{progress?.unlocked ? 'Guardar esta lembrança' : `${format(chapter.at)} pétalas para descobrir`}</span><span aria-hidden="true">📖</span></button>
               ) : (
                 <span className="memory-saved"><span aria-hidden="true">✓</span> Lembrança guardada</span>
               )}
@@ -209,7 +227,7 @@ export default function StoryPage() {
               )}
             </div>
             {!collected && <p className="save-hint">Guarde a lembrança para receber pétalas e continuar a jornada. Você não perde seu progresso ao voltar para o jogo.</p>}
-            {collected && nextIndex < 0 && unlockedCount < STORY_CHAPTERS.length && <p className="save-hint">Mais histórias aparecem conforme a cidade floresce. Sua partida segue ativa!</p>}
+            {collected && nextIndex < 0 && unlockedCount < chapters.length && <p className="save-hint">Mais histórias aparecem conforme a cidade floresce. Sua partida segue ativa!</p>}
           </div>
         </article>
       </div>

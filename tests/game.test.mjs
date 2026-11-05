@@ -107,26 +107,16 @@ test('all chapters enforce unlocks, one-time rewards and permanent memory bonuse
   assert.match(run(newPlayer(NOW), 'story', { chapterId: 'bad' }).error, /inválido/);
 });
 
-test('prestige resets purchases but retains memories, lifetime, daily and clicks', () => {
+test('retired seed prestige cannot reset or award currency', () => {
   const player = newPlayer(NOW);
   Object.assign(player, {
     coins: 500000, lifetime: 2000000, seeds: 2, total_clicks: 50, last_daily: NOW,
     generators: { 'fritz-jr': 4 }, upgrades: { 'mapa-da-cidade': 3 },
     memories: STORY_CHAPTERS.map((item) => item.id),
   });
-  const { player: saved, state } = run(player, 'prestige');
-  assert.equal(state.prestigeAward, 2);
-  assert.equal(saved.seeds, 4);
-  assert.equal(saved.coins, 0);
-  assert.deepEqual(saved.generators, {});
-  assert.deepEqual(saved.upgrades, {});
-  assert.equal(saved.lifetime, player.lifetime);
-  assert.equal(saved.last_daily, NOW);
-  assert.equal(saved.total_clicks, 50);
-  assert.deepEqual(saved.memories, player.memories);
-  assert.equal(state.characters.filter((item) => item.unlocked).length, 6);
-  close(state.multipliers.production, 1 + 4 * .25 + 5 * .05 + 8 * .02);
-  assert.match(run(newPlayer(NOW), 'prestige').error, /250.000/);
+  const original = structuredClone(player);
+  assert.match(run(player, 'prestige').error, /Pórtico.*20/);
+  assert.deepEqual(player, original);
 });
 
 test('concurrent clicks survive CAS conflicts and never cross accounts', async () => {

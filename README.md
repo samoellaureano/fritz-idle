@@ -1,36 +1,63 @@
 # Fritz em Joinville — A Jornada das Flores
 
-Jogo idle com oito capítulos ilustrados, personagens e pontos de Joinville, pétalas, progresso offline, melhorias, presente diário e prestígio. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
+Jogo idle com três trilhas e 16 capítulos ilustrados, personagens gestores, lugares de Joinville, pétalas, sementes, progresso offline, melhorias, presente diário e novas eras. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
 
 O **Caderno da Cidade**, no mesmo diário, complementa a aventura com a **Cidade das Bicicletas**, o Memorial da Bicicleta e a memória industrial de **Döhler (1881), Wetzel (1932), Tupy (1938), Consul (1950) e Ciser (1959)**. As cenas de Fritz são ficção original; fatos e datas têm links para a Prefeitura e as histórias institucionais das empresas. As menções são históricas, sem patrocínio ou endosso declarado, e não indicam visitação pública às fábricas.
 
-Essas páginas podem ser lidas desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. São complementos de leitura, não novos capítulos com recompensa. Bicicletas e as cinco memórias industriais também inspiram seis novos geradores de pétalas, sem alterar IDs, custos e produção dos sete geradores originais.
+O contexto histórico pode ser lido desde o início por `/historia#cidade-das-bicicletas` e `/historia#memoria-industrial`. As trilhas jogáveis ficam em `/historia?jornada=flores`, `/historia?jornada=bicicletas` e `/historia?jornada=industria`: oito capítulos das flores, três das bicicletas e cinco dos ofícios, com ilustrações originais próprias. Cada capítulo é liberado por pétalas históricas e rende uma recompensa única de pétalas, +2% de produção permanente e XP na era em que foi guardado. Releituras não repetem recompensas.
+
+Os 13 lugares estão agrupados pelas mesmas jornadas e **produzem pétalas**, preservando seus IDs, custos e taxas-base. O botão **max** compra, numa única operação, todas as unidades que o saldo comporta, respeitando o custo arredondado individual de cada unidade. O saldo de pétalas aparece também em um contador compacto fixo durante a rolagem.
 
 ### Museu e novas eras
 
-Na aba **Museu e eras**, seis miniaturas fictícias originais podem ser adquiridas uma única vez com sementes: bicicleta (2), tear (4), engrenagem (6), caderno do aprendiz (8), geladeira (10) e parafuso (12). Cada peça converte o bônus das sementes gastas (+25% por semente) em produção permanente equivalente e melhora os toques. O museu tem fontes históricas; não representa acervos reais, produtos oficiais ou patrocínios.
+Na aba **Museu e eras**, sete miniaturas fictícias originais podem ser adquiridas uma única vez com **Pórticos**: Roda da Memória (1), bicicleta (2), tear (4), engrenagem (6), caderno do aprendiz (8), geladeira (10) e parafuso (12). As peças dão bônus próprios permanentes de produção e toques. Suas insígnias aparecem ao lado do apelido no ranking e nas mensagens, além do perfil. O museu tem fontes históricas; não representa acervos reais, produtos oficiais ou patrocínios.
 
-O prestígio comum continua exigindo 250.000 pétalas e dá `floor(saldo / 250000)` sementes. A **Redefinição da Cidade** é uma segunda camada, liberada após **50 sementes conquistadas no ciclo**, incluindo as gastas no museu. A recompensa é a **Roda da Memória**, uma medalha imaginária inspirada na Cidade das Bicicletas. Cada Roda soma +10% de produção permanente; o total acumulado é o primeiro critério do ranking e acompanha o avatar no jogo, diário, perfil, ranking e mensagens.
+Há uma única troca de era, simbolizada pelo **Pórtico de Joinville**, liberada no **nível 20 de jornada**. A recompensa é `nível / 20`, permitindo frações: nível 20 = 1 Pórtico, 30 = 1,5, 40 = 2. Cada Pórtico disponível soma +10% de produção; gastar no museu remove esse bônus da moeda e adiciona o bônus permanente da peça. O saldo de Pórticos é o primeiro critério do ranking e acompanha o avatar. A Roda da Memória é somente uma peça do museu, não uma moeda de reinício.
 
-O reset exige confirmação digitada e mostra a prévia/perdas. Zera apenas saldo de pétalas, sementes, geradores, melhorias e contadores do ciclo. **Preserva** pétalas históricas, personagens, capítulos e seus bônus, museu, Rodas, cliques históricos, identidade e mensagens. O intervalo diário não reinicia. Há uma celebração do Fritz que respeita a preferência por movimento reduzido.
+O reset exige confirmação digitada e mostra a prévia/perdas. Zera saldos de pétalas e sementes, lugares, melhorias, gestores contratados, viveiro e XP da era. **Preserva** pétalas históricas, personagens encontrados, capítulos e seus bônus, conquistas já obtidas, museu, Pórticos, cliques históricos, identidade e mensagens. Os intervalos do presente diário e do compartilhamento não reiniciam, nem a duração do buff. Há uma celebração do Fritz que respeita a preferência por movimento reduzido.
 
-Recompensa calculada exclusivamente no servidor, arredondada para baixo:
+XP e nível são calculados exclusivamente no servidor:
 
 ```
-40 * sqrt(sementesDoCiclo / 50)
-+ 25 * log2(1 + petalasDoCiclo / 12500000)
-+ 15 * capitulosGuardados / 8
-+ 10 * log2(1 + geradoresCompradosNoCiclo / 50)
-+ 10 * pecasDoMuseu / 6
+XP = log2(1 + petalasDaEra / 1000)
+   + 0.75 * novasHistoriasDaEra
+   + 0.5 * log2(1 + lugaresCompradosNaEra)
+   + 0.25 * niveisDeMelhorias
+   + 0.5 * gestoresContratados
+   + 0.25 * log2(1 + toquesNaEra)
+   + 0.5 * insigniasAdquiridasNaEra
+nivel = 1 + floor(XP)
+porticosNaTroca = nivel >= 20 ? nivel / 20 : 0
 ```
 
-São pesos-base, não percentuais fixos; as contribuições de sementes, pétalas e ativações têm retornos decrescentes. Compras e sementes do ciclo sobrevivem ao prestígio comum, mas não à redefinição avançada. Capítulos/peças preservados entram em cada avaliação, sem novas recompensas de leitura. Saves antigos são migrados no primeiro acesso: sementes atuais, pétalas históricas e geradores ativos servem como ponto de partida dos contadores, pois compras antigas não eram registradas. Mutações usam CAS; o número esperado do ciclo impede repetir uma redefinição entre abas/dispositivos.
+Saves antigos são migrados no primeiro acesso: Rodas já recebidas viram Pórticos 1:1, sem perder museu, sementes, histórias ou saldos. O contador existente de pétalas/compras da era é respeitado; na ausência dele, usam-se pétalas históricas e lugares ativos. Histórias existentes inicializam o XP de leitura somente na migração; depois da troca não contam de novo. Conquistas detectáveis antes do reset são guardadas permanentemente. Mutações usam CAS; o número esperado da era impede repetir a troca entre abas/dispositivos. `/api/prestige` agora rejeita o antigo reset por sementes, sem alterar o save.
+
+### Sementes e gestores
+
+Ao recuperar **500 milhões de pétalas na era**, o **Viveiro dos gestores** fica disponível na aba Personagens por **500 milhões de pétalas disponíveis**. O saldo histórico de outras eras não libera a compra. Fritz entra automaticamente e gera 1 semente/minuto. Sementes não dão mais bônus de produção por saldo e não são usadas no museu: acumulam como recurso e contratam os outros gestores encontrados.
+
+| Gestor | Custo em sementes | Sementes/min | Bônus de pétalas | Toques automáticos/s |
+|---|---:|---:|---:|---:|
+| Fritz | Incluído | 1 | +10% | 0 |
+| Dona Francisca | 5 | 2 | +20% | 0,2 |
+| Fritz Alt | 15 | 3 | +30% | 0,4 |
+| Juarez Machado | 40 | 4 | +40% | 0,6 |
+| Schwanke | 100 | 5 | +50% | 0,8 |
+| Eduarda Henklein | 250 | 6 | +60% | 1 |
+
+Gestores são contratados uma vez por era. Os bônus somam-se aos dos lugares, histórias e museu. Toques automáticos rendem pétalas sem inflar o contador de cliques manuais; sementes e pétalas respeitam o mesmo limite offline. Encontrar personalidades ainda dá os bônus originais de +5%; contratação é uma etapa separada e reinicia na era seguinte.
+
+### Compartilhar a jornada
+
+No mural, o cartão PNG é desenhado localmente, com arte original, apelido público, progresso, insígnias e uma breve descrição do jogo. A arte e o texto usam sempre o link público `https://fritzidle.com.br`, nunca o IP ou endereço local do navegador. Pode ser compartilhado pelo menu do dispositivo quando suportado, ou baixado com uma descrição para copiar. Compartilhar/exportar concede **+20% de pétalas e sementes por 30 minutos, uma vez a cada 24 horas**. Cancelar o menu não solicita bônus. Não se verifica a publicação na rede social, e nenhum dado Google é incluído.
+
+A duração é calculada no servidor e não se estende ao ficar offline, voltar ao jogo ou trocar de era. O ganho offline integra apenas a interseção entre o intervalo creditado e a duração real do bônus.
 
 Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)**. Cada conta tem sua própria jornada, compartilhada entre aparelhos. O servidor calcula todas as recompensas: o navegador não pode gravar um saldo arbitrário.
 
-**Jogar:** https://fritz-idle.onrender.com
+**Jogar:** https://fritzidle.com.br
 
-**Healthcheck:** https://fritz-idle.onrender.com/api/health
+**Healthcheck:** https://fritzidle.com.br/api/health
 
 O deploy usa Render Free e Supabase Free. Enquanto o aplicativo OAuth Google estiver em modo **Testing**, apenas as contas cadastradas como usuários de teste podem entrar.
 
@@ -61,7 +88,8 @@ A tabela usa RLS: usuários autenticados só podem consultar seu próprio save, 
 6. No Supabase, em **Authentication → Sign In / Providers → Google**, ative Google e informe Client ID e Client Secret do Google. Não coloque o Client Secret Google no código ou no Render.
 7. Em **Authentication → URL Configuration**, defina **Site URL** como a URL do jogo e adicione à lista **Redirect URLs**:
    - `http://localhost:3001/auth/callback`
-   - `https://SEU_SERVICO.onrender.com/auth/callback`
+   - `https://fritz-idle.onrender.com/auth/callback`
+   - `https://fritzidle.com.br/auth/callback`
 8. Use apenas os escopos padrão de identidade (`openid`, `email`, `profile`). Para acesso público fora dos usuários de teste, publique a configuração OAuth e atenda às exigências do Google.
 
 O fluxo usa PKCE e cookies de sessão. O retorno do Supabase vai para `/auth/callback`; páginas e APIs exigem usuário verificado. Ao expirar a sessão, o jogo retorna ao login sem apagar o save.
@@ -70,11 +98,11 @@ O fluxo usa PKCE e cookies de sessão. O retorno do Supabase vai para `/auth/cal
 
 Execute também [002_community.sql](supabase/migrations/002_community.sql) no SQL Editor **antes de publicar esta versão**. Ela adiciona perfis, mensagens e a visão de ranking sem alterar os saves existentes. Não execute novamente uma migração já aplicada.
 
-Depois, aplique [003_memory_wheels.sql](supabase/migrations/003_memory_wheels.sql) **antes de publicar museu e eras**. Ela amplia a visão de ranking com Rodas/redefinições, mantém o acesso exclusivo do servidor e não redefine nenhum save.
+Depois, aplique [003_memory_wheels.sql](supabase/migrations/003_memory_wheels.sql) e [004_porticos_and_badges.sql](supabase/migrations/004_porticos_and_badges.sql), nessa ordem, **antes de publicar esta versão**. A quarta migração acrescenta Pórticos fracionários e insígnias à visão de ranking, mantém o acesso exclusivo do servidor e não redefine nenhum save. Se as três primeiras já estão aplicadas, execute apenas a quarta. Os campos antigos da visão são preservados para compatibilidade durante o deploy.
 
 No primeiro acesso sem perfil (inclusive para contas antigas), `/perfil` solicita um apelido único de 3 a 24 letras/números, hífen ou sublinhado, e um avatar. Maiúsculas/minúsculas não distinguem apelidos; acentos distinguem. Os retratos são releituras lúdicas originais de Dona Francisca, Fritz Alt, Juarez Machado e Schwanke, além do Fritz fictício. O perfil pode ser editado posteriormente sem reiniciar a partida.
 
-Ao salvar o perfil, a participação no `/mural` é automática e informada na tela. Apenas jogadores autenticados podem ver apelidos, avatares e progresso; nomes Google, e-mails e IDs de autenticação não são publicados. O ranking exibe as primeiras 50 jornadas, ordenadas por **Rodas da Memória → sementes disponíveis → histórias concluídas → pétalas históricas**, com desempate por antiguidade do perfil e ID público. A posição do próprio jogador também aparece fora do top 50. O progresso é o último salvo pelo servidor, não uma estimativa offline dos demais jogadores.
+Ao salvar o perfil, a participação no `/mural` é automática e informada na tela. Apenas jogadores autenticados podem ver apelidos, avatares e progresso; nomes Google, e-mails e IDs de autenticação não são publicados. O ranking exibe as primeiras 50 jornadas, ordenadas por **Pórticos disponíveis → sementes disponíveis → histórias concluídas → pétalas históricas**, com desempate por antiguidade do perfil e ID público. A posição do próprio jogador também aparece fora do top 50. O perfil mostra também insígnias, nível e conquistas. O progresso é o último salvo pelo servidor, não uma estimativa offline dos demais jogadores.
 
 O feed mostra as 50 mensagens mais recentes, com incentivos prontos ou texto personalizado de até 160 caracteres. O intervalo de 60 segundos é transacional no Postgres (também entre abas/aparelhos); excluir uma mensagem não elimina o intervalo. Só o autor pode excluir suas mensagens. Mensagens são texto simples, não HTML. Não publique dados pessoais. Esta versão não oferece moderação automática: revise a necessidade de denúncia/moderação antes de abrir o jogo a um público amplo.
 
@@ -97,9 +125,9 @@ npm run build
 npm start -- --port 3001
 ```
 
-Os testes locais verificam economia, progresso offline, prestígio, capítulos, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
+Os testes locais verificam economia, progresso offline, Pórticos fracionários, reset, gestores, compra max, trilhas, buffs temporizados, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
 
-Os testes de integração da comunidade e progressão também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as três migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
+Os testes de integração da comunidade e progressão também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as quatro migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
 
 ```powershell
 npm run build
@@ -139,6 +167,19 @@ O arquivo local `data/game.db` não é apagado, enviado ou atribuído automatica
 6. Após o deploy, acesse `/api/health`: deve retornar HTTP 200 e `{"status":"ok"}` sem login.
 7. Entre com Google, jogue, saia e entre novamente. Teste também em outro aparelho e com outra conta: o progresso deve persistir por conta, sem compartilhar saldos.
 8. Reinicie/redeploy o serviço e confirme a preservação do save. No Supabase, teste com uma chave de usuário que não é possível ler outro `user_id` nem fazer INSERT/UPDATE direto na tabela.
+
+### Domínio fritzidle.com.br
+
+O Blueprint declara `fritzidle.com.br`; o Render também cria `www.fritzidle.com.br`, redirecionando para o domínio sem www, e emite os certificados HTTPS após verificar o DNS.
+
+No DNS avançado do Registro.br:
+
+| Tipo | Nome | Destino |
+|---|---|---|
+| A | Raiz (nome vazio) | `216.24.57.1` |
+| CNAME | `www` | `fritz-idle.onrender.com` |
+
+Após a propagação e a confirmação do certificado no Render, defina `SITE_URL=https://fritzidle.com.br` no serviço e confirme o mesmo Site URL no Supabase, com `https://fritzidle.com.br/auth/callback` autorizado. Não troque a origem de produção antes de o domínio responder por HTTPS, para evitar interromper o login. O endereço `onrender.com` continua disponível durante a transição.
 
 ### Healthcheck e cron externo
 

@@ -16,10 +16,10 @@
 
 * { box-sizing: border-box; }
 
-.memory-wheel-art { width: 48px; height: 48px; flex: 0 0 auto; vertical-align: middle; }
-.memory-wheel-badge { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; flex: 0 0 auto; max-width: 100%; padding: 3px 6px; border: 1px solid #f3cb7850; border-radius: 12px; color: var(--gold); background: #463c252e; font-size: 11px; }
-.memory-wheel-badge .memory-wheel-art { width: 22px; height: 22px; }
-.memory-wheel-badge small { color: var(--green); font-size: 10px; }
+.era-portal-art { width: 48px; height: 48px; flex: 0 0 auto; vertical-align: middle; }
+.era-portal-badge { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; flex: 0 0 auto; max-width: 100%; padding: 3px 6px; border: 1px solid #f3cb7850; border-radius: 12px; color: var(--gold); background: #463c252e; font-size: 11px; }
+.era-portal-badge .era-portal-art { width: 22px; height: 22px; }
+.era-portal-badge small { color: var(--green); font-size: 10px; }
 .museum-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .museum-item { display: flex; flex-direction: column; min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: #10211d80; }
 .museum-owned { border-color: #b7d88566; }
@@ -31,7 +31,7 @@
 .museum-item button { margin-top: auto; width: 100%; white-space: normal; font-size: 12px; }
 .museum-section > .community-note { margin-bottom: 22px; }
 .rebirth-card { margin-top: 28px; padding: clamp(18px, 3vw, 30px); border: 1px solid #f3cb7850; border-radius: 16px; background: radial-gradient(ellipse at top, #79612a30, #10211d80); overflow-wrap: anywhere; }
-.rebirth-card > .memory-wheel-art { display: block; width: 80px; height: 80px; margin: 0 auto 20px; }
+.rebirth-card > .era-portal-art { display: block; width: 80px; height: 80px; margin: 0 auto 20px; }
 .rebirth-card h2 { font-size: 26px; }
 .rebirth-card progress { width: 100%; height: 16px; accent-color: var(--gold); }
 .rebirth-breakdown { padding: 0; list-style: none; }
@@ -49,10 +49,11 @@
 .memory-celebration { text-align: center; }
 .fritz-new-era { display: flex; align-items: center; justify-content: center; gap: 14px; height: 120px; }
 .fritz-rider { font-size: 56px; animation: fritz-pedals 1s ease-in-out 4; }
-.fritz-new-era > .memory-wheel-art { width: 64px; height: 64px; animation: memory-turns 3s ease-in-out; }
+.fritz-new-era > .era-portal-art { width: 64px; height: 64px; animation: portal-arrives 3s ease-in-out; }
 @keyframes fritz-pedals { 50% { transform: translateY(-12px) rotate(-8deg); } }
 @keyframes memory-turns { from { transform: rotate(-360deg) scale(.5); } to { transform: rotate(0) scale(1); } }
-@media (prefers-reduced-motion: reduce) { .fritz-rider, .fritz-new-era > .memory-wheel-art { animation: none; } }
+@keyframes portal-arrives { from { opacity: .2; transform: scale(.8); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .fritz-rider, .fritz-new-era > .era-portal-art { animation: none; } }
 @media (max-width: 600px) {
   .museum-grid { grid-template-columns: minmax(0, 1fr); }
   .ranking-entry, .message-author, .profile-name-row { flex-wrap: wrap; }
@@ -700,4 +701,54 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .back-to-game { padding-right: 6px; padding-left: 6px; font-size: 7px; }
   .chapter-nav-item { width: 73vw; min-width: 73vw; }
   .chapter-reading { padding-right: 11px; padding-left: 11px; }
+}
+
+.resource-dock { position: sticky; top: 8px; z-index: 15; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; margin: 12px 0; padding: 10px 16px; border: 1px solid #f3cb7880; border-radius: 14px; background: #10211df5; box-shadow: 0 5px 22px #0005; font-size: 13px; font-variant-numeric: tabular-nums; }
+.resource-dock strong { color: #fff1c2; font-size: 20px; }
+.resource-dock > span { color: var(--green); }
+.coins-value { font-size: 23px; color: #ffe3a0; font-variant-numeric: tabular-nums; }
+.petal-stat .stat-footnote { display: none; }
+.places-journey { margin-top: 24px; }
+.places-journey > h3 { color: var(--gold); font-size: 16px; margin-bottom: 6px; }
+.places-journey > p { color: var(--muted); font-size: 12px; line-height: 1.7; }
+.place-card { grid-template-columns: 41px minmax(0, 1fr) 38px 86px 44px; }
+.max-button { padding: 11px 5px; border: 1px solid #b7d88466; border-radius: 8px; background: #b7d88418; color: var(--green); cursor: pointer; font-weight: 700; }
+.max-button:disabled { opacity: .4; cursor: not-allowed; }
+.manager-actions { margin-top: auto; padding-top: 12px; width: 100%; }
+.manager-actions p { color: var(--gold); font-size: 12px; line-height: 1.7; }
+.manager-actions button { width: 100%; white-space: normal; }
+.museum-badges { display: inline-flex; flex-wrap: wrap; gap: 5px; vertical-align: middle; }
+.museum-badge { display: inline-grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; border: 1px solid #f3cb7870; background: #463c2550; font-size: 17px; }
+.ranking-stats span:last-child { color: #ffe3a0; font-weight: 600; padding: 3px 6px; border-radius: 6px; background: #f3cb7810; }
+.profile-collection { padding: 22px 0; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+.profile-collection > .museum-badges { margin-bottom: 16px; }
+.journey-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 28px 0; }
+.journey-choice { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 20px; text-align: left; color: var(--ink); border: 1px solid var(--border); border-radius: 24px 12px 24px 12px; background: linear-gradient(145deg, #284238, #152b24); cursor: pointer; }
+.journey-choice.active { border-color: var(--gold); box-shadow: 0 0 0 2px #f3cb7815; }
+.journey-choice > span:first-child { font-size: 32px; }
+.journey-choice small { color: #c1cdbf; line-height: 1.7; }
+.journey-choice > span:last-child { font-size: 12px; color: var(--gold); }
+.chapter-list { border-radius: 28px 12px 28px 12px; }
+.chapter-nav-item { position: relative; margin-bottom: 9px; }
+.chapter-nav-item:not(:last-of-type)::after { content: ''; position: absolute; left: 24px; top: 100%; height: 10px; border-left: 2px dashed #b7d88480; }
+.chapter-nav-item:nth-of-type(even) { margin-left: 12px; }
+.chapter-number { border-radius: 50%; }
+.progress-share { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 340px); gap: 30px; margin-bottom: 26px; }
+.progress-share > div { min-width: 0; }
+.progress-share p { color: var(--muted); line-height: 1.8; }
+.progress-share .share-description { color: #e8e8d3; padding: 16px; border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0; background: #25423650; }
+.progress-card-preview { display: block; width: 100%; height: auto; border-radius: 22px; align-self: center; box-shadow: 0 12px 35px #0005; }
+.share-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.share-actions button { white-space: normal; }
+@media (max-width: 700px) {
+  .journey-picker { grid-template-columns: 1fr; gap: 10px; }
+  .journey-choice { padding: 14px; }
+  .progress-share { grid-template-columns: 1fr; }
+  .progress-card-preview { max-width: 400px; justify-self: center; }
+  .place-card { grid-template-columns: 32px minmax(0, 1fr) 28px 70px; gap: 7px; }
+  .max-button { grid-column: 4; padding: 6px; }
+  .chapter-nav-item:nth-of-type(even) { margin-left: 0; }
+  .chapter-nav-item::after { display: none; }
+  .resource-dock { gap: 6px 12px; font-size: 11px; padding: 8px 10px; }
+  .resource-dock strong { font-size: 18px; }
 }

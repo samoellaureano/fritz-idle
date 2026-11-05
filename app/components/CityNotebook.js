@@ -53,7 +53,7 @@ export default function CityNotebook({ nickname }) {
           <aside className="city-memory-facts"><h4>Homenagem à memória, não publicidade</h4><p>As empresas são citadas por sua relação histórica com Joinville. Não há patrocínio, vínculo comercial ou endosso declarado por elas. As cenas de Fritz são ficção; os fatos e datas têm fontes indicadas. As referências não representam visitas abertas ao público.</p></aside>
         </div>
       </article>
-      <p className="city-notebook-note">Estas páginas complementam o diário: não são capítulos com recompensa, não alteram sua produção e não contam no ranking de histórias concluídas.</p>
+      <p className="city-notebook-note">Este caderno reúne o contexto e as fontes das trilhas. Guarde as lembranças nas jornadas <a href="/historia?jornada=bicicletas">Caminhos que aproximam</a> e <a href="/historia?jornada=industria">Mãos que constroem</a>: cada novo capítulo rende pétalas, +2% de produção permanente e XP na era.</p>
       <a className="story-button next" href="/">Voltar a recolher pétalas →</a>
     </section>
   );

@@ -6,8 +6,59 @@ import { ENCOURAGEMENTS } from '../lib/community.js';
 import { BICYCLE_MEMORY, INDUSTRIAL_MEMORIES } from '../lib/city-memory.js';
 import { MUSEUM_ITEMS } from '../lib/progression.js';
 import { STORY_CHAPTERS } from '../lib/story.js';
+import { CITY_CHAPTERS } from '../lib/journeys.js';
 
 const enabled = cloudEnabled && process.env.FRITZ_BROWSER_TESTS === '1';
+
+test('browser trails, managers, max buying, museum profile and share export', { skip: !enabled }, async () => {
+  const fixture = await cloudFixture();
+  let browser;
+  try {
+    const { chromium } = createRequire(import.meta.url)(process.env.FRITZ_PLAYWRIGHT_MODULE);
+    browser = await chromium.launch({ channel: 'msedge', headless: true });
+    const context = await browser.newContext();
+    const actor = await fixture.user();
+    await fixture.profile(actor, `Trilha_${fixture.suffix}`);
+    await fixture.seed(actor, { coins: 600000000, lifetime: 600000000, cycle_petals: 600000000,
+      seeds: 30, porticos: 1.5, museum: ['bicicleta'] });
+    await context.addCookies(actor.browserCookies);
+    const page = await context.newPage();
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(fixture.origin);
+    await page.getByRole('button', { name: 'Personagens', exact: true }).click();
+    await page.getByRole('button', { name: 'Adquirir · 500 mi 🌸', exact: true }).click();
+    await page.getByRole('button', { name: 'Viveiro ativo', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Contratar · 5 🌱', exact: true }).click();
+    await page.getByRole('button', { name: 'Gestor ativo ✓', exact: true }).nth(1).waitFor();
+    await page.getByRole('button', { name: 'A jornada', exact: true }).click();
+    await page.getByRole('button', { name: 'Comprar o máximo de Rua das Palmeiras', exact: true }).click();
+    await page.goto(`${fixture.origin}/historia?jornada=bicicletas`);
+    await page.getByRole('button', { name: 'Guardar esta lembrança', exact: true }).click();
+    await page.locator('.memory-saved').waitFor();
+    assert.equal(await page.locator('.chapter-nav-item').count(), 3);
+    assert.equal(await page.locator('.chapter-art').getAttribute('src'), CITY_CHAPTERS[0].art);
+    await page.goto(`${fixture.origin}/historia?jornada=industria`);
+    await page.locator('.chapter-nav-item').first().waitFor();
+    assert.equal(await page.locator('.chapter-nav-item').count(), 5);
+    await page.goto(`${fixture.origin}/perfil`);
+    await page.locator('.profile-collection .museum-badge').waitFor();
+    assert.ok(await page.locator('.profile-collection .achievement-unlocked').count() > 0);
+    await page.goto(`${fixture.origin}/mural`);
+    await page.locator('.progress-card-preview').waitFor();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Baixar arte para as redes', exact: true }).click(),
+    ]);
+    assert.equal(download.suggestedFilename(), 'minha-jornada-com-fritz.png');
+    await page.getByText('Próximo bônus:', { exact: false }).waitFor();
+    assert.equal((await fixture.api(actor, '/api/game')).data.share.ready, false);
+    assert.deepEqual(errors, []);
+  } finally {
+    if (browser) await browser.close();
+    await fixture.cleanup();
+  }
+});
 
 test('browser onboarding, personalized game and diary, community messages and mobile layouts', { skip: !enabled }, async () => {
   const fixture = await cloudFixture();
@@ -148,13 +199,13 @@ test('browser museum spending, explicit reset confirmation, celebration, badges 
     await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
     assert.ok(await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).isDisabled());
     await fixture.seed(actor, {
-      seeds: 50, cycle_seeds: 50, lifetime: 12500000, cycle_petals: 12500000,
+      seeds: 50, porticos: 2, lifetime: 500000000, cycle_petals: 500000000,
       cycle_purchases: 50, memories: STORY_CHAPTERS.map((item) => item.id),
     });
     await page.reload();
     await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
     assert.equal(await page.locator('.museum-item').count(), MUSEUM_ITEMS.length);
-    await page.getByRole('button', { name: 'Adquirir Bicicleta das flores · 2 sementes', exact: true }).click();
+    await page.getByRole('button', { name: 'Adquirir Bicicleta das flores · 2 Pórticos', exact: true }).click();
     await page.getByRole('button', { name: 'Guardada no museu ✓', exact: true }).waitFor();
     await page.setViewportSize({ width: 320, height: 740 });
     await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).click();
@@ -174,15 +225,15 @@ test('browser museum spending, explicit reset confirmation, celebration, badges 
     assert.equal(await celebration.locator('.fritz-rider').evaluate((node) => getComputedStyle(node).animationName), 'none');
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     assert.equal(await celebration.locator('.fritz-rider').evaluate((node) => getComputedStyle(node).animationName), 'fritz-pedals');
-    await celebration.getByRole('button', { name: 'Pedalar para a próxima aventura' }).click();
+    await celebration.getByRole('button', { name: 'Atravessar para a próxima aventura' }).click();
     const restored = await fixture.api(actor, '/api/game');
     assert.equal(restored.data.rebirth.count, 1);
     assert.equal(restored.data.seeds, 0);
-    assert.ok(restored.data.museum[0].owned);
+    assert.ok(restored.data.museum.find((item) => item.id === 'bicicleta').owned);
     const expected = restored.data.rebirth.points;
     await page.reload();
-    await page.locator('.account-bar .memory-wheel-badge').waitFor();
-    assert.ok((await page.locator('.account-bar .memory-wheel-badge').getAttribute('aria-label')).includes(`${expected} Rodas`));
+    await page.locator('.account-bar .era-portal-badge').waitFor();
+    assert.ok((await page.locator('.account-bar .era-portal-badge').getAttribute('aria-label')).includes(`${expected.toLocaleString('pt-BR')} Pórticos`));
     await page.getByRole('button', { name: 'Museu e eras', exact: true }).click();
     await page.getByRole('button', { name: 'Guardada no museu ✓', exact: true }).waitFor();
     assert.ok(await page.getByRole('button', { name: 'Abrir uma nova era', exact: true }).isDisabled());
@@ -200,10 +251,10 @@ test('browser museum spending, explicit reset confirmation, celebration, badges 
         await page.getByRole('button', { name: 'Salvar minha identidade' }).waitFor();
       } else {
         await page.getByRole('heading', { name: 'Correio das flores' }).waitFor();
-        await page.locator('.own-ranking .memory-wheel-badge').waitFor();
-        await page.locator('.message-card').filter({ hasText: 'Pedalando para uma nova era!' }).locator('.memory-wheel-badge').waitFor();
+        await page.locator('.own-ranking .era-portal-badge').waitFor();
+        await page.locator('.message-card').filter({ hasText: 'Pedalando para uma nova era!' }).locator('.era-portal-badge').waitFor();
       }
-      assert.ok(await page.locator('.memory-wheel-badge').count() > 0, `missing badge on ${route}`);
+      assert.ok(await page.locator('.era-portal-badge').count() > 0, `missing badge on ${route}`);
       for (const width of [320, 375, 430, 768, 1280]) {
         await page.setViewportSize({ width, height: 900 });
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${route} rebirth overflow at ${width}`);

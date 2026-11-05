@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Fios coloridos em um tear imaginario">
+<rect width="1000" height="600" fill="#293f3b"/><circle cx="800" cy="130" r="90" fill="#d2a970"/><path d="M0 500Q500 330 1000 460V600H0" fill="#527060"/>
+<g fill="none" stroke="#e6c18a" stroke-width="22"><path d="M280 490V130h430v360M250 490h490M290 200h410M290 425h410"/></g>
+<g stroke-width="13"><path d="M325 190v240m70-240v240m70-240v240m70-240v240m70-240v240m70-240v240" stroke="#b4cd94"/><path d="M305 250h390m-390 70h390m-390 70h390" stroke="#dd8e92"/></g><path d="M110 390q90-230 170-90M710 385q140-175 215 20" fill="none" stroke="#e6c18a" stroke-width="9"/>
+<g fill="#eeb3a3"><circle cx="160" cy="420" r="23"/><circle cx="850" cy="420" r="28"/></g>
+</svg>
