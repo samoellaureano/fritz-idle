@@ -181,3 +181,23 @@ test('mutations require the configured origin, not caller-controlled hosts', () 
     else process.env.SITE_URL = previous;
   }
 });
+
+test('Render uses its trusted external URL when SITE_URL is absent', () => {
+  const previous = process.env.SITE_URL;
+  const previousRender = process.env.RENDER_EXTERNAL_URL;
+  delete process.env.SITE_URL;
+  process.env.RENDER_EXTERNAL_URL = 'https://fritz-deployment.onrender.com';
+  try {
+    assert.equal(siteOrigin(), 'https://fritz-deployment.onrender.com');
+    process.env.SITE_URL = 'https://jogo.example';
+    assert.equal(siteOrigin(), 'https://jogo.example');
+    delete process.env.SITE_URL;
+    delete process.env.RENDER_EXTERNAL_URL;
+    assert.throws(siteOrigin, /não configurada/);
+  } finally {
+    if (previous === undefined) delete process.env.SITE_URL;
+    else process.env.SITE_URL = previous;
+    if (previousRender === undefined) delete process.env.RENDER_EXTERNAL_URL;
+    else process.env.RENDER_EXTERNAL_URL = previousRender;
+  }
+});

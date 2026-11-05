@@ -16,7 +16,7 @@ Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://SEU_PROJETO.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave publishable ou anon |
 | `SUPABASE_SERVICE_ROLE_KEY` | Chave secret ou service_role, exclusiva do servidor |
-| `SITE_URL` | Origem exata do jogo, sem caminho: local `http://localhost:3001`, produção `https://SEU_SERVICO.onrender.com` |
+| `SITE_URL` | Local: `http://localhost:3001`. No Render, pode ficar ausente: o servidor usa a variável confiável `RENDER_EXTERNAL_URL`. Para domínio personalizado, informe sua origem HTTPS exata. |
 
 A tabela usa RLS: usuários autenticados só podem consultar seu próprio save, sem permissão de escrita direta. Somente o servidor grava. Atualizações com controle de versão evitam perda de cliques e duplicação de recompensas em abas/aparelhos simultâneos.
 
@@ -63,7 +63,7 @@ O arquivo local `data/game.db` não é apagado, enviado ou atribuído automatica
 
 1. Publique esta versão no GitHub (commit + push). O Render não recebe mudanças que existem apenas no computador.
 2. No Render, escolha **New → Blueprint**, conecte o repositório e use [render.yaml](render.yaml). O serviço está configurado como **free**, sem disco pago.
-3. Informe as quatro variáveis acima. Use a URL HTTPS definitiva do serviço em `SITE_URL`.
+3. Informe as três variáveis Supabase solicitadas. O Render fornece a URL pública automaticamente em `RENDER_EXTERNAL_URL`; não copie o `SITE_URL` local para produção. Para domínio personalizado, adicione `SITE_URL` com sua origem HTTPS.
 4. Confirme a mesma URL na configuração do Supabase e nas origens Google. Se precisar alterar variáveis públicas, faça um novo build/deploy.
 5. Build: `npm ci && npm run build`. Start: `npm start -- --hostname 0.0.0.0 --port $PORT`. Node 22.
 6. Após o deploy, acesse `/api/health`: deve retornar HTTP 200 e `{"status":"ok"}` sem login.
