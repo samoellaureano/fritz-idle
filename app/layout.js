@@ -1,8 +1,8 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Jogo Idle do Fritz',
-  description: 'Um jogo idle feito com Next.js e SQLite',
+  title: 'Fritz em Joinville — A Jornada das Flores',
+  description: 'Ajude Fritz a percorrer Joinville, encontrar seus amigos e trazer as pétalas de volta à Cidade das Flores.',
 };
 
 export default function RootLayout({ children }) {

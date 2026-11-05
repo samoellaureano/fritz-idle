@@ -1,4 +1,4 @@
-# Jogo Idle do Fritz
+# Fritz em Joinville — A Jornada das Flores
 
 Stack: **Node.js + Next.js (App Router) + SQLite3 (better-sqlite3)**
 
@@ -9,9 +9,11 @@ npm install
 npm run dev
 ```
 
-Abra http://localhost:3000
+Abra http://localhost:3000. No jogo, você recolhe pétalas da Cidade das Flores, ativa lugares conhecidos de Joinville, encontra personagens ligados à história local, completa conquistas e planta Sementes da Cidade para reiniciar com um bônus permanente.
 
-O banco é criado automaticamente em `data/game.db`.
+Acesse `/historia` para ler os oito capítulos ilustrados de Fritz. As referências externas de cada capítulo documentam a memória local; cenas e diálogos são ficção. Guarde cada lembrança no diário para receber pétalas e +2% de produção permanente sem reiniciar sua partida.
+
+O banco é criado automaticamente em `data/game.db`. O progresso antigo, os cliques e os geradores já comprados são preservados na atualização. A jornada inclui progresso offline, presente diário, melhorias, personagens colecionáveis, conquistas, lembranças narrativas e prestígio.
 
 ## Estrutura
 
