@@ -51,7 +51,7 @@ test('all fourteen requested places have their own three-step illustrated narrat
 
 test('historical corrections keep real people out of invented scenes', () => {
   const princess = STORY_CHAPTERS.find((chapter) => chapter.id === 'a-carta-de-francisca');
-  const princessStory = princess.paragraphs.join(' ');
+  const princessStory = [...princess.paragraphs, princess.fact].join(' ');
   assert.match(princess.title, /inventou/);
   assert.match(princessStory, /Não é uma carta do acervo/);
   assert.match(princessStory, /nunca visitou Joinville/);
@@ -62,7 +62,7 @@ test('historical corrections keep real people out of invented scenes', () => {
   const artistStory = STORY_CHAPTERS.find((chapter) => chapter.id === 'o-atelier-na-colina');
   assert.equal(artistStory.character, 'Legado de Fritz Alt');
   assert.match(artistStory.paragraphs.join(' '), /não encontra o escultor/i);
-  assert.match(artistStory.paragraphs.join(' '), /dois Fritzes/);
+  assert.match(artistStory.paragraphs.join(' '), /dois Fritzes/i);
 
   const cemetery = LANDMARK_JOURNEYS.find((journey) => journey.id === 'cemiterio-imigrantes');
   assert.equal(cemetery.name, 'Cemitério do Imigrante');

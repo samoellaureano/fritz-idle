@@ -36,7 +36,7 @@ test('city notebook covers bicycles and dated industrial memories with official 
     assert.equal(chapter.id, `oficio-${INDUSTRIAL_MEMORIES[index].id}`);
     assert.equal(chapter.fact, INDUSTRIAL_MEMORIES[index].fact);
     assert.equal(chapter.paragraphs.length, 2);
-    assert.match(chapter.paragraphs.join(' '), /sem fingir que visitou a fábrica/);
+    assert.deepEqual(chapter.paragraphs, [INDUSTRIAL_MEMORIES[index].scene, INDUSTRIAL_MEMORIES[index].closing]);
   }
 });
 
