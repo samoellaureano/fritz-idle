@@ -34,4 +34,4 @@ export async function proxy(request) {
   }
 }
 
-export const config = { matcher: ['/', '/historia/:path*'] };
+export const config = { matcher: ['/', '/historia/:path*', '/perfil', '/mural'] };

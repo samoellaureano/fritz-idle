@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { gameRequest as request } from '@/lib/client-request';
+import Avatar from '@/app/components/Avatar';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -37,7 +38,7 @@ export default function Home() {
       .then((nextState) => {
         applyState(nextState);
         if (nextState.lastEarned > 1 && nextState.lastElapsed > 10) {
-          setOfflineMsg(`Que bom ter você de volta! Enquanto esteve fora, a cidade floresceu e rendeu ${format(nextState.lastEarned)} pétalas.`);
+          setOfflineMsg(`${nextState.profile.nickname}, que bom ter você de volta! Enquanto esteve fora, a cidade floresceu e rendeu ${format(nextState.lastEarned)} pétalas.`);
         }
       })
       .catch((cause) => setError(cause.message));
@@ -132,7 +133,8 @@ export default function Home() {
       </header>
 
       <div className="account-bar">
-        <span>Progresso salvo na sua conta Google</span>
+        <a className="player-identity" href="/perfil"><Avatar id={state.profile.avatarId} decorative /><span>{state.profile.nickname} · editar perfil</span></a>
+        <a className="community-profile-link" href="/mural">🌷 Mural-ranking e mensagens</a>
         <form action="/auth/logout" method="post"><button type="submit">Sair da conta</button></form>
       </div>
 
@@ -141,7 +143,7 @@ export default function Home() {
           <div className="hero-copy">
             <span className="eyebrow"><span className="eyebrow-dot" /> UMA AVENTURA FEITA EM JOINVILLE</span>
             <h1>A cidade vai <span>florescer</span> de novo.</h1>
-            <p>Uma ventania espalhou as pétalas mágicas. Ajude Fritz a percorrer Joinville, reencontrar velhos amigos e trazer a cor de volta para casa.</p>
+            <p>{state.profile.nickname}, uma ventania espalhou as pétalas mágicas. Fritz conta com você para percorrer Joinville, reencontrar velhos amigos e trazer a cor de volta para casa.</p>
             <div className="hero-signature"><span>🐊</span> Fritz e a jornada das flores <span className="signature-line" /></div>
             <a className="hero-story-link" href="/historia">Ler as histórias ilustradas <span aria-hidden="true">→</span></a>
           </div>
@@ -204,7 +206,7 @@ export default function Home() {
                     <span className={`chapter-preview ${state.nextChapter.color}`} aria-hidden="true">{state.nextChapter.icon}</span>
                   </div>
                 ) : (
-                  <div className="complete-chapter"><span>🌷</span><div><h3>Joinville floresceu outra vez!</h3><p>Todos os amigos estão juntos. Plante novas raízes com a Semente da Cidade e continue a aventura.</p></div></div>
+                  <div className="complete-chapter"><span>🌷</span><div><h3>{state.profile.nickname}, Joinville floresceu outra vez!</h3><p>Todos os amigos estão juntos. Plante novas raízes com a Semente da Cidade e continue a aventura.</p></div></div>
                 )}
               </section>
 

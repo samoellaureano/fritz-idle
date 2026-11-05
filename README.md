@@ -42,6 +42,18 @@ A tabela usa RLS: usuários autenticados só podem consultar seu próprio save, 
 
 O fluxo usa PKCE e cookies de sessão. O retorno do Supabase vai para `/auth/callback`; páginas e APIs exigem usuário verificado. Ao expirar a sessão, o jogo retorna ao login sem apagar o save.
 
+### Apelido, avatar e comunidade
+
+Execute também [002_community.sql](supabase/migrations/002_community.sql) no SQL Editor **antes de publicar esta versão**. Ela adiciona perfis, mensagens e a visão de ranking sem alterar os saves existentes. Não execute novamente uma migração já aplicada.
+
+No primeiro acesso sem perfil (inclusive para contas antigas), `/perfil` solicita um apelido único de 3 a 24 letras/números, hífen ou sublinhado, e um avatar. Maiúsculas/minúsculas não distinguem apelidos; acentos distinguem. Os retratos são releituras lúdicas originais de Dona Francisca, Fritz Alt, Juarez Machado e Schwanke, além do Fritz fictício. O perfil pode ser editado posteriormente sem reiniciar a partida.
+
+Ao salvar o perfil, a participação no `/mural` é automática e informada na tela. Apenas jogadores autenticados podem ver apelidos, avatares e progresso; nomes Google, e-mails e IDs de autenticação não são publicados. O ranking exibe as primeiras 50 jornadas, ordenadas por **sementes → histórias concluídas → pétalas históricas**, com desempate por antiguidade do perfil e ID público. A posição do próprio jogador também aparece fora do top 50. O progresso é o último salvo pelo servidor, não uma estimativa offline dos demais jogadores.
+
+O feed mostra as 50 mensagens mais recentes, com incentivos prontos ou texto personalizado de até 160 caracteres. O intervalo de 60 segundos é transacional no Postgres (também entre abas/aparelhos); excluir uma mensagem não elimina o intervalo. Só o autor pode excluir suas mensagens. Mensagens são texto simples, não HTML. Não publique dados pessoais. Esta versão não oferece moderação automática: revise a necessidade de denúncia/moderação antes de abrir o jogo a um público amplo.
+
+Perfis, ranking e mensagens não têm acesso direto por chaves anon/authenticated. As APIs verificam a conta e a origem das mutações e usam o cliente exclusivo do servidor. O ranking lê o save autoritativo; campos de pontuação não são aceitos pelo cadastro.
+
 ## 3. Rodar localmente
 
 ```powershell
@@ -60,6 +72,32 @@ npm start -- --port 3001
 ```
 
 Os testes locais verificam economia, progresso offline, prestígio, capítulos, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
+
+Os testes de integração da comunidade também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as duas migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
+
+```powershell
+npm run build
+$env:SITE_URL = 'http://localhost:3002'
+npm start -- --hostname 127.0.0.1 --port 3002
+```
+
+Em outro terminal, com `.env.local` configurado:
+
+```powershell
+$env:FRITZ_CLOUD_TESTS = '1'
+npm test
+```
+
+Para incluir o fluxo de navegador (onboarding, jogo, diário, mensagens e larguras de 320 a 1280px), use uma instalação existente do Playwright e Microsoft Edge:
+
+```powershell
+$env:FRITZ_CLOUD_TESTS = '1'
+$env:FRITZ_BROWSER_TESTS = '1'
+$env:FRITZ_PLAYWRIGHT_MODULE = 'C:\caminho\para\node_modules\playwright'
+npm test
+```
+
+Esses testes usam sessões de contas sintéticas verificadas; a entrada Google real continua exigindo validação manual. O destino HTTP dos testes é restrito a localhost na porta 3002, nunca ao site público.
 
 ### Save antigo em SQLite
 

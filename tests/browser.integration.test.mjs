@@ -1,0 +1,102 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { cloudEnabled, cloudFixture } from './helpers/cloud.mjs';
+import { ENCOURAGEMENTS } from '../lib/community.js';
+
+const enabled = cloudEnabled && process.env.FRITZ_BROWSER_TESTS === '1';
+
+test('browser onboarding, personalized game and diary, community messages and mobile layouts', { skip: !enabled }, async () => {
+  const fixture = await cloudFixture();
+  let browser;
+  let page;
+  try {
+    if (!process.env.FRITZ_PLAYWRIGHT_MODULE) throw new Error('Set FRITZ_PLAYWRIGHT_MODULE to an installed Playwright module.');
+    const { chromium } = createRequire(import.meta.url)(process.env.FRITZ_PLAYWRIGHT_MODULE);
+    browser = await chromium.launch({ channel: 'msedge', headless: true });
+    const context = await browser.newContext();
+    page = await context.newPage();
+    const pageErrors = [];
+    page.on('pageerror', (error) => pageErrors.push(error.message));
+    await page.goto(`${fixture.origin}/mural`);
+    await page.waitForURL('**/login');
+    assert.equal(await page.getByRole('button', { name: 'Entrar com Google' }).count(), 1);
+    const actor = await fixture.user();
+    await context.addCookies(actor.browserCookies);
+    await page.goto(fixture.origin);
+    await page.waitForURL('**/perfil');
+    const nickname = `Jardim_${fixture.suffix}`;
+    await page.getByRole('textbox', { name: 'Seu apelido em Joinville' }).fill(nickname);
+    await page.getByRole('radio', { name: /Fritz Alt/ }).check();
+    await page.getByRole('button', { name: 'Começar minha jornada com Fritz' }).click();
+    await page.waitForURL(`${fixture.origin}/`);
+    await page.getByText(`${nickname} · editar perfil`, { exact: true }).waitFor();
+    const initial = await fixture.api(actor, '/api/game');
+    assert.equal(initial.data.profile.avatarId, 'fritz-alt');
+    assert.equal(initial.data.totalClicks, 0);
+    await Promise.all([
+      page.waitForResponse((response) => response.url().endsWith('/api/click') && response.status() === 200),
+      page.getByRole('button', { name: /Recolher pétalas/ }).click(),
+    ]);
+    assert.equal((await fixture.api(actor, '/api/game')).data.totalClicks, 1);
+    await page.getByRole('link', { name: /Ler as histórias ilustradas/ }).click();
+    await page.locator('.reader-dedication').waitFor();
+    assert.ok((await page.locator('.reader-dedication').innerText()).includes(nickname));
+    await Promise.all([
+      page.waitForResponse((response) => response.url().endsWith('/api/story') && response.status() === 200),
+      page.getByRole('button', { name: /Guardar esta lembrança/ }).click(),
+    ]);
+    await page.locator('.memory-saved').waitFor();
+    await page.getByRole('link', { name: 'Mural da cidade', exact: true }).click();
+    await page.getByRole('heading', { name: `${nickname}, ninguém floresce sozinho.` }).waitFor();
+    assert.ok((await page.locator('.own-ranking').innerText()).includes('1 histórias'));
+    await page.getByRole('button', { name: ENCOURAGEMENTS[0].text, exact: true }).click();
+    await page.getByRole('button', { name: 'Espalhar um incentivo', exact: true }).click();
+    await page.locator('.message-card').filter({ hasText: ENCOURAGEMENTS[0].text }).waitFor();
+    assert.ok(await page.getByRole('button', { name: /Novo incentivo em/ }).isDisabled());
+    const { error } = await fixture.admin.from('player_profiles')
+      .update({ last_message_at: new Date(Date.now() - 61000).toISOString() }).eq('user_id', actor.id);
+    if (error) throw error;
+    await page.reload();
+    await page.getByRole('heading', { name: 'Correio das flores' }).waitFor();
+    const custom = '<script>window.__muralXss=true</script>';
+    await page.getByRole('textbox', { name: 'Ou escreva com suas palavras' }).fill(custom);
+    await page.getByRole('button', { name: 'Espalhar um incentivo', exact: true }).click();
+    const message = page.locator('.message-card').filter({ hasText: custom });
+    await message.waitFor();
+    assert.equal(await message.locator('script').count(), 0);
+    assert.equal(await page.evaluate(() => typeof window.__muralXss), 'undefined');
+    await message.getByRole('button', { name: 'Excluir minha mensagem', exact: true }).click();
+    await message.waitFor({ state: 'detached' });
+    for (const route of ['/perfil', '/mural', '/historia', '/']) {
+      await page.goto(`${fixture.origin}${route}`);
+      if (route === '/perfil') await page.getByRole('button', { name: 'Salvar minha identidade' }).waitFor();
+      else if (route === '/mural') await page.getByRole('heading', { name: 'Correio das flores' }).waitFor();
+      else if (route === '/historia') await page.locator('.reader-dedication').waitFor();
+      else await page.locator('.player-identity').waitFor();
+      for (const width of [320, 375, 430, 768, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        const dimensions = await page.evaluate(() => ({
+          viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth,
+        }));
+        assert.ok(dimensions.content <= dimensions.viewport, `${route} overflows at ${width}: ${JSON.stringify(dimensions)}`);
+      }
+    }
+    await page.goto(`${fixture.origin}/perfil`);
+    await page.getByRole('textbox', { name: 'Seu apelido em Joinville' }).fill(`Novo_${fixture.suffix}`);
+    await page.getByRole('radio', { name: /Schwanke/ }).check();
+    await page.getByRole('button', { name: 'Salvar minha identidade' }).click();
+    await page.waitForURL(`${fixture.origin}/`);
+    await page.getByText(`Novo_${fixture.suffix} · editar perfil`, { exact: true }).waitFor();
+    assert.equal((await fixture.api(actor, '/api/game')).data.totalClicks, 1);
+    assert.deepEqual(pageErrors, []);
+  } catch (error) {
+    if (page && process.env.FRITZ_BROWSER_FAILURE_SCREENSHOT) {
+      await page.screenshot({ path: process.env.FRITZ_BROWSER_FAILURE_SCREENSHOT, fullPage: true });
+    }
+    throw error;
+  } finally {
+    if (browser) await browser.close();
+    await fixture.cleanup();
+  }
+});

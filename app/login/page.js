@@ -25,6 +25,7 @@ export default async function LoginPage({ searchParams }) {
           <span className="eyebrow">FRITZ EM JOINVILLE</span>
           <h1>Sua jornada merece criar raízes.</h1>
           <p>Entre com o Google para guardar suas pétalas, histórias e conquistas na sua conta, e continuar de onde parou em outro aparelho.</p>
+          <p className="login-note">Na primeira visita, escolha seu apelido e avatar. Eles acompanham sua jornada e aparecem no mural da cidade junto com seu progresso — nunca seu e-mail Google.</p>
           {message && <p className="error-banner" role="alert">{message}</p>}
           <form action="/auth/google" method="post">
             <button className="story-button" disabled={!configured} type="submit">Entrar com Google</button>

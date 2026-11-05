@@ -16,6 +16,91 @@
 
 * { box-sizing: border-box; }
 
+.player-avatar { display: block; width: 48px; height: 48px; flex: 0 0 auto; }
+.player-identity { display: inline-flex; align-items: center; gap: 8px; min-width: 0; color: var(--green); text-decoration: none; overflow-wrap: anywhere; }
+.player-identity .player-avatar { width: 34px; height: 34px; }
+.account-bar .community-profile-link { font-size: 12px; }
+.story-nav-actions .player-identity { max-width: 210px; font-size: 12px; }
+.story-prose .reader-dedication { padding: 12px 16px; border-left: 2px solid var(--gold); color: var(--green); font-size: 13px; font-style: italic; }
+.story-prose .reader-dedication:first-child::first-letter { float: none; margin: 0; font: inherit; color: inherit; }
+.community-page { overflow-wrap: anywhere; }
+.community-page .story-eyebrow { font-size: 10px; }
+.community-page > .story-error, .community-page > .story-reward { max-width: 1230px; margin: 16px auto; font-size: 14px; }
+.community-hero { max-width: 1230px; margin: 24px auto; padding: clamp(24px, 5vw, 56px); border: 1px solid var(--border); border-radius: 16px; background-size: cover; background-position: center; }
+.mural-hero { background-image: linear-gradient(90deg, #10211df5, #10211db3), url('/historia-encontro.jpg'); }
+.community-hero h1 { max-width: 800px; margin: 16px 0; font-family: Manrope, sans-serif; font-size: clamp(27px, 4vw, 44px); line-height: 1.2; color: var(--ink); }
+.community-hero p { max-width: 640px; color: #d2d5c7; font-size: 16px; line-height: 1.8; }
+.community-profile-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--green); font-size: 14px; text-decoration: none; }
+.community-profile-link .player-avatar { width: 38px; height: 38px; }
+.community-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 20px; max-width: 1230px; margin: 0 auto 28px; }
+.community-card { min-width: 0; padding: clamp(18px, 3vw, 30px); border: 1px solid var(--border); border-radius: 14px; background: linear-gradient(145deg, #1b2d25fa, #14231dfa); }
+.community-card h2 { margin: 12px 0; font-family: Manrope, sans-serif; font-size: 26px; }
+.community-card h3 { margin-top: 24px; font-size: 17px; }
+.community-card p { color: var(--muted); font-size: 14px; line-height: 1.75; }
+.community-note { padding: 14px 16px; border: 1px solid #f3cb7826; border-radius: 9px; color: #d7cead; background: #6d582f24; font-size: 13px; line-height: 1.8; }
+.community-card .community-note { color: #d7cead; font-size: 13px; }
+.community-loading { max-width: 1230px; margin: 30px auto; color: var(--muted); }
+.profile-form, .community-page > .community-card { max-width: 1000px; margin: 0 auto 32px; }
+.profile-name-row { display: flex; align-items: center; gap: 22px; }
+.profile-name-row > .player-avatar { width: 100px; height: 100px; }
+.profile-name-input { flex: 1; min-width: 0; }
+.profile-name-input label, .message-form label { display: block; margin-bottom: 10px; font-size: 16px; font-weight: 700; }
+.profile-name-input p { font-size: 12px; }
+.profile-name-input input, .message-form textarea { width: 100%; padding: 12px 14px; border: 1px solid #b7d8844d; border-radius: 9px; color: var(--ink); background: #10211d; font: inherit; font-size: 16px; }
+.profile-name-input input:focus-visible, .message-form textarea:focus-visible, .avatar-option:focus-within { outline: 2px solid var(--gold); outline-offset: 3px; }
+.avatar-fieldset, .message-form fieldset { margin: 24px 0; padding: 0; border: 0; min-width: 0; }
+.avatar-fieldset legend, .message-form legend { font-size: 17px; font-weight: 700; }
+.avatar-fieldset > p { font-size: 13px; }
+.avatar-fieldset a { color: var(--green); }
+.avatar-options { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.avatar-option { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 10px; border: 1px solid var(--border); border-radius: 12px; background: #10211d80; text-align: center; cursor: pointer; }
+.avatar-option.chosen { border-color: var(--gold); background: #b7d88412; }
+.avatar-option input { position: absolute; top: 10px; left: 10px; width: 16px; height: 16px; accent-color: var(--green); }
+.avatar-option .player-avatar { width: 78px; height: 78px; max-width: 100%; }
+.avatar-option strong { font-size: 13px; }
+.avatar-option small { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.profile-form > .story-button { margin-top: 22px; width: 100%; font-size: 14px; }
+.ranking-list, .message-list { margin: 20px 0 0; padding: 0; list-style: none; }
+.ranking-entry { display: flex; align-items: center; gap: 12px; margin: 10px 0; padding: 16px 10px; border-bottom: 1px solid var(--border); border-radius: 8px; }
+.ranking-place { min-width: 33px; color: var(--gold); font-size: 17px; font-weight: 800; }
+.ranking-copy { min-width: 0; flex: 1; }
+.ranking-copy strong { font-size: 15px; }
+.ranking-copy small { color: var(--green); font-size: 11px; }
+.ranking-stats { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 8px; color: var(--muted); font-size: 12px; }
+.own-ranking { border: 1px solid #b7d8844d; background: #b7d8840d; }
+.message-form { padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.message-form fieldset { margin-top: 20px; }
+.message-form p { font-size: 12px; }
+.message-form textarea { resize: vertical; min-height: 96px; }
+.message-form > .story-button { width: 100%; font-size: 14px; }
+.encouragement-options { display: grid; gap: 8px; margin: 14px 0 24px; }
+.encouragement-options button { min-height: 48px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 9px; background: #10211d80; color: #d2d5c7; text-align: left; font-size: 13px; line-height: 1.7; cursor: pointer; }
+.encouragement-options button.selected { border-color: var(--gold); color: var(--gold); background: #6d582f24; }
+.encouragement-options button:disabled { opacity: .6; cursor: not-allowed; }
+.message-card { margin-bottom: 14px; padding: 18px; border: 1px solid var(--border); border-radius: 10px; background: #10211d66; }
+.message-author { display: flex; align-items: center; gap: 10px; }
+.message-author > div { min-width: 0; }
+.message-author strong { display: block; font-size: 14px; }
+.message-author time { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+.message-card > p { color: #e4e3d1; white-space: pre-wrap; }
+.message-card > button { font-size: 12px; }
+
+@media (max-width: 850px) {
+  .community-layout { grid-template-columns: minmax(0, 1fr); }
+  .avatar-options { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .story-topbar { flex-wrap: wrap; height: auto; min-height: 66px; padding-top: 14px; padding-bottom: 14px; }
+  .story-nav-actions { flex-wrap: wrap; justify-content: flex-start; }
+}
+@media (max-width: 480px) {
+  .avatar-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .profile-name-row { flex-direction: column; align-items: stretch; gap: 14px; }
+  .profile-name-row > .player-avatar { align-self: center; }
+  .ranking-entry { flex-wrap: wrap; gap: 8px; }
+  .ranking-entry .player-avatar { width: 38px; height: 38px; }
+  .ranking-copy { flex-basis: calc(100% - 88px); }
+  .community-page .story-nav-actions { gap: 10px; width: 100%; }
+}
+
 html { min-height: 100%; scroll-behavior: smooth; }
 
 body {

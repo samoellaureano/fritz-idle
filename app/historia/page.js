@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { STORY_CHAPTERS } from '@/lib/story';
 import { gameRequest as request } from '@/lib/client-request';
+import Avatar from '@/app/components/Avatar';
 
 function format(value) {
   if (!Number.isFinite(value)) return '0';
@@ -77,7 +78,7 @@ export default function StoryPage() {
         body: JSON.stringify({ chapterId: chapter.id }),
       });
       applyState(updatedState);
-      setRewardMessage(`Uma lembrança virou raiz: +${format(updatedState.memoryReward)} pétalas e +2% de produção permanente.`);
+      setRewardMessage(`${updatedState.profile.nickname}, uma lembrança sua virou raiz: +${format(updatedState.memoryReward)} pétalas e +2% de produção permanente.`);
     } catch (cause) {
       setError(cause.message);
       await refresh();
@@ -102,6 +103,8 @@ export default function StoryPage() {
           <span>Fritz <span>em Joinville</span></span>
         </a>
         <div className="story-nav-actions">
+          <a className="player-identity" href="/perfil"><Avatar id={gameState.profile.avatarId} decorative /><span>{gameState.profile.nickname}</span></a>
+          <a className="back-to-game" href="/mural">Mural da cidade</a>
           <span className="story-save"><span aria-hidden="true">🌸</span> {format(gameState.coins)} pétalas</span>
           <a className="back-to-game" href="/"><span>↖</span> Voltar a jogar</a>
         </div>
@@ -110,7 +113,7 @@ export default function StoryPage() {
       <section className="story-intro">
         <span className="story-eyebrow"><span className="story-eyebrow-dot" /> UM DIÁRIO DE JOINVILLE</span>
         <h1>Há coisas que a cidade <span>não esquece.</span></h1>
-        <p>Uma aventura para ler sem pressa — entre um punhado de pétalas e o próximo lugar onde Fritz vai precisar de você.</p>
+        <p>{gameState.profile.nickname}, este diário também é seu. Uma aventura para ler sem pressa — entre um punhado de pétalas e o próximo lugar onde Fritz vai precisar de você.</p>
         <div className="story-progress-summary">
           <span>📖 {completedCount} de {STORY_CHAPTERS.length} lembranças guardadas</span>
           <span className="story-progress-track"><span style={{ width: `${(completedCount / STORY_CHAPTERS.length) * 100}%` }} /></span>
@@ -156,6 +159,7 @@ export default function StoryPage() {
             </div>
 
             <div className="story-prose">
+              <p className="reader-dedication">{gameState.profile.nickname}, Fritz abre o diário ao seu lado. Esta lembrança de {chapter.place} espera um lugar na sua jornada.</p>
               {chapter.paragraphs.map((paragraph, index) => <p key={`${chapter.id}-${index}`}>{paragraph}</p>)}
             </div>
 
