@@ -47,7 +47,7 @@ export default async function LoginPage({ searchParams }) {
           <form action="/auth/google" method="post">
             <button className="story-button" disabled={!configured} type="submit">Entrar com Google</button>
           </form>
-          <p className="login-note">Seu progresso é individual. Usamos a autenticação do Google pelo Supabase; o jogo nunca recebe sua senha Google.</p>
+          <p className="login-note">Seu progresso é individual. A autenticação do Google é feita pelo Supabase; o jogo nunca recebe sua senha Google.</p>
         </div>
       </section>
     </main>

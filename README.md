@@ -285,3 +285,14 @@ O Render Free pode suspender serviços ociosos após 15 minutos e tem cota mensa
 - `app/auth/`: entrada Google, callback e saída.
 - `proxy.js`: proteção das páginas e atualização dos cookies.
 - `app/api/health/`: liveness independente do banco.
+
+## Identificação, privacidade e publicação
+
+- Desenvolvedor/titular informado: **Samoel Laureano Consultoria e Desenvolvimento de Software Ltda. (SL DEV Solutions, CNPJ 57.127.304/0001-31)**. Contato público: `samoel.laureano@sldevsolutions.com.br`.
+- O arquivo [LICENSE](LICENSE) reserva os direitos das criações originais da titularidade da empresa, sem pretender relicenciar materiais de terceiros.
+- O projeto é independente e não representa a Prefeitura de Joinville. Os avisos no jogo e em [Sobre e direitos](app/sobre/page.js) não constituem autorização municipal; publicação em canal oficial depende de autorização expressa.
+- Consulte as páginas [Sobre e direitos](app/sobre/page.js), [Privacidade](app/privacidade/page.js) e [Termos de Uso](app/termos/page.js). Elas descrevem os fluxos implementados e devem ser revistas quando o produto ou os fornecedores mudarem.
+- O login público segue diretamente para autenticação Google, sem declaração ou verificação de idade. Os Termos destinam o serviço a pessoas com **13 anos ou mais**, mas essa condição não é uma barreira técnica de acesso. Antes de publicar, revise juridicamente a experiência para adolescentes, as bases legais, classificação etária, retenção e exclusão, regiões/transferências dos fornecedores e medidas de segurança.
+- A página da [SECOM.UCO](https://www.joinville.sc.gov.br/institucional/secom/uco/) apresenta as atribuições da unidade, não critérios de inscrição ou aprovação deste jogo. Confirme diretamente com a Prefeitura o canal e a autorização aplicáveis.
+
+Este preparo documental não é parecer jurídico nem garante aprovação de publicação.

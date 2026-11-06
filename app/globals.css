@@ -725,6 +725,20 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .chapter-nav-item:not(:last-of-type)::after { content: ''; position: absolute; left: 24px; top: 100%; height: 10px; border-left: 2px dashed #b7d88480; }
 .chapter-nav-item:nth-of-type(even) { margin-left: 12px; }
 .chapter-number { border-radius: 50%; }
+.legal-page { padding-bottom: 32px; }
+.legal-content { max-width: 850px; margin: 36px auto 48px; padding: clamp(22px, 5vw, 48px); border: 1px solid var(--border); border-radius: 18px; background: linear-gradient(145deg, #1b2d25fa, #14231dfa); overflow-wrap: anywhere; }
+.legal-content h1 { margin: 12px 0 24px; font-family: Manrope, sans-serif; font-size: clamp(30px, 5vw, 46px); line-height: 1.2; }
+.legal-content h2 { margin: 30px 0 10px; color: var(--gold); font-family: Manrope, sans-serif; font-size: 20px; }
+.legal-content p, .legal-content li { color: #d2d5c7; font-size: 14px; line-height: 1.85; }
+.legal-content ul { padding-left: 22px; }
+.legal-content li { margin: 10px 0; }
+.legal-content a { color: var(--green); overflow-wrap: anywhere; }
+.legal-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 20px; max-width: 1230px; margin: 0 auto; padding: 20px 24px; border-top: 1px solid var(--border); color: var(--muted); background: var(--background); font-size: 12px; line-height: 1.7; }
+.legal-footer p { margin: 0; }
+.legal-footer nav { display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.legal-footer a { color: var(--green); text-decoration: none; }
+.legal-footer a:hover { text-decoration: underline; }
+.legal-footer small { width: 100%; color: var(--muted-dark); }
 .progress-share { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 340px); gap: 30px; margin-bottom: 26px; }
 .progress-share > div { min-width: 0; }
 .progress-share p { color: var(--muted); line-height: 1.8; }
