@@ -272,7 +272,7 @@ export default function Home() {
                     return (
                       <article className={`place-card ${affordable ? 'affordable' : ''}`} key={generator.id}>
                         <div className={`place-icon place-tone-${index % 5}`}><GameIcon symbol={generator.icon} /></div>
-                        <div className="place-copy"><h3>{generator.name}</h3><p>{generator.place}</p><span className="place-rate" tabIndex={0} data-tooltip="Rendimento por unidade com melhorias e bônus ativos; não inclui os toques automáticos dos gestores.">✦ +{generator.effectiveCps < 1000 ? generator.effectiveCps.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : format(generator.effectiveCps)} pétalas/s cada</span></div>
+                        <div className="place-copy"><h3>{generator.name}</h3><p>{generator.place}</p><span className="place-rate" tabIndex={0} data-tooltip="Rendimento por unidade com melhorias e bônus ativos; não inclui os toques automáticos dos personagens.">✦ +{generator.effectiveCps < 1000 ? generator.effectiveCps.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : format(generator.effectiveCps)} pétalas/s cada</span></div>
                         <div className="place-owned"><strong>{generator.owned}</strong><span>ativos</span></div>
                         <button className="buy-button" disabled={!affordable || busy} onClick={() => handleBuy(generator.id)}>
                           <span>{format(generator.cost)}</span><small><GameIcon symbol="🌸" /></small>
@@ -306,10 +306,10 @@ export default function Home() {
           {tab === 'personagens' && (
             <section className="section-block full-tab">
               <div className="section-heading"><div><span className="section-kicker">GENTE QUE FAZ A CIDADE</span><h2>Amigos pelo caminho</h2></div><span className="chapter-counter">{unlockedCharacters.length} / {state.characters.length} reunidos</span></div>
-              <p className="section-intro">Encontrar amigos mantém o bônus de +5%. Depois de adquirir o gerador de sementes, contrate-os com sementes como gestores: eles produzem sementes, melhoram os lugares e automatizam a coleta. São releituras fictícias, não atividades das pessoas reais.</p>
+              <p className="section-intro">Encontrar amigos mantém o bônus de +5%. Depois de adquirir o gerador de sementes, contrate os personagens com sementes: eles produzem sementes, melhoram os lugares e automatizam a coleta. São releituras fictícias, não atividades das pessoas reais.</p>
               <div className="daily-card">
                 <span className="daily-illustration"><GameIcon symbol="🌱" /></span>
-                <div><h3>Viveiro dos gestores</h3><p>Libera após recuperar 500 mi de pétalas nesta era. Custa 500 mi de pétalas; Fritz inicia a produção de 1 semente por minuto.</p><p>{format(state.seedGenerator.progress)} / 500 mi recuperadas · {format(state.seeds)} sementes disponíveis</p></div>
+                <div><h3>Viveiro dos personagens</h3><p>Libera após recuperar 500 mi de pétalas nesta era. Custa 500 mi de pétalas; Fritz inicia a produção de 1 semente por minuto.</p><p>{format(state.seedGenerator.progress)} / 500 mi recuperadas · {format(state.seeds)} sementes disponíveis</p></div>
                 <button className="story-button primary" disabled={busy || state.seedGenerator.owned || !state.seedGenerator.ready || display < state.seedGenerator.cost} onClick={() => perform(() => request('/api/seed-generator', { method: 'POST' }))}>{state.seedGenerator.owned ? 'Viveiro ativo' : <>Adquirir · 500 mi <GameIcon symbol="🌸" /></>}</button>
               </div>
               <div className="character-grid">
@@ -321,7 +321,7 @@ export default function Home() {
                       <p><GameIcon symbol="🌱" /> {format(character.seedsPerSecond * 60)}/min · +{Math.round(character.productionBonus * 100)}% pétalas · {format(character.autoClicks)} toques/s automáticos</p>
                       <button className="story-button secondary" disabled={busy || character.hired || !character.unlocked || !state.seedGenerator.owned || state.seeds < character.seedCost}
                         onClick={() => perform(() => request('/api/manager', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ characterId: character.id }) }))}>
-                        {character.hired ? 'Gestor ativo ✓' : character.id === 'fritz' ? 'Incluído no viveiro' : <>Contratar · {character.seedCost} <GameIcon symbol="🌱" /></>}
+                        {character.hired ? 'Personagem ativo ✓' : character.id === 'fritz' ? 'Incluído no viveiro' : <>Contratar · {character.seedCost} <GameIcon symbol="🌱" /></>}
                       </button>
                     </div>
                   </article>
@@ -374,7 +374,7 @@ export default function Home() {
             <strong>Nível {state.rebirth.level} · {format(state.rebirth.reward)} Pórticos na troca</strong>
             <div className="progress-track"><div className="progress-fill" style={{ width: `${state.rebirth.nextLevelProgress * 100}%` }} /></div>
             <button className="side-action" onClick={() => setTab('museu')}>Museu e Pórtico de Joinville <span>→</span></button>
-            <button className="side-action" onClick={() => setTab('personagens')}>Gestores · {format(state.seeds)} sementes <span>→</span></button>
+            <button className="side-action" onClick={() => setTab('personagens')}>Personagens · {format(state.seeds)} sementes <span>→</span></button>
           </section>
 
           <section className="side-card return-card">

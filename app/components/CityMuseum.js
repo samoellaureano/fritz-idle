@@ -31,7 +31,7 @@ export default function CityMuseum({ state, busy, error, onPurchase, onRebirth }
   return (
     <section className="section-block full-tab museum-section" aria-labelledby="museum-heading">
       <div className="section-heading"><div><span className="section-kicker">O QUE A CIDADE GUARDA EM VOCÊ</span><h2 id="museum-heading">Museu das pequenas memórias</h2></div><span className="chapter-counter">{state.museum.filter((item) => item.owned).length}/{state.museum.length} peças</span></div>
-      <p className="section-intro">{state.profile.nickname}, seus Pórticos podem virar insígnias para sempre. Os lugares trazem pétalas; os gestores produzem sementes; o museu protege as memórias. A Roda da Memória agora é uma peça do acervo, não uma moeda de era.</p>
+      <p className="section-intro">{state.profile.nickname}, seus Pórticos podem virar insígnias para sempre. Os lugares trazem pétalas; os personagens produzem sementes; o museu protege as memórias. A Roda da Memória agora é uma peça do acervo, não uma moeda de era.</p>
       <p className="community-note">Miniaturas fictícias originais, inspiradas na história local — não são peças reais de acervos, produtos oficiais ou patrocínios. Cada insígnia adquirida com Pórticos melhora sua produção e seus toques permanentemente e acompanha seu nome no mural.</p>
       <div className="museum-grid">
         {state.museum.map((item) => (
@@ -55,17 +55,17 @@ export default function CityMuseum({ state, busy, error, onPurchase, onRebirth }
         <h3>Prévia: {number(rebirth.reward)} Pórticos de Joinville</h3>
         <ul className="rebirth-breakdown">{rebirth.breakdown.map((part) => <li key={part.id}><span>{part.label}</span><strong>{number(part.points)} XP</strong></li>)}</ul>
         <p className="museum-formula">Nível = 1 + parte inteira do XP acima. A troca é nível ÷ 20: 20 = 1 Pórtico, 30 = 1,5 e 40 = 2. Cada Pórtico disponível soma +10% de produção; as insígnias compradas têm bônus próprios permanentes. O XP da era reinicia, sem repetir recompensas de histórias já guardadas.</p>
-        <p>O XP equilibra a cidade: pétalas sustentam o avanço e cada gestor soma 0,75 XP. Histórias, compras, melhorias, toques e insígnias têm limites de contribuição para não antecipar demais a troca. As histórias continuam dando pétalas e bônus permanentes mesmo após o limite de XP.</p>
-        <p>Antes de recomeçar, experimente o viveiro e seus gestores. O nível 20 abre uma escolha, não encerra a jornada: desenvolver a automação e seguir explorando aumenta os Pórticos da troca.</p>
+        <p>O XP equilibra a cidade: pétalas sustentam o avanço e cada personagem contratado soma 0,75 XP. Histórias, compras, melhorias, toques e insígnias têm limites de contribuição para não antecipar demais a troca. As histórias continuam dando pétalas e bônus permanentes mesmo após o limite de XP.</p>
+        <p>Antes de recomeçar, experimente o viveiro e seus personagens. O nível 20 abre uma escolha, não encerra a jornada: desenvolver a automação e seguir explorando aumenta os Pórticos da troca.</p>
         <button className="story-button primary" disabled={!rebirth.ready || busy} onClick={() => confirmRef.current.showModal()}>Abrir uma nova era</button>
         {!rebirth.ready && <p>Explore, leia e melhore a cidade até o nível {rebirth.requiredLevel}.</p>}
       </section>
       <dialog className="memory-dialog" ref={confirmRef} aria-labelledby="reset-title" onCancel={(event) => { if (busy) event.preventDefault(); }}>
         <h2 id="reset-title">Levar a memória, recomeçar a economia?</h2>
         <p>Você recebe <strong>{number(rebirth.reward)} Pórticos</strong> pelo progresso atual. A produção pode aumentar esse valor até a confirmação.</p>
-        <p><strong>Zeram:</strong> saldo de pétalas, sementes, lugares, melhorias, contratação de gestores, gerador de sementes e XP desta era.</p>
+        <p><strong>Zeram:</strong> saldo de pétalas, sementes, lugares, melhorias, contratação de personagens, gerador de sementes e XP desta era.</p>
         <p><strong>Ficam:</strong> pétalas históricas, personagens encontrados, histórias e seus bônus, conquistas, museu, Pórticos, apelido, avatar e mensagens. Presente diário e bônus de compartilhamento mantêm seus intervalos.</p>
-        <p>Não é possível desfazer. Os gestores poderão ser contratados novamente na próxima era.</p>
+        <p>Não é possível desfazer. Os personagens poderão ser contratados novamente na próxima era.</p>
         {error && <p className="story-error" role="alert">{error}</p>}
         <div className="memory-dialog-actions">
           <button className="story-button secondary" disabled={busy} onClick={() => confirmRef.current.close()}>Continuar esta jornada</button>

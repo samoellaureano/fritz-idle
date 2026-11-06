@@ -53,7 +53,7 @@ test('browser trails, managers, max buying, museum profile and share export', { 
     await page.getByRole('button', { name: 'Adquirir · 500 mi', exact: true }).click();
     await page.getByRole('button', { name: 'Viveiro ativo', exact: true }).waitFor();
     await page.getByRole('button', { name: 'Contratar · 5', exact: true }).click();
-    await page.getByRole('button', { name: 'Gestor ativo ✓', exact: true }).nth(1).waitFor();
+    await page.getByRole('button', { name: 'Personagem ativo ✓', exact: true }).nth(1).waitFor();
     await page.getByRole('button', { name: 'A jornada', exact: true }).click();
     await page.getByRole('button', { name: 'Comprar o máximo de Rua das Palmeiras', exact: true }).click();
     await page.goto(`${fixture.origin}/historia?jornada=bicicletas`);

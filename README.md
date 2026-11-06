@@ -1,6 +1,6 @@
 # Fritz em Joinville — A Jornada das Flores
 
-Jogo idle com 17 trilhas e 58 capítulos ilustrados, personagens gestores, lugares de Joinville, pétalas, sementes, progresso offline, melhorias, presente diário e novas eras. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
+Jogo idle com 17 trilhas e 58 capítulos ilustrados, personagens, lugares de Joinville, pétalas, sementes, progresso offline, melhorias, presente diário e novas eras. Cenas e diálogos são ficção; as fontes históricas ficam em `/historia`.
 
 As narrativas distinguem os fatos locais das invenções do diário de Fritz. Dona Francisca não visitou Joinville nem morou no Palácio dos Príncipes; a carta da aventura é imaginada, não uma peça do acervo. As trilhas de bicicletas, ofícios e lugares combinam referências documentadas com cenas lúdicas, sem alterar desbloqueios ou recompensas já guardadas.
 
@@ -47,7 +47,7 @@ Na aba **Museu e eras**, sete miniaturas fictícias originais podem ser adquirid
 
 Há uma única troca de era, simbolizada pelo **Pórtico de Joinville**, liberada no **nível 20 de jornada**. A recompensa é `nível / 20`, permitindo frações: nível 20 = 1 Pórtico, 30 = 1,5, 40 = 2. Cada Pórtico disponível soma +10% de produção; gastar no museu remove esse bônus da moeda e adiciona o bônus permanente da peça. O saldo de Pórticos é o primeiro critério do ranking e acompanha o avatar. A Roda da Memória é somente uma peça do museu, não uma moeda de reinício.
 
-O reset mostra a prévia/perdas e exige clicar em **Confirmar redefinição**, sem digitar uma palavra. É possível cancelar antes da confirmação. Zera saldos de pétalas e sementes, lugares, melhorias, gestores contratados, viveiro e XP da era. **Preserva** pétalas históricas, personagens encontrados, capítulos e seus bônus, conquistas já obtidas, museu, Pórticos, cliques históricos, identidade e mensagens. Os intervalos do presente diário e do compartilhamento não reiniciam, nem a duração do buff. Há uma celebração do Fritz que respeita a preferência por movimento reduzido.
+O reset mostra a prévia/perdas e exige clicar em **Confirmar redefinição**, sem digitar uma palavra. É possível cancelar antes da confirmação. Zera saldos de pétalas e sementes, lugares, melhorias, personagens contratados, viveiro e XP da era. **Preserva** pétalas históricas, personagens encontrados, capítulos e seus bônus, conquistas já obtidas, museu, Pórticos, cliques históricos, identidade e mensagens. Os intervalos do presente diário e do compartilhamento não reiniciam, nem a duração do buff. Há uma celebração do Fritz que respeita a preferência por movimento reduzido.
 
 XP e nível são calculados exclusivamente no servidor:
 
@@ -56,16 +56,16 @@ XP = 0.6 * log2(1 + petalasDaEra / 1000)
    + min(3, 0.1 * novasHistoriasDaEra)
    + min(2, 0.25 * log2(1 + lugaresCompradosNaEra))
    + min(1, 0.1 * niveisDeMelhorias)
-   + 0.75 * gestoresContratados
+   + 0.75 * personagensContratados
    + min(0.5, 0.05 * log2(1 + toquesNaEra))
    + min(0.5, 0.25 * insigniasAdquiridasNaEra)
 nivel = 1 + floor(XP)
 porticosNaTroca = nivel >= 20 ? nivel / 20 : 0
 ```
 
-Os limites equilibram a contribuição de leitura, compras e cliques sem permitir que substituam toda a economia. Todas as histórias continuam dando sua recompensa de pétalas e +2% de produção, mesmo após os 3 XP de leitura. Gestores têm mais peso; pétalas continuam contribuindo sem teto, permitindo avançar mesmo sem novas histórias em eras seguintes. Não existe requisito adicional de contratação para reiniciar: o nível 20 continua sendo a única condição, e o alinhamento com a automação é resultado dos pesos, não uma trava oculta.
+Os limites equilibram a contribuição de leitura, compras e cliques sem permitir que substituam toda a economia. Todas as histórias continuam dando sua recompensa de pétalas e +2% de produção, mesmo após os 3 XP de leitura. Personagens contratados têm mais peso; pétalas continuam contribuindo sem teto, permitindo avançar mesmo sem novas histórias em eras seguintes. Não existe requisito adicional de contratação para reiniciar: o nível 20 continua sendo a única condição, e o alinhamento com a automação é resultado dos pesos, não uma trava oculta.
 
-Na simulação de referência, o primeiro Pórtico libera em **46m40** para o leitor com cliques e **56min** sem cliques, depois de experimentar o viveiro e contratar outro gestor. Duas sessões de 20 minutos por dia mantêm a conclusão das histórias, lugares e gestores em **24h18 corridas**. Desenvolver todos esses objetivos a cada era e comprar insígnias conforme o saldo permite completar o museu em **12 eras** na simulação; reiniciar sempre no nível 20 exige **15 eras**. Essas são estratégias medidas, não mínimos garantidos nem prazos universais.
+Na simulação de referência, o primeiro Pórtico libera em **46m40** para o leitor com cliques e **56min** sem cliques, depois de experimentar o viveiro e contratar outro personagem. Duas sessões de 20 minutos por dia mantêm a conclusão das histórias, lugares e personagens em **24h18 corridas**. Desenvolver todos esses objetivos a cada era e comprar insígnias conforme o saldo permite completar o museu em **12 eras** na simulação; reiniciar sempre no nível 20 exige **15 eras**. Essas são estratégias medidas, não mínimos garantidos nem prazos universais.
 
 O rebalanceamento recalcula o nível da era atual com os novos pesos, podendo reduzi-lo; não remove saldos, Pórticos já ganhos, histórias, peças adquiridas ou seus bônus. Os preços menores valem para próximas compras; compras anteriores não são cobradas novamente nem reembolsadas.
 
@@ -82,21 +82,21 @@ Além das quatro melhorias originais, há seis equipamentos, todos com até cinc
 | Campainha das flores | 150.000 | +10% na produção dos lugares |
 | Café para o caminho | 750.000 | +30 minutos de progresso offline |
 | Regador de afetos | 6.000.000 | +15% na produção dos lugares |
-| Bolsa de futuros jardins | 1.000.000.000 | +10% de sementes dos gestores |
+| Bolsa de futuros jardins | 1.000.000.000 | +10% de sementes dos personagens |
 
-A bolsa não cria sementes sozinha: exige viveiro e gestores ativos. Seu bônus também vale offline e combina com o compartilhamento. Os equipamentos de toque também melhoram os toques automáticos dos gestores, sem contar como cliques manuais. O progresso offline tem um limite diário de 5 horas, reiniciado à meia-noite UTC; Brisa da Babitonga acrescenta 1 hora por nível e Café para o caminho, 30 minutos por nível. O contador considera apenas o tempo creditado enquanto o jogador esteve ausente. O XP de melhorias continua limitado a 1, evitando antecipar eras apenas pela quantidade de equipamentos.
+A bolsa não cria sementes sozinha: exige viveiro e personagens ativos. Seu bônus também vale offline e combina com o compartilhamento. Os equipamentos de toque também melhoram os toques automáticos dos personagens, sem contar como cliques manuais. O progresso offline tem um limite diário de 5 horas, reiniciado à meia-noite UTC; Brisa da Babitonga acrescenta 1 hora por nível e Café para o caminho, 30 minutos por nível. O contador considera apenas o tempo creditado enquanto o jogador esteve ausente. O XP de melhorias continua limitado a 1, evitando antecipar eras apenas pela quantidade de equipamentos.
 
 Nos lugares, o botão **max xN** mostra quantas unidades cabem nas pétalas disponíveis, atualizando com a produção. A prévia soma os mesmos custos arredondados por unidade usados pelo servidor; o total final é confirmado ao comprar e pode crescer com novas pétalas ou mudar se outra aba gastar o saldo. Sem saldo para uma unidade, mostra **max x0** desabilitado. O logo próprio do Fritz, com sorriso e uma flor, acompanha os cabeçalhos do jogo, diário, perfil, mural e o ícone da aba.
 
-O rendimento “pétalas/s cada” de cada lugar mostra a produção efetiva por unidade, incluindo melhorias, personagens, histórias, museu, Pórticos disponíveis e compartilhamento ativo. Os toques automáticos dos gestores entram somente na produção total, não no rendimento individual dos lugares.
+O rendimento “pétalas/s cada” de cada lugar mostra a produção efetiva por unidade, incluindo melhorias, personagens, histórias, museu, Pórticos disponíveis e compartilhamento ativo. Os toques automáticos dos personagens entram somente na produção total, não no rendimento individual dos lugares.
 
 As dicas de recursos, rendimento, compra máxima, capítulos, Pórticos e insígnias usam tooltips no visual do jogo, exibidos após 600 ms com o cursor sobre o elemento ou imediatamente ao focar pelo teclado. Sair antes desse tempo cancela a abertura. Escape fecha a dica; ao rolar, dicas do cursor fecham e as de foco acompanham o elemento enquanto estiver visível. O texto fica limitado à largura da tela e pode ser alcançado com o cursor sem desaparecer.
 
-### Sementes e gestores
+### Sementes e personagens
 
-Ao recuperar **500 milhões de pétalas na era**, o **Viveiro dos gestores** fica disponível na aba Personagens por **500 milhões de pétalas disponíveis**. O saldo histórico de outras eras não libera a compra. Fritz entra automaticamente e gera 1 semente/minuto. Sementes não dão mais bônus de produção por saldo e não são usadas no museu: acumulam como recurso e contratam os outros gestores encontrados.
+Ao recuperar **500 milhões de pétalas na era**, o **Viveiro dos personagens** fica disponível na aba Personagens por **500 milhões de pétalas disponíveis**. O saldo histórico de outras eras não libera a compra. Fritz entra automaticamente e gera 1 semente/minuto. Sementes não dão mais bônus de produção por saldo e não são usadas no museu: acumulam como recurso e contratam os outros personagens encontrados.
 
-| Gestor | Custo em sementes | Sementes/min | Bônus de pétalas | Toques automáticos/s |
+| Personagem | Custo em sementes | Sementes/min | Bônus de pétalas | Toques automáticos/s |
 |---|---:|---:|---:|---:|
 | Fritz | Incluído | 1 | +10% | 0 |
 | Dona Francisca | 5 | 2 | +20% | 0,2 |
@@ -105,7 +105,7 @@ Ao recuperar **500 milhões de pétalas na era**, o **Viveiro dos gestores** fic
 | Schwanke | 100 | 5 | +50% | 0,8 |
 | Eduarda Henklein | 250 | 6 | +60% | 1 |
 
-Gestores são contratados uma vez por era. Os bônus somam-se aos dos lugares, histórias e museu. Toques automáticos rendem pétalas sem inflar o contador de cliques manuais; sementes e pétalas respeitam o mesmo limite offline. Encontrar personalidades ainda dá os bônus originais de +5%; contratação é uma etapa separada e reinicia na era seguinte.
+Personagens são contratados uma vez por era. Os bônus somam-se aos dos lugares, histórias e museu. Toques automáticos rendem pétalas sem inflar o contador de cliques manuais; sementes e pétalas respeitam o mesmo limite offline. Encontrar personalidades ainda dá os bônus originais de +5%; contratação é uma etapa separada e reinicia na era seguinte.
 
 ### Compartilhar a jornada
 
@@ -125,7 +125,7 @@ O deploy usa Render Free e Supabase Free. Enquanto o aplicativo OAuth Google est
 
 ## Validação local sem Supabase
 
-Execute `npm run dev:local` e abra http://localhost:3001/login. Clique em **Entrar como Fritz_Teste**: o usuário de teste já tem perfil e começa **do zero**, sem pétalas, sementes, histórias, museu ou gestores. Não é preciso criar uma conta Google, configurar chaves ou alterar o banco de produção.
+Execute `npm run dev:local` e abra http://localhost:3001/login. Clique em **Entrar como Fritz_Teste**: o usuário de teste já tem perfil e começa **do zero**, sem pétalas, sementes, histórias, museu ou personagens contratados. Não é preciso criar uma conta Google, configurar chaves ou alterar o banco de produção.
 
 Neste modo, sessão, progresso, perfil, ranking e mensagens ficam **somente na memória do processo Node**. O jogo usa as mesmas regras, validações, recompensas e controle de concorrência da versão com Supabase. Recarregar a página, navegar entre telas ou sair/entrar preserva o progresso enquanto o servidor continua ativo. As abas que entrarem como usuário de teste compartilham a mesma partida. O mural mostra apenas os perfis e mensagens locais, nunca jogadores reais.
 
@@ -139,7 +139,7 @@ Testes unitários: `npm test`. Para validar as APIs contra o servidor de memóri
 
 ### Validação da progressão e da cadência
 
-`node --test tests\progression-cadence.test.mjs tests\era-progression-flow.test.mjs` simula partidas com relógio controlado, sem esperar horas reais e sem injetar saldo na partida. Cobre os 58 capítulos, 13 lugares, seis gestores, viveiro, ganho offline, compartilhamento, novas eras e a compra das sete peças do museu com Pórticos efetivamente conquistados.
+`node --test tests\progression-cadence.test.mjs tests\era-progression-flow.test.mjs` simula partidas com relógio controlado, sem esperar horas reais e sem injetar saldo na partida. Cobre os 58 capítulos, 13 lugares, seis personagens, viveiro, ganho offline, compartilhamento, novas eras e a compra das sete peças do museu com Pórticos efetivamente conquistados.
 
 O modelo compara leitura de 45–60 segundos por capítulo, até dois cliques por segundo nos primeiros dez minutos de atividade (fora da leitura), presente diário e compras por retorno de produção. Também cobre quem não lê, quem não clica, quem não usa o presente e sessões espaçadas. A duração de leitura é uma hipótese da simulação, não uma trava do jogo. O cenário casual de referência é **duas sessões de 20 minutos por dia**, com meta de concluir a primeira jornada em **24–48 horas corridas**; o museu completo é uma progressão separada. Isso não garante duração mínima para quem joga continuamente ou lê mais rápido.
 
@@ -209,7 +209,7 @@ npm run build
 npm start -- --port 3001
 ```
 
-Os testes locais verificam economia, progresso offline, Pórticos fracionários, reset, gestores, compra max, trilhas, buffs temporizados, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
+Os testes locais verificam economia, progresso offline, Pórticos fracionários, reset, personagens, compra max, trilhas, buffs temporizados, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
 
 Os testes de integração da comunidade e progressão também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as cinco migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
 
