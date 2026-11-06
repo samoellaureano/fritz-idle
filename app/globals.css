@@ -214,6 +214,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .seed-pill { display: flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid rgba(183, 216, 132, .18); border-radius: 30px; background: rgba(183, 216, 132, .07); font-size: 12px; font-weight: 700; white-space: nowrap; }
 .seed-pill > span:first-child { font-size: 14px; }
 .seed-word { color: var(--muted); font-weight: 500; }
+.online-pill { display: flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid rgba(183, 216, 132, .18); border-radius: 30px; color: var(--muted); background: rgba(183, 216, 132, .05); font-size: 11px; white-space: nowrap; }
+.online-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--green); box-shadow: 0 0 9px #b7d88480; }
+.presence-unavailable .online-dot { background: var(--muted-dark); box-shadow: none; }
 
 .hero { margin-top: 23px; }
 .hero-art {
@@ -517,6 +520,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .main-nav { gap: 15px; }
   .nav-link { font-size: 10px; }
   .seed-pill { gap: 5px; padding: 8px 10px; font-size: 10px; }
+  .online-pill { gap: 5px; padding: 7px 8px; font-size: 9px; }
   .hero-art { min-height: 310px; background-position: 54% center; }
   .hero-copy { width: 61%; padding: 35px 0 31px 28px; }
   .hero h1 { font-size: 34px; }
@@ -541,6 +545,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   .brand { padding-bottom: 7px; font-size: 12px; }
   .brand-mark { width: 27px; height: 27px; font-size: 16px; }
   .seed-pill { margin-bottom: 6px; padding: 7px 8px; font-size: 9px; }
+  .online-pill { margin-bottom: 6px; max-width: 130px; overflow: hidden; text-overflow: ellipsis; font-size: 8px; }
   .main-nav { order: 3; width: 100%; min-height: 44px; justify-content: space-between; gap: 9px; }
   .nav-link { min-height: 44px; flex: 1; font-size: 9px; }
   .hero { margin-top: 14px; }
@@ -676,6 +681,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .resource-dock { position: sticky; top: 8px; z-index: 15; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; margin: 12px 0; padding: 10px 16px; border: 1px solid #f3cb7880; border-radius: 14px; background: #10211df5; box-shadow: 0 5px 22px #0005; font-size: 13px; font-variant-numeric: tabular-nums; }
 .resource-dock strong { color: #fff1c2; font-size: 20px; }
 .resource-dock > span { color: var(--green); }
+.resource-dock > .offline-budget { color: #d7cead; }
 .coins-value { font-size: 23px; color: #ffe3a0; font-variant-numeric: tabular-nums; }
 .petal-stat .stat-footnote { display: none; }
 .places-journey { margin-top: 24px; }

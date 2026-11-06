@@ -48,11 +48,11 @@ test('seed bag needs active managers, stacks with sharing and respects offline c
     cycle_petals: 1e13, lifetime: 1e13, share_until: now + SHARE_DURATION };
   close(run(player).state.seedsPerSecond, 1 / 60 * 1.5 * 1.2);
   const returned = run(player, 'game', {}, now + 24 * 3600000);
-  assert.equal(returned.state.lastElapsed, 10.5 * 3600);
-  close(returned.player.seeds, 10.5 * 60 * 1.5);
+  assert.equal(returned.state.lastElapsed, 7.5 * 3600);
+  close(returned.player.seeds, 7.5 * 60 * 1.5);
   const reset = run(player, 'rebirth', { expectedCycle: 0 });
   assert.ok(!reset.error);
   assert.deepEqual(reset.player.upgrades, {});
   assert.equal(reset.state.seedsPerSecond, 0);
-  assert.equal(reset.state.multipliers.offlineHours, 8);
+  assert.equal(reset.state.multipliers.offlineHours, 5);
 });

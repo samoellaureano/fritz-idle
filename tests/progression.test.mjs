@@ -215,7 +215,8 @@ test('share grants a daily timed buff and offline integration stops exactly at e
   assert.equal(run(shared.player, 'game', {}, NOW + 86400000 - 1).state.share.ready, false);
   assert.equal(run(shared.player, 'share', {}, NOW + 86400000).state.share.ready, false);
   const capped = run(shared.player, 'game', {}, NOW + 86400000);
-  close(capped.state.lastEarned, normal.cps * 8 * 3600);
+  close(capped.state.lastEarned, normal.cps * 5 * 3600);
+  assert.equal(capped.state.offlineBudget.creditedSeconds, 5 * 3600);
 });
 
 test('CAS serializes portal spending, era resets, generator purchases and sharing', async () => {

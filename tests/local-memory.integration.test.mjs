@@ -19,6 +19,7 @@ test('local login, authoritative gameplay, profile, mural and logout work withou
   assert.equal((await api('/api/game')).status, 401);
   assert.equal((await api('/api/profile')).status, 401);
   assert.equal((await api('/api/community')).status, 401);
+  assert.equal((await api('/api/presence', 'POST')).status, 401);
   assert.equal((await api('/auth/local', 'POST', undefined, '', 'https://other.example')).status, 403);
   const signedIn = await api('/auth/local', 'POST');
   assert.equal(signedIn.status, 303);
@@ -32,6 +33,12 @@ test('local login, authoritative gameplay, profile, mural and logout work withou
     const before = await game.json();
     assert.ok(before.profile.id);
     assert.equal(before.profile.nickname, 'Fritz_Teste');
+    assert.equal((await api('/api/presence', 'POST', undefined, cookie, 'https://other.example')).status, 403);
+    const presence = await api('/api/presence', 'POST', undefined, cookie);
+    assert.equal(presence.status, 200);
+    assert.equal((await presence.json()).onlineCount, 1);
+    const repeatedPresence = await api('/api/presence', 'POST', undefined, cookie);
+    assert.equal((await repeatedPresence.json()).onlineCount, 1);
     assert.equal((await api('/api/click', 'POST', undefined, cookie, 'https://other.example')).status, 403);
     assert.equal((await api('/api/story', 'POST', { chapterId: 'opa-jerke-3' }, cookie)).status, 400);
     const clicked = await api('/api/click', 'POST', undefined, cookie);

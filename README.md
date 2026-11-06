@@ -84,7 +84,7 @@ Além das quatro melhorias originais, há seis equipamentos, todos com até cinc
 | Regador de afetos | 6.000.000 | +15% na produção dos lugares |
 | Bolsa de futuros jardins | 1.000.000.000 | +10% de sementes dos gestores |
 
-A bolsa não cria sementes sozinha: exige viveiro e gestores ativos. Seu bônus também vale offline e combina com o compartilhamento. Os equipamentos de toque também melhoram os toques automáticos dos gestores, sem contar como cliques manuais. Com todas as melhorias offline no máximo, o limite passa de 8 para 15,5 horas. O XP de melhorias continua limitado a 1, evitando antecipar eras apenas pela quantidade de equipamentos.
+A bolsa não cria sementes sozinha: exige viveiro e gestores ativos. Seu bônus também vale offline e combina com o compartilhamento. Os equipamentos de toque também melhoram os toques automáticos dos gestores, sem contar como cliques manuais. O progresso offline tem um limite diário de 5 horas, reiniciado à meia-noite UTC; Brisa da Babitonga acrescenta 1 hora por nível e Café para o caminho, 30 minutos por nível. O contador considera apenas o tempo creditado enquanto o jogador esteve ausente. O XP de melhorias continua limitado a 1, evitando antecipar eras apenas pela quantidade de equipamentos.
 
 Nos lugares, o botão **max xN** mostra quantas unidades cabem nas pétalas disponíveis, atualizando com a produção. A prévia soma os mesmos custos arredondados por unidade usados pelo servidor; o total final é confirmado ao comprar e pode crescer com novas pétalas ou mudar se outra aba gastar o saldo. Sem saldo para uma unidade, mostra **max x0** desabilitado. O logo próprio do Fritz, com sorriso e uma flor, acompanha os cabeçalhos do jogo, diário, perfil, mural e o ícone da aba.
 
@@ -112,6 +112,8 @@ Gestores são contratados uma vez por era. Os bônus somam-se aos dos lugares, h
 No mural, o cartão PNG é desenhado localmente, com arte original, apelido público, progresso, insígnias e uma breve descrição do jogo. A arte e o texto usam sempre o link público `https://fritzidle.com.br`, nunca o IP ou endereço local do navegador. Pode ser compartilhado pelo menu do dispositivo quando suportado, ou baixado com uma descrição para copiar. Compartilhar/exportar concede **+20% de pétalas e sementes por 30 minutos, uma vez a cada 24 horas**. Cancelar o menu não solicita bônus. Não se verifica a publicação na rede social, e nenhum dado Google é incluído.
 
 A duração é calculada no servidor e não se estende ao ficar offline, voltar ao jogo ou trocar de era. O ganho offline integra apenas a interseção entre o intervalo creditado e a duração real do bônus.
+
+O jogo mostra uma estimativa agregada de jogadores ativos, atualizada enquanto a página está visível. Ela conta contas autenticadas com atividade recente, sem exibir nomes ou identificadores.
 
 Stack: **Node.js 22+ / Next.js 16 / React 19 / Supabase (Postgres + Google Auth)**. Cada conta tem sua própria jornada, compartilhada entre aparelhos. O servidor calcula todas as recompensas: o navegador não pode gravar um saldo arbitrário.
 
@@ -209,7 +211,7 @@ npm start -- --port 3001
 
 Os testes locais verificam economia, progresso offline, Pórticos fracionários, reset, gestores, compra max, trilhas, buffs temporizados, isolamento de contas e conflitos simultâneos com um armazenamento em memória. **Não substituem o teste real do OAuth, RLS e Postgres após configurar o Supabase.**
 
-Os testes de integração da comunidade e progressão também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as quatro migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
+Os testes de integração da comunidade e progressão também estão ligados ao `npm test`, mas ficam ignorados por padrão: criam contas temporárias no Supabase configurado e as apagam com seus perfis, saves e mensagens ao terminar. Execute apenas com autorização no projeto de destino e com as cinco migrações aplicadas. Em um terminal separado, inicie o build de produção na porta de teste:
 
 ```powershell
 npm run build

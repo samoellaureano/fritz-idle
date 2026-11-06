@@ -15,6 +15,8 @@ export default function Home() {
   const [display, setDisplay] = useState(0);
   const [offlineMsg, setOfflineMsg] = useState(null);
   const [error, setError] = useState(null);
+  const [onlineCount, setOnlineCount] = useState(null);
+  const [presenceUnavailable, setPresenceUnavailable] = useState(false);
   const [busy, setBusy] = useState(false);
   const [tab, setTab] = useState('jornada');
   const syncRef = useRef({ coins: 0, cps: 0, at: Date.now() });
@@ -29,7 +31,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    request('/api/game')
+    request('/api/game?resume=1')
       .then((nextState) => {
         applyState(nextState);
         if (nextState.lastEarned > 1 && nextState.lastElapsed > 10) {
@@ -49,10 +51,48 @@ export default function Home() {
 
   useEffect(() => {
     const id = setInterval(() => {
-      request('/api/game').then(applyState).catch((cause) => setError(cause.message));
+      if (document.visibilityState === 'visible') {
+        const returning = Date.now() - syncRef.current.at > 90000;
+        request(`/api/game${returning ? '?resume=1' : ''}`).then(applyState).catch((cause) => setError(cause.message));
+      }
     }, 15000);
-    return () => clearInterval(id);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        request('/api/game?resume=1').then(applyState).catch((cause) => setError(cause.message));
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
   }, [applyState]);
+
+  useEffect(() => {
+    let active = true;
+    const pulse = () => {
+      if (document.visibilityState !== 'visible') return;
+      request('/api/presence', { method: 'POST' })
+        .then((result) => {
+          if (!active) return;
+          setOnlineCount(result.onlineCount);
+          setPresenceUnavailable(false);
+        })
+        .catch(() => {
+          if (!active) return;
+          setOnlineCount(null);
+          setPresenceUnavailable(true);
+        });
+    };
+    pulse();
+    const id = setInterval(pulse, 60000);
+    document.addEventListener('visibilitychange', pulse);
+    return () => {
+      active = false;
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', pulse);
+    };
+  }, []);
 
   async function perform(action) {
     setBusy(true);
@@ -123,6 +163,10 @@ export default function Home() {
         <div className="seed-pill" tabIndex={0} data-tooltip="Pórticos disponíveis para adquirir insígnias permanentes no museu">
           <span aria-hidden="true"><GameIcon symbol="🏰" /></span> {format(state.rebirth.points)} <span className="seed-word">Pórticos</span>
         </div>
+        <div className={`online-pill ${presenceUnavailable ? 'presence-unavailable' : ''}`} title="Contagem aproximada de contas ativas nos últimos dois minutos; sem exibir nomes.">
+          <span className="online-dot" aria-hidden="true" />
+          {presenceUnavailable ? 'Presença indisponível' : onlineCount === null ? 'Conectando...' : `${onlineCount} ${onlineCount === 1 ? 'pessoa' : 'pessoas'} por aqui`}
+        </div>
       </header>
 
       <div className="account-bar">
@@ -134,6 +178,9 @@ export default function Home() {
         <strong tabIndex={0} data-tooltip="Pétalas disponíveis"><GameIcon symbol="🌸" /> {format(display)}</strong>
         <span tabIndex={0} data-tooltip="Sementes disponíveis"><GameIcon symbol="🌱" /> {format(state.seeds)} · {format(state.seedsPerSecond)}/s</span>
         <span>Nível {state.rebirth.level} · Era {state.rebirth.count + 1}</span>
+        <span className="offline-budget" title="O limite renova à meia-noite UTC. Melhorias aumentam o tempo disponível.">
+          Até {Math.floor(state.offlineBudget.remainingSeconds / 3600)}h{Math.floor((state.offlineBudget.remainingSeconds % 3600) / 60) ? ` ${Math.floor((state.offlineBudget.remainingSeconds % 3600) / 60)}min` : ''} de progresso offline hoje
+        </span>
         {state.share.until > Date.now() && <span><GameIcon symbol="✨" /> +20% até {new Date(state.share.until).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>}
       </div>
 

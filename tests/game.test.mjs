@@ -67,7 +67,7 @@ test('upgrades enforce costs, five levels and their original effects', () => {
   const state = run(player).state;
   close(state.clickValue, 76);
   close(state.multipliers.production, 3.25);
-  assert.equal(state.multipliers.offlineHours, 15.5);
+  assert.equal(state.multipliers.offlineHours, 12.5);
 });
 
 test('offline production is capped and never negative', () => {
@@ -78,9 +78,35 @@ test('offline production is capped and never negative', () => {
   assert.equal(result.state.lastElapsed, MAX_OFFLINE_SECONDS);
   player.upgrades['brisa-da-babitonga'] = 5;
   result = run(player);
-  close(result.state.lastEarned, 13 * 3600 * 0.2);
+  close(result.state.lastEarned, 10 * 3600 * 0.2);
+  assert.equal(result.state.lastElapsed, 10 * 3600);
   const future = newPlayer(NOW + 10000);
   assert.equal(run(future).state.lastEarned, 0);
+});
+
+test('daily offline credit is capped, upgrades extend it, online ticks do not spend it, and UTC days reset it', () => {
+  const start = Date.UTC(2026, 10, 5, 0);
+  const player = newPlayer(start);
+  player.generators['fritz-jr'] = 1;
+  player.upgrades['brisa-da-babitonga'] = 2;
+
+  const online = runGameAction(player, 'game', {}, start + 4 * 3600000, { offline: false });
+  assert.equal(online.state.lastElapsed, 4 * 3600);
+  assert.equal(online.state.offlineBudget.creditedSeconds, 0);
+  assert.equal(online.state.offlineBudget.limitSeconds, 7 * 3600);
+
+  const returned = runGameAction(online.player, 'game', {}, start + 14 * 3600000, { offline: true });
+  assert.equal(returned.state.lastElapsed, 7 * 3600);
+  assert.equal(returned.state.offlineBudget.creditedSeconds, 7 * 3600);
+  assert.equal(returned.state.offlineBudget.remainingSeconds, 0);
+
+  const sameDay = runGameAction(returned.player, 'game', {}, start + 15 * 3600000, { offline: true });
+  assert.equal(sameDay.state.lastElapsed, 0);
+  assert.equal(sameDay.state.offlineBudget.remainingSeconds, 0);
+
+  const nextDay = runGameAction(sameDay.player, 'game', {}, start + 25 * 3600000, { offline: true });
+  assert.equal(nextDay.state.lastElapsed, 7 * 3600);
+  assert.equal(nextDay.state.offlineBudget.remainingSeconds, 0);
 });
 
 test('daily reward cannot be duplicated and becomes available after exactly 24h', () => {
@@ -166,6 +192,14 @@ test('concurrent clicks survive CAS conflicts and never cross accounts', async (
   assert.equal(store.saves.get('alice').state.coins, 12);
   assert.equal(store.saves.get('alice').version, 12);
   assert.equal(store.saves.get('bob').state.coins, 1);
+});
+
+test('long gaps before gameplay actions are credited as offline and consume the daily allowance', async () => {
+  const store = memoryStore();
+  await store.create('alice', newPlayer(NOW));
+  const result = await executeSavedAction(store, 'alice', 'click', {}, () => NOW + 24 * 3600000);
+  assert.equal(result.lastElapsed, 5 * 3600);
+  assert.equal(result.offlineBudget.creditedSeconds, 5 * 3600);
 });
 
 test('concurrent daily/story/purchase claims cannot double-spend or double-award', async () => {
